@@ -1,0 +1,111 @@
+openapi: 3.0.2
+info:
+  description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
+  version: '1.0'
+  title: Regnskapsregisteret API
+  contact:
+    name: Brønnøysundregistrene
+    url: 'https://fellesdatakatalog.brreg.no'
+    email: fellesdatakatalog@brreg.no
+  license:
+    name: License of API
+    url: 'http://data.norge.no/nlod/no/2.0'
+tags:
+  - name: regnskapsregisteret
+    description: Regnskapsregister API
+servers:
+  - url: 'https://data.brreg.no/regnskapsregisteret'
+paths:
+  /regnskap:
+    get:
+      tags:
+        - regnskap
+      summary: Query for regnskaps.
+      description: Returnerer en samling årsregnskap
+      operationId: getRegnskap
+      parameters:
+        - name: orgNummer
+          in: query
+          description: Virksomhetens organisasjonsnummer
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Regnskap'
+        '404':
+          description: Ikke funnet
+  /regnskaps/{id}:
+    get:
+      tags:
+        - regnskap
+      description: Hent et spesifikt årsregnskap for en virksomhet
+      operationId: getRegnskapById
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Regnskap"
+        '404':
+          description: Ikke funnet
+components:
+  schemas:
+    Regnskap:
+        type: object
+        description: Et regnskap for et gitt år
+        properties:
+          id:
+            type: string
+            description: system-generert id (GUID)
+          orgNummer:
+            type: string
+            description: Organisasjonsnummer
+          regnskapsperiode:
+            type: string
+          sumDriftsinntekter:
+            type: number
+          sumKostnader:
+            type: number
+          driftsresultat:
+            type: number
+          sumFinansinntekter:
+            type: number
+          sumFinanskostnader:
+            type: number
+          ordinærtResultatFørSkattekostnad:
+            type: number
+          årsreslutat:
+            type: number
+          sumAnleggsmidler:
+            type: number
+          sumOmløpsmidler:
+            type: number
+          sumEiendeler:
+            type: number
+          sumInnskuttEgenkapital:
+            type: number
+          sumOpptjentEgenkapital:
+            type: number
+          sumEgenkaptial:
+            type: number
+          sumLangsiktigGjeld:
+            type: number
+          sumKortsiktigGjeld:
+            type: number
+          sumGjeld:
+            type: number
