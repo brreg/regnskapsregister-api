@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  regnskapsregister:
+    build:
+      context: ./
+      args:
+        JAR_FILE: regnskapsregister-api-1.0.0-SNAPSHOT.jar
+    image: regnskap/test:latest
+    restart: always
+    ports:
+      - 127.0.0.1:8080:8080
