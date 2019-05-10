@@ -72,40 +72,168 @@ components:
           id:
             type: string
             description: system-generert id (GUID)
-          orgNummer:
-            type: string
-            description: Organisasjonsnummer
+          virksomhet:
+            $ref: "#/components/schemas/Virksomhet"
           regnskapsperiode:
+            $ref: "#/components/schemas/Tidsperiode"
+          valuta:
+            $ref: "#/components/schemas/Valutakode"
+          avviklingsregnskap:
+            type: boolean
+          oppstillingsplan:
             type: string
-          sumDriftsinntekter:
-            type: number
-          sumKostnader:
-            type: number
-          driftsresultat:
-            type: number
-          sumFinansinntekter:
-            type: number
-          sumFinanskostnader:
-            type: number
-          ordinærtResultatFørSkattekostnad:
-            type: number
-          årsreslutat:
-            type: number
-          sumAnleggsmidler:
-            type: number
-          sumOmløpsmidler:
-            type: number
-          sumEiendeler:
-            type: number
-          sumInnskuttEgenkapital:
-            type: number
-          sumOpptjentEgenkapital:
-            type: number
-          sumEgenkaptial:
-            type: number
-          sumLangsiktigGjeld:
-            type: number
-          sumKortsiktigGjeld:
-            type: number
-          sumGjeld:
-            type: number
+            enum: ["små", "store", "øvrige"]
+          revisjon:
+            $ref: "#/components/schemas/Revisjon"
+          regnkapsprinsipper:
+            $ref: "#/components/schemas/Regnskapsprinsipper"
+          egenkapitalGjeld:
+            $ref: "#/components/schemas/EgenkapitalGjeld"
+          eiendeler:
+            $ref: "#/components/schemas/Eiendeler"
+          resultatregnskapResultat:
+            $ref: "#/components/schemas/ResultatregnskapResultat"
+    ResultatregnskapResultat:
+      type: object
+      properties:
+        ordinærtResultatFørSkattekostnad:
+          $ref: "#/components/schemas/Post"
+        årsresultat:
+          $ref: "#/components/schemas/Post"
+        totalresultat:
+          $ref: "#/components/schemas/Post"
+        finansresultat:
+          $ref: "#/components/schemas/Finansresultat"
+        driftsresultat:
+          $ref: "#/components/schemas/Driftsresultat"
+    EgenkapitalGjeld:
+      type: object
+      properties:
+        sumEgenkapitalGjeld:
+            $ref: "#/components/schemas/Post"
+        egenkapital:
+            $ref: "#/components/schemas/Egenkapital"
+        gjeldOversikt:
+            $ref: "#/components/schemas/Gjeld"
+    Eiendeler:
+      type: object
+      properties:
+        sumEiendeler:
+            $ref: "#/components/schemas/Post"
+        omløpsmidler:
+            $ref: "#/components/schemas/Oml%C3%B8psmidler"
+        anleggsmidler:
+            $ref: "#/components/schemas/Anleggsmidler"
+    Anleggsmidler:
+      type: object
+      properties:
+        sumAnleggsmidler:
+          $ref: "#/components/schemas/Post"
+    Omløpsmidler:
+      type: object
+      properties:
+        sumOmløpsmidler:
+          $ref: "#/components/schemas/Post"
+    Finansresultat:
+      type: object
+      properties:
+        nettoFinans:
+          $ref: "#/components/schemas/Post"
+        finansinntekt:
+          $ref: "#/components/schemas/Finansinntekt"
+        finanskostnad:
+          $ref: "#/components/schemas/Finanskostnad"
+    Driftsresultat:
+      type: object
+      properties:
+        driftsresultat:
+          $ref: "#/components/schemas/Post"
+        driftsinntekter:
+          $ref: "#/components/schemas/Driftsinntekter"
+        driftskostnad:
+          $ref: "#/components/schemas/Driftskostnad"
+    Driftsinntekter:
+      type: object
+      properties:
+        sumDriftsinntekter:
+          $ref: "#/components/schemas/Post"
+    Driftskostnad:
+      type: object
+      properties:
+        sumDriftskostnad:
+          $ref: "#/components/schemas/Post"
+    Finansinntekt:
+      type: object
+      properties:
+        sumFinansinntekter:
+          $ref: "#/components/schemas/Post"
+    Finanskostnad:
+      type: object
+      properties:
+        sumFinanskostnad:
+          $ref: "#/components/schemas/Post"
+    Virksomhet:
+      type: object
+      description: Virksomheten som regnskapet tilhører
+      properties:
+        organisasjonsnummer:
+          type: string
+        organisasjonsform:
+          type: string
+        morselskap:
+          type: boolean
+    Tidsperiode:
+      type: object
+    Valutakode:
+      type: object
+    Revisjon:
+      type: object
+    Post:
+      type: object
+      properties:
+        note:
+          type: string
+        årets:
+          type: number
+        fjorårets:
+          type: number
+    Regnskapsprinsipper:
+      type: object
+    Egenkapital:
+      type: object
+      properties:
+        sumEgenkapital:
+          $ref: "#/components/schemas/Post"
+        opptjentEgenkapital:
+          $ref: "#/components/schemas/OpptjentEgenkapital"
+        innskuttEgenkapital:
+          $ref: "#/components/schemas/InnskuttEgenkapital"
+    OpptjentEgenkapital:
+      type: object
+      properties:
+        sumOpptjentEgenkapital:
+          $ref: "#/components/schemas/Post"
+    InnskuttEgenkapital:
+      type: object
+      properties:
+        sumInnskuttEgenkaptial:
+          $ref: "#/components/schemas/Post"
+    Gjeld:
+      type: object
+      properties:
+        sumGjeld:
+          $ref: "#/components/schemas/Post"
+        kortsiktigGjeld:
+          $ref: "#/components/schemas/KortsiktigGjeld"
+        langsiktigGjeld:
+          $ref: "#/components/schemas/LangsiktigGjeld"
+    KortsiktigGjeld:
+      type: object
+      properties:
+        sumKortsiktigGjeld:
+          $ref: "#/components/schemas/Post"
+    LangsiktigGjeld:
+      type: object
+      properties:
+        sumLangsiktigGjeld:
+          $ref: "#/components/schemas/Post"
