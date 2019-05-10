@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
-@EnableScheduling
 public class Application {
     private static Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
