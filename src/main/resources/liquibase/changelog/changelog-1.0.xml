@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="extnot" id="1.0-0">
+        <sql endDelimiter=";">
+            CREATE SCHEMA IF NOT EXISTS nsg
+        </sql>
+    </changeSet>
+
+    <changeSet author="extnot" id="1.0-1">
+        <createSequence sequenceName="invoice_seq" schemaName="nsg"/>
+    </changeSet>
+
+    <changeSet author="extnot" id="1.0-2">
+        <createTable tableName="invoice" schemaName="nsg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="invoice_pkey"/>
+            </column>
+            <column name="_invoiceoriginalid" type="INT"/>
+            <column name="customizationid" type="TEXT"/>
+            <column name="profileid" type="TEXT"/>
+            <column name="id" type="TEXT"/>
+            <column name="issuedate" type="DATE"/>
+            <column name="duedate" type="TEXT"/>
+            <column name="invoicetypecode" type="TEXT"/>
+            <column name="documentcurrencycode" type="TEXT"/>
+            <column name="accountingcost" type="TEXT"/>
+            <column name="buyerreference" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="extnot" id="1.0-3">
+        <createTable tableName="invoiceoriginal" schemaName="nsg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="invoiceoriginal_pkey"/>
+            </column>
+            <column name="invoice" type="CLOB"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="extnot" id="1.0-4">
+        <addForeignKeyConstraint baseColumnNames="_invoiceoriginalid" baseTableName="invoice" baseTableSchemaName="nsg"
+                                 constraintName="nsg_i_io_fk" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedColumnNames="_id" referencedTableName="invoiceoriginal" referencedTableSchemaName="nsg"/>
+    </changeSet>
+
+</databaseChangeLog>
