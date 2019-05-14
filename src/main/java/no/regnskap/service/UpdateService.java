@@ -1,5 +1,7 @@
 package no.regnskap.service;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import no.regnskap.service.xml.ListeRegnskapXml;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -7,14 +9,15 @@ import java.io.*;
 @Service
 public class UpdateService {
 
-    public String getXmlFile() {
-        try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("20190327213825-masse-2.xml");
-            return readFromInputStream(inputStream);
-        } catch (IOException e) {
-            return e.getMessage();
-        }
+    public ListeRegnskapXml getXmlData() throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        return xmlMapper.readValue(getXmlFile(), ListeRegnskapXml.class);
+    }
+
+    private String getXmlFile() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("20190327213825-masse-2.xml");
+        return readFromInputStream(inputStream);
     }
 
     private String readFromInputStream(InputStream inputStream)

@@ -3,6 +3,7 @@ package no.regnskap.controller;
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.UpdateService;
+import no.regnskap.service.xml.ListeRegnskapXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -37,8 +39,8 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     }
 
     @RequestMapping(value="/regnskap/update", method=GET)
-    public ResponseEntity<String> checkForUpdatedFile() {
-        return new ResponseEntity<>(updateService.getXmlFile(), HttpStatus.OK);
+    public ResponseEntity<ListeRegnskapXml> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException {
+        return new ResponseEntity<>(updateService.getXmlData(), HttpStatus.OK);
     }
 
     @Override
