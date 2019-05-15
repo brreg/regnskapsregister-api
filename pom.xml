@@ -149,7 +149,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/specification/regnskapsregister.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/specification/regnskapsregister.yaml</inputSpec>
                             <validateSpec>true</validateSpec>
                             <generatorName>spring</generatorName>
                             <templateDirectory>${project.basedir}/src/main/resources/openAPI/openapi-generator-maven-plugin/templates/JavaSpring</templateDirectory>

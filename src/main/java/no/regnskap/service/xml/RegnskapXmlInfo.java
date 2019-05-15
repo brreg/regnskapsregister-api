@@ -2,17 +2,19 @@ package no.regnskap.service.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigDecimal;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegnskapXmlInfo {
     private String feltkode;
-    private String sum;
+    private Long sum;
     private RegnskapXmlPost post;
 
     public String getFeltkode() {
         return feltkode;
     }
 
-    public String getSum() {
+    public Long getSum() {
         return sum;
     }
 
@@ -24,8 +26,8 @@ public class RegnskapXmlInfo {
         this.feltkode = feltkode;
     }
 
-    public void setSum(String sum) {
-        this.sum = sum;
+    public void setSum(BigDecimal sum) {
+        this.sum = sum.longValue();
     }
 
     public void setPost(RegnskapXmlPost post) {

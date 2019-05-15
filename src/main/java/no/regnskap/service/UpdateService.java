@@ -16,7 +16,7 @@ public class UpdateService {
 
     private String getXmlFile() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("20190327213825-masse-2.xml");
+        InputStream inputStream = classLoader.getResourceAsStream("specification/examples/20190327213825-masse-2.xml");
         return readFromInputStream(inputStream);
     }
 
