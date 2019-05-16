@@ -4,29 +4,16 @@ services:
   regnskapsregister:
     image: regnskap/test:latest
     depends_on:
-      - postgres
+      - mongodb
     restart: always
     ports:
       - 127.0.0.1:8080:8080
-    environment:
-      - POSTGRES_HOST=postgres:5432
-      - POSTGRES_DB=$NSG_POSTGRES_DB
-      - POSTGRES_USER=$NSG_POSTGRES_DBO_USER
-      - POSTGRES_PASSWORD=$NSG_POSTGRES_DBO_PASSWORD
-      - NSG_POSTGRES_HOST
-      - NSG_POSTGRES_DB
-      - NSG_POSTGRES_DBO_USER
-      - NSG_POSTGRES_DBO_PASSWORD
-      - NSG_POSTGRES_USER
-      - NSG_POSTGRES_PASSWORD
-  postgres:
-    image: postgres
-    restart: always
-    ports:
-      - 5432:5432
+
+  mongodb:
+    image: mongo:latest
     volumes:
-      - /var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=$NSG_POSTGRES_DB
-      - POSTGRES_USER=$NSG_POSTGRES_DBO_USER
-      - POSTGRES_PASSWORD=$NSG_POSTGRES_DBO_PASSWORD
+      - $HOME/data/springboot-repository-data:/data/db
+      - $HOME/data/springboot-repository-bkp:/data/bkp
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet

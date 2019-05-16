@@ -2,6 +2,7 @@ package no.regnskap.controller;
 
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.service.UpdateService;
 import no.regnskap.service.xml.ListeRegnskapXml;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -27,6 +29,9 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
 
     @Autowired
     private UpdateService updateService;
+
+    @Autowired
+    private RegnskapRepository repository;
 
     @RequestMapping(value="/ping", method=GET, produces={"text/plain"})
     public ResponseEntity<String> getPing() {
@@ -39,8 +44,8 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     }
 
     @RequestMapping(value="/regnskap/update", method=GET)
-    public ResponseEntity<ListeRegnskapXml> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException {
-        return new ResponseEntity<>(updateService.getXmlData(), HttpStatus.OK);
+    public ResponseEntity<ListeRegnskapXml> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException, SQLException {
+        return new ResponseEntity<>(updateService.update(), HttpStatus.OK);
     }
 
     @Override
@@ -48,12 +53,12 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
         List<Regnskap> regnskap;
 
         try {
-            // Get regnskap
+            regnskap = repository.findByVirksomhetOrganisasjonsnummer(orgNummer);
         } catch (Exception e) {
             LOGGER.error("getRegnskap failed:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(regnskap, HttpStatus.OK);
     }
 /*
         if (regnskap==null) {
