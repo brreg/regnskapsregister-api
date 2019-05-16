@@ -1,12 +1,12 @@
 package no.regnskap.repository;
 
-import no.regnskap.generated.model.Regnskap;
+import no.regnskap.service.xml.RegnskapXml;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface RegnskapRepository extends MongoRepository<Regnskap, String> {
-    List<Regnskap> findByVirksomhetOrganisasjonsnummer(String orgnr);
+public interface RegnskapRepository extends MongoRepository<RegnskapXml, String> {
+    List<RegnskapXml> findByRegnskapInformasjonOrgnr(String orgnr);
 }

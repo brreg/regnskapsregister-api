@@ -1,8 +1,6 @@
 package no.regnskap.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import no.regnskap.generated.model.Regnskap;
-import no.regnskap.generated.model.Virksomhet;
 import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.service.xml.ListeRegnskapXml;
 import no.regnskap.service.xml.RegnskapXml;
@@ -15,13 +13,15 @@ import java.sql.SQLException;
 @Service
 public class UpdateService {
 
+    public static final String TRUE_STRING = "J";
+
     @Autowired
     private RegnskapRepository mongoRepository;
 
     public ListeRegnskapXml update() throws IOException, SQLException {
         ListeRegnskapXml latestRegnskap = getXmlData();
-        for (RegnskapXml regnskapXml : latestRegnskap.getDeler()) {
-            mongoRepository.save(mapFromXmlToModel(regnskapXml));
+        for (RegnskapXml regnskapXml : latestRegnskap.getRegnskapsListe()) {
+            mongoRepository.save(regnskapXml);
         }
         return latestRegnskap;
     }
@@ -48,17 +48,5 @@ public class UpdateService {
             }
         }
         return resultStringBuilder.toString();
-    }
-
-    private Regnskap mapFromXmlToModel(RegnskapXml xmlData) {
-        Regnskap regnskap = new Regnskap();
-
-        Virksomhet virksomhet = new Virksomhet();
-        virksomhet.setOrganisasjonsnummer(xmlData.getHode().getOrgnr());
-        virksomhet.setMorselskap(xmlData.getHode().getMor_i_konsern());
-        virksomhet.setOrganisasjonsform(xmlData.getHode().getOrgform());
-        regnskap.setVirksomhet(virksomhet);
-
-        return regnskap;
     }
 }

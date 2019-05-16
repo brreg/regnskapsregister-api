@@ -14,7 +14,7 @@ public class ListeRegnskapXml {
 
     @JacksonXmlProperty(localName = "del")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private RegnskapXml[] deler;
+    private RegnskapXml[] regnskapsListe;
 
     public Integer getAntallPoster() {
         return antallPoster;
@@ -24,11 +24,11 @@ public class ListeRegnskapXml {
         this.antallPoster = antallPoster;
     }
 
-    public RegnskapXml[] getDeler() {
-        return deler;
+    public RegnskapXml[] getRegnskapsListe() {
+        return regnskapsListe;
     }
 
-    public void setDeler(RegnskapXml[] deler) {
-        this.deler = deler;
+    public void setRegnskapsListe(RegnskapXml[] regnskapsListe) {
+        this.regnskapsListe = regnskapsListe;
     }
 }

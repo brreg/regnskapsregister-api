@@ -5,6 +5,7 @@ import no.regnskap.generated.model.Regnskap;
 import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.service.UpdateService;
 import no.regnskap.service.xml.ListeRegnskapXml;
+import no.regnskap.service.xml.RegnskapXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,22 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
         return new ResponseEntity<>(updateService.update(), HttpStatus.OK);
     }
 
+    @RequestMapping(value="/regnskap/find", method=GET)
+    public ResponseEntity<List<RegnskapXml>> findOne(HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(repository.findByRegnskapInformasjonOrgnr("980919676"), HttpStatus.OK);
+    }
+
     @Override
     public ResponseEntity<List<Regnskap>> getRegnskap(HttpServletRequest httpServletRequest, @ApiParam(value = "Virksomhetens organisasjonsnummer") @Valid @RequestParam(value = "orgNummer", required = false) String orgNummer) {
         List<Regnskap> regnskap;
 
         try {
-            regnskap = repository.findByVirksomhetOrganisasjonsnummer(orgNummer);
+            //regnskap = repository.findByOrgOgRegInfoOrgnr(orgNummer);
         } catch (Exception e) {
             LOGGER.error("getRegnskap failed:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(regnskap, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 /*
         if (regnskap==null) {
