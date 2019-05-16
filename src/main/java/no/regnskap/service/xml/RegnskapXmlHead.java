@@ -3,10 +3,10 @@ package no.regnskap.service.xml;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-import static no.regnskap.service.UpdateService.TRUE_STRING;
+import static no.regnskap.service.RegnskapService.TRUE_STRING;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegnskapXmlHode {
+public class RegnskapXmlHead {
     private String orgnr;
     private String regnskapstype;
     private Integer regnaar;

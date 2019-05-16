@@ -4,31 +4,38 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.springframework.data.annotation.Id;
 
 @JacksonXmlRootElement(localName = "deler")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListeRegnskapXml {
+public class RegnskapWrap {
 
-    @JacksonXmlProperty(localName = "ant_poster")
-    private Integer antallPoster;
+    @Id
+    private String checksum;
+
+    private long created = System.currentTimeMillis();
 
     @JacksonXmlProperty(localName = "del")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private RegnskapXml[] regnskapsListe;
+    private RegnskapXml[] list;
 
-    public Integer getAntallPoster() {
-        return antallPoster;
+    public String getChecksum() {
+        return checksum;
     }
 
-    public void setAntallPoster(Integer antallPoster) {
-        this.antallPoster = antallPoster;
+    public void setChecksum(String checksum) {
+        this.checksum = checksum;
     }
 
-    public RegnskapXml[] getRegnskapsListe() {
-        return regnskapsListe;
+    public long getCreated() {
+        return created;
     }
 
-    public void setRegnskapsListe(RegnskapXml[] regnskapsListe) {
-        this.regnskapsListe = regnskapsListe;
+    public RegnskapXml[] getList() {
+        return list;
+    }
+
+    public void setList(RegnskapXml[] list) {
+        this.list = list;
     }
 }

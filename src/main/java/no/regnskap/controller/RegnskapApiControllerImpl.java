@@ -3,8 +3,8 @@ package no.regnskap.controller;
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.service.UpdateService;
-import no.regnskap.service.xml.ListeRegnskapXml;
+import no.regnskap.service.RegnskapService;
+import no.regnskap.service.xml.RegnskapWrap;
 import no.regnskap.service.xml.RegnskapXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     private static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiControllerImpl.class);
 
     @Autowired
-    private UpdateService updateService;
+    private RegnskapService service;
 
     @Autowired
     private RegnskapRepository repository;
@@ -45,15 +45,15 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     }
 
     @RequestMapping(value="/regnskap/update", method=GET)
-    public ResponseEntity<ListeRegnskapXml> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException, SQLException {
-        return new ResponseEntity<>(updateService.update(), HttpStatus.OK);
+    public ResponseEntity<RegnskapWrap> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException, SQLException {
+        return new ResponseEntity<>(service.update(), HttpStatus.OK);
     }
-
+/*
     @RequestMapping(value="/regnskap/find", method=GET)
     public ResponseEntity<List<RegnskapXml>> findOne(HttpServletRequest httpServletRequest) {
-        return new ResponseEntity<>(repository.findByRegnskapInformasjonOrgnr("980919676"), HttpStatus.OK);
+        return new ResponseEntity<>(repository.findByListHeadOrgnr("980919676"), HttpStatus.OK);
     }
-
+*/
     @Override
     public ResponseEntity<List<Regnskap>> getRegnskap(HttpServletRequest httpServletRequest, @ApiParam(value = "Virksomhetens organisasjonsnummer") @Valid @RequestParam(value = "orgNummer", required = false) String orgNummer) {
         List<Regnskap> regnskap;

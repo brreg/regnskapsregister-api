@@ -9,26 +9,26 @@ public class RegnskapXml {
 
     @JacksonXmlProperty(localName = "hode")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private RegnskapXmlHode regnskapInformasjon;
+    private RegnskapXmlHead head;
 
     @JacksonXmlProperty(localName = "info")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private RegnskapXmlInfo[] postListe;
+    private RegnskapXmlInfo[] posts;
 
-    public RegnskapXmlHode getRegnskapInformasjon() {
-        return regnskapInformasjon;
+    public RegnskapXmlHead getHead() {
+        return head;
     }
 
-    public void setRegnskapInformasjon(RegnskapXmlHode regnskapInformasjon) {
-        this.regnskapInformasjon = regnskapInformasjon;
+    public void setHead(RegnskapXmlHead head) {
+        this.head = head;
     }
 
-    public RegnskapXmlInfo[] getPostListe() {
-        return postListe;
+    public RegnskapXmlInfo[] getPosts() {
+        return posts;
     }
 
-    public void setPostListe(RegnskapXmlInfo[] postListe) {
-        this.postListe = postListe;
+    public void setPosts(RegnskapXmlInfo[] posts) {
+        this.posts = posts;
     }
 }
 
