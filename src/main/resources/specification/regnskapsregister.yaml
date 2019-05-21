@@ -82,7 +82,10 @@ components:
             type: boolean
           oppstillingsplan:
             type: string
-            enum: ["smaa", "store", "oevrige"]
+            enum:
+            - smaa
+            - store
+            - oevrige
           revisjon:
             $ref: "#/components/schemas/Revisjon"
           regnkapsprinsipper:
