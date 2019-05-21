@@ -1,7 +1,8 @@
-package no.regnskap.service.xml;
+package no.regnskap.model.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import no.regnskap.model.xml.RegnskapXmlPost;
 
 import java.math.BigDecimal;
 

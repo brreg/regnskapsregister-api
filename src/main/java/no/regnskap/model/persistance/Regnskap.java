@@ -1,44 +1,56 @@
-package no.regnskap.service.xml;
+package no.regnskap.model.persistance;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import static no.regnskap.service.RegnskapService.TRUE_STRING;
+import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RegnskapXmlHead {
+@Document("regnskap")
+public class Regnskap {
+    @Id
+    private String _id;
+    @Indexed
     private String orgnr;
     private String regnskapstype;
     private Integer regnaar;
-    @JacksonXmlProperty(localName = "oppstillingsplan_versjonsnr")
+    @Field("oppstillingsplan_versjonsnr")
     private String oppstillingsplanVersjonsnr;
     private String valutakode;
-    @JacksonXmlProperty(localName = "regnskap_dokumenttype")
-    private String regnskapDokumenttype;
     private String startdato;
     private String avslutningsdato;
     private String mottakstype;
     private boolean avviklingsregnskap;
     private boolean feilvaloer;
     private String journalnr;
-    @JacksonXmlProperty(localName = "mottatt_dato")
+    @Field("mottatt_dato")
     private String mottattDato;
     private String orgform;
-    @JacksonXmlProperty(localName = "mor_i_konsern")
+    @Field("mor_i_konsern")
     private boolean morselskap;
-    @JacksonXmlProperty(localName = "regler_smaa")
+    @Field("regler_smaa")
     private boolean reglerSmaa;
-    @JacksonXmlProperty(localName = "fleksible_poster")
+    @Field("fleksible_poster")
     private boolean fleksiblePoster;
-    @JacksonXmlProperty(localName = "fravalg_revisjon")
+    @Field("fravalg_revisjon")
     private boolean fravalgRevisjon;
-    @JacksonXmlProperty(localName = "utarbeidet_regnskapsforer")
+    @Field("utarbeidet_regnskapsforer")
     private boolean utarbeidetRegnskapsforer;
-    @JacksonXmlProperty(localName = "bistand_regnskapsforer")
+    @Field("bistand_regnskapsforer")
     private boolean bistandRegnskapsforer;
     private String aarsregnskapstype;
-    @JacksonXmlProperty(localName = "land_for_land")
+    @Field("land_for_land")
     private boolean landForLand;
+    private List<RegnskapFelt> felter;
+
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String id) {
+        this._id = id;
+    }
 
     public String getOrgnr() {
         return orgnr;
@@ -80,14 +92,6 @@ public class RegnskapXmlHead {
         this.valutakode = valutakode;
     }
 
-    public String getRegnskapDokumenttype() {
-        return regnskapDokumenttype;
-    }
-
-    public void setRegnskapDokumenttype(String regnskapDokumenttype) {
-        this.regnskapDokumenttype = regnskapDokumenttype;
-    }
-
     public String getStartdato() {
         return startdato;
     }
@@ -116,16 +120,16 @@ public class RegnskapXmlHead {
         return avviklingsregnskap;
     }
 
-    public void setAvviklingsregnskap(String avviklingsregnskap) {
-        this.avviklingsregnskap = TRUE_STRING.equals(avviklingsregnskap);
+    public void setAvviklingsregnskap(boolean avviklingsregnskap) {
+        this.avviklingsregnskap = avviklingsregnskap;
     }
 
     public boolean isFeilvaloer() {
         return feilvaloer;
     }
 
-    public void setFeilvaloer(String feilvaloer) {
-        this.feilvaloer = TRUE_STRING.equals(feilvaloer);
+    public void setFeilvaloer(boolean feilvaloer) {
+        this.feilvaloer = feilvaloer;
     }
 
     public String getJournalnr() {
@@ -156,48 +160,48 @@ public class RegnskapXmlHead {
         return morselskap;
     }
 
-    public void setMorselskap(String morselskap) {
-        this.morselskap = TRUE_STRING.equals(morselskap);
+    public void setMorselskap(boolean morselskap) {
+        this.morselskap = morselskap;
     }
 
     public boolean isReglerSmaa() {
         return reglerSmaa;
     }
 
-    public void setReglerSmaa(String reglerSmaa) {
-        this.reglerSmaa = TRUE_STRING.equals(reglerSmaa);
+    public void setReglerSmaa(boolean reglerSmaa) {
+        this.reglerSmaa = reglerSmaa;
     }
 
     public boolean isFleksiblePoster() {
         return fleksiblePoster;
     }
 
-    public void setFleksiblePoster(String fleksiblePoster) {
-        this.fleksiblePoster = TRUE_STRING.equals(fleksiblePoster);
+    public void setFleksiblePoster(boolean fleksiblePoster) {
+        this.fleksiblePoster = fleksiblePoster;
     }
 
     public boolean isFravalgRevisjon() {
         return fravalgRevisjon;
     }
 
-    public void setFravalgRevisjon(String fravalgRevisjon) {
-        this.fravalgRevisjon = TRUE_STRING.equals(fravalgRevisjon);
+    public void setFravalgRevisjon(boolean fravalgRevisjon) {
+        this.fravalgRevisjon = fravalgRevisjon;
     }
 
     public boolean isUtarbeidetRegnskapsforer() {
         return utarbeidetRegnskapsforer;
     }
 
-    public void setUtarbeidetRegnskapsforer(String utarbeidetRegnskapsforer) {
-        this.utarbeidetRegnskapsforer = TRUE_STRING.equals(utarbeidetRegnskapsforer);
+    public void setUtarbeidetRegnskapsforer(boolean utarbeidetRegnskapsforer) {
+        this.utarbeidetRegnskapsforer = utarbeidetRegnskapsforer;
     }
 
     public boolean isBistandRegnskapsforer() {
         return bistandRegnskapsforer;
     }
 
-    public void setBistandRegnskapsforer(String bistandRegnskapsforer) {
-        this.bistandRegnskapsforer = TRUE_STRING.equals(bistandRegnskapsforer);
+    public void setBistandRegnskapsforer(boolean bistandRegnskapsforer) {
+        this.bistandRegnskapsforer = bistandRegnskapsforer;
     }
 
     public String getAarsregnskapstype() {
@@ -212,7 +216,15 @@ public class RegnskapXmlHead {
         return landForLand;
     }
 
-    public void setLandForLand(String landForLand) {
-        this.landForLand = TRUE_STRING.equals(landForLand);
+    public void setLandForLand(boolean landForLand) {
+        this.landForLand = landForLand;
+    }
+
+    public List<RegnskapFelt> getFelter() {
+        return felter;
+    }
+
+    public void setFelter(List<RegnskapFelt> felter) {
+        this.felter = felter;
     }
 }

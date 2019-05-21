@@ -1,4 +1,4 @@
-package no.regnskap.service.xml;
+package no.regnskap.model.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
