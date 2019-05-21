@@ -1,10 +1,10 @@
 openapi: 3.0.2
 info:
-  description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
+  description: Tilgjengliggjoer noekkeltall fra virksomheters aarsregnskap
   version: '1.0'
   title: Regnskapsregisteret API
   contact:
-    name: Brønnøysundregistrene
+    name: Broennoeysundregistrene
     url: 'https://fellesdatakatalog.brreg.no'
     email: fellesdatakatalog@brreg.no
   license:
@@ -21,7 +21,7 @@ paths:
       tags:
         - regnskap
       summary: Query for regnskaps.
-      description: Returnerer en samling årsregnskap
+      description: Returnerer en samling aarsregnskap
       operationId: getRegnskap
       parameters:
         - name: orgNummer
@@ -45,7 +45,7 @@ paths:
     get:
       tags:
         - regnskap
-      description: Hent et spesifikt årsregnskap for en virksomhet
+      description: Hent et spesifikt aarsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
         - name: id
@@ -67,7 +67,7 @@ components:
   schemas:
     Regnskap:
         type: object
-        description: Et regnskap for et gitt år
+        description: Et regnskap for et gitt aar
         properties:
           id:
             type: string
@@ -82,7 +82,10 @@ components:
             type: boolean
           oppstillingsplan:
             type: string
-            enum: ["små", "store", "øvrige"]
+            enum:
+            - smaa
+            - store
+            - oevrige
           revisjon:
             $ref: "#/components/schemas/Revisjon"
           regnkapsprinsipper:
@@ -95,13 +98,17 @@ components:
             $ref: "#/components/schemas/ResultatregnskapResultat"
     ResultatregnskapResultat:
       type: object
+      description: bladibladibla
+      externalDocs:
+        description: Begrepsreferanse
+        url: https://jira.brreg.no/browse/BEGREP-821
       properties:
-        ordinærtResultatFørSkattekostnad:
-          $ref: "#/components/schemas/Post"
-        årsresultat:
-          $ref: "#/components/schemas/Post"
+        ordinaertResultatFoerSkattekostnad:
+          type: number
+        aarsresultat:
+          type: number
         totalresultat:
-          $ref: "#/components/schemas/Post"
+          type: number
         finansresultat:
           $ref: "#/components/schemas/Finansresultat"
         driftsresultat:
@@ -110,7 +117,7 @@ components:
       type: object
       properties:
         sumEgenkapitalGjeld:
-            $ref: "#/components/schemas/Post"
+            type: number
         egenkapital:
             $ref: "#/components/schemas/Egenkapital"
         gjeldOversikt:
@@ -119,26 +126,26 @@ components:
       type: object
       properties:
         sumEiendeler:
-            $ref: "#/components/schemas/Post"
-        omløpsmidler:
-            $ref: "#/components/schemas/Oml%C3%B8psmidler"
+            type: number
+        omloepsmidler:
+            $ref: "#/components/schemas/Omloepsmidler"
         anleggsmidler:
             $ref: "#/components/schemas/Anleggsmidler"
     Anleggsmidler:
       type: object
       properties:
         sumAnleggsmidler:
-          $ref: "#/components/schemas/Post"
-    Omløpsmidler:
+          type: number
+    Omloepsmidler:
       type: object
       properties:
-        sumOmløpsmidler:
-          $ref: "#/components/schemas/Post"
+        sumOmloepsmidler:
+          type: number
     Finansresultat:
       type: object
       properties:
         nettoFinans:
-          $ref: "#/components/schemas/Post"
+          type: number
         finansinntekt:
           $ref: "#/components/schemas/Finansinntekt"
         finanskostnad:
@@ -147,7 +154,7 @@ components:
       type: object
       properties:
         driftsresultat:
-          $ref: "#/components/schemas/Post"
+          type: number
         driftsinntekter:
           $ref: "#/components/schemas/Driftsinntekter"
         driftskostnad:
@@ -156,25 +163,25 @@ components:
       type: object
       properties:
         sumDriftsinntekter:
-          $ref: "#/components/schemas/Post"
+          type: number
     Driftskostnad:
       type: object
       properties:
         sumDriftskostnad:
-          $ref: "#/components/schemas/Post"
+          type: number
     Finansinntekt:
       type: object
       properties:
         sumFinansinntekter:
-          $ref: "#/components/schemas/Post"
+          type: number
     Finanskostnad:
       type: object
       properties:
         sumFinanskostnad:
-          $ref: "#/components/schemas/Post"
+          type: number
     Virksomhet:
       type: object
-      description: Virksomheten som regnskapet tilhører
+      description: Virksomheten som regnskapet tilhoerer
       properties:
         organisasjonsnummer:
           type: string
@@ -184,26 +191,27 @@ components:
           type: boolean
     Tidsperiode:
       type: object
+      properties:
+        fraDato:
+          type: string
+          format: date
+        tilDato:
+          type: string
+          format: date
     Valutakode:
-      type: object
+      type: string
     Revisjon:
       type: object
-    Post:
-      type: object
       properties:
-        note:
-          type: string
-        årets:
-          type: number
-        fjorårets:
-          type: number
+        ikkeRevidertAarsregnskap:
+          type: boolean
     Regnskapsprinsipper:
       type: object
     Egenkapital:
       type: object
       properties:
         sumEgenkapital:
-          $ref: "#/components/schemas/Post"
+          type: number
         opptjentEgenkapital:
           $ref: "#/components/schemas/OpptjentEgenkapital"
         innskuttEgenkapital:
@@ -212,17 +220,17 @@ components:
       type: object
       properties:
         sumOpptjentEgenkapital:
-          $ref: "#/components/schemas/Post"
+          type: number
     InnskuttEgenkapital:
       type: object
       properties:
         sumInnskuttEgenkaptial:
-          $ref: "#/components/schemas/Post"
+          type: number
     Gjeld:
       type: object
       properties:
         sumGjeld:
-          $ref: "#/components/schemas/Post"
+          type: number
         kortsiktigGjeld:
           $ref: "#/components/schemas/KortsiktigGjeld"
         langsiktigGjeld:
@@ -231,9 +239,9 @@ components:
       type: object
       properties:
         sumKortsiktigGjeld:
-          $ref: "#/components/schemas/Post"
+          type: number
     LangsiktigGjeld:
       type: object
       properties:
         sumLangsiktigGjeld:
-          $ref: "#/components/schemas/Post"
+          type: number
