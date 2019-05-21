@@ -2,11 +2,18 @@ version: "3.5"
 
 services:
   regnskapsregister:
-    build:
-      context: ./
-      args:
-        JAR_FILE: regnskapsregister-api-1.0.0-SNAPSHOT.jar
     image: regnskap/test:latest
+    depends_on:
+      - mongodb
     restart: always
     ports:
       - 127.0.0.1:8080:8080
+
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - $HOME/data/springboot-repository-data:/data/db
+      - $HOME/data/springboot-repository-bkp:/data/bkp
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
