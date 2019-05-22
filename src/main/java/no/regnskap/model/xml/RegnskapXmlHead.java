@@ -39,6 +39,8 @@ public class RegnskapXmlHead {
     private String aarsregnskapstype;
     @JacksonXmlProperty(localName = "land_for_land")
     private boolean landForLand;
+    @JacksonXmlProperty(localName = "revisorberetning_ikke_levert")
+    private boolean revisorberetningIkkeLevert;
 
     public String getOrgnr() {
         return orgnr;
@@ -214,5 +216,13 @@ public class RegnskapXmlHead {
 
     public void setLandForLand(String landForLand) {
         this.landForLand = TRUE_STRING.equals(landForLand);
+    }
+
+    public boolean isRevisorberetningIkkeLevert() {
+        return revisorberetningIkkeLevert;
+    }
+
+    public void setRevisorberetningIkkeLevert(String revisorberetningIkkeLevert) {
+        this.revisorberetningIkkeLevert = TRUE_STRING.equals(revisorberetningIkkeLevert);
     }
 }

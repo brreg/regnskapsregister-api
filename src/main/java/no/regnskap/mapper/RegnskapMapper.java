@@ -34,6 +34,7 @@ public class RegnskapMapper {
             mapped.setMorselskap(xml.getHead().isMorselskap());
             mapped.setReglerSmaa(xml.getHead().isReglerSmaa());
             mapped.setUtarbeidetRegnskapsforer(xml.getHead().isUtarbeidetRegnskapsforer());
+            mapped.setRevisorberetningIkkeLevert(xml.getHead().isRevisorberetningIkkeLevert());
 
             mapped.setAvslutningsdato(localDateFromXmlDateString(xml.getHead().getAvslutningsdato()));
             mapped.setMottattDato(localDateFromXmlDateString(xml.getHead().getMottattDato()));
@@ -48,34 +49,32 @@ public class RegnskapMapper {
     }
 
     public static Regnskap persistanceToGenerated(no.regnskap.model.persistance.Regnskap persistanceDTO) {
-        Regnskap regnskap = new Regnskap();
-        regnskap.setId(persistanceDTO.getId());
-        regnskap.setAvviklingsregnskap(persistanceDTO.isAvviklingsregnskap());
-        regnskap.setValuta(persistanceDTO.getValutakode());
-
-        Virksomhet virksomhet = new Virksomhet();
-        virksomhet.setOrganisasjonsnummer(persistanceDTO.getOrgnr());
-        virksomhet.setOrganisasjonsform(persistanceDTO.getOrgform());
-        virksomhet.setMorselskap(persistanceDTO.isMorselskap());
-        regnskap.setVirksomhet(virksomhet);
-
-        Tidsperiode tidsperiode = new Tidsperiode();
-        tidsperiode.setFraDato(persistanceDTO.getStartdato());
-        tidsperiode.setTilDato(persistanceDTO.getAvslutningsdato());
-        regnskap.setRegnskapsperiode(tidsperiode);
-
-        regnskap.setOppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistanceDTO.getAarsregnskapstype().toLowerCase()));
-
-        Revisjon revisjon = new Revisjon();
-        regnskap.setRevisjon(revisjon);
-
-        regnskap.setRegnkapsprinsipper(null);
-
-        regnskap.setResultatregnskapResultat(persistanceDTO.getFelter().getResultatregnskapResultat());
-        regnskap.setEgenkapitalGjeld(persistanceDTO.getFelter().getEgenkapitalGjeld());
-        regnskap.setEiendeler(persistanceDTO.getFelter().getEiendeler());
-
-        return regnskap;
+        return new Regnskap()
+            .id(persistanceDTO.getId())
+            .avviklingsregnskap(persistanceDTO.isAvviklingsregnskap())
+            .valuta(persistanceDTO.getValutakode())
+            .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistanceDTO.getAarsregnskapstype().toLowerCase()))
+            .revisjon(
+                new Revisjon()
+                    .ikkeRevidertAarsregnskap(persistanceDTO.isRevisorberetningIkkeLevert()))
+            .regnskapsperiode(
+                new Tidsperiode()
+                .fraDato(persistanceDTO.getStartdato())
+                .tilDato(persistanceDTO.getAvslutningsdato()))
+            .regnkapsprinsipper(
+                new Regnskapsprinsipper()
+                    .smaaForetak(persistanceDTO.isReglerSmaa()))
+            .virksomhet(
+                new Virksomhet()
+                    .organisasjonsnummer(persistanceDTO.getOrgnr())
+                    .organisasjonsform(persistanceDTO.getOrgform())
+                    .morselskap(persistanceDTO.isMorselskap())
+                    .levertAarsregnskap(true)
+                    .navn("HentFraEnhetsregisteret")
+            )
+            .egenkapitalGjeld(persistanceDTO.getFelter().getEgenkapitalGjeld())
+            .eiendeler(persistanceDTO.getFelter().getEiendeler())
+            .resultatregnskapResultat(persistanceDTO.getFelter().getResultatregnskapResultat());
     }
 
     private static LocalDate localDateFromXmlDateString(String dateString) {

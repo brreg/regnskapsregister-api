@@ -42,6 +42,8 @@ public class Regnskap {
     private String aarsregnskapstype;
     @Field("land_for_land")
     private boolean landForLand;
+    @Field("revisorberetning_ikke_levert")
+    private boolean revisorberetningIkkeLevert;
     private RegnskapFelt felter;
 
     public String getId() {
@@ -218,6 +220,14 @@ public class Regnskap {
 
     public void setLandForLand(boolean landForLand) {
         this.landForLand = landForLand;
+    }
+
+    public boolean isRevisorberetningIkkeLevert() {
+        return revisorberetningIkkeLevert;
+    }
+
+    public void setRevisorberetningIkkeLevert(boolean revisorberetningIkkeLevert) {
+        this.revisorberetningIkkeLevert = revisorberetningIkkeLevert;
     }
 
     public RegnskapFelt getFelter() {
