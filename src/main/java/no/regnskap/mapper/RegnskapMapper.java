@@ -1,64 +1,45 @@
 package no.regnskap.mapper;
 
-import no.regnskap.generated.model.Virksomhet;
-import no.regnskap.model.persistance.RegnskapFelt;
-import no.regnskap.model.persistance.Regnskap;
+import no.regnskap.generated.model.*;
 import no.regnskap.model.xml.RegnskapXml;
-import no.regnskap.model.xml.RegnskapXmlInfo;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class RegnskapMapper {
 
-
-
-    public static List<Regnskap> mapFromXmlForPersistance(RegnskapXml[] regnskapXml) {
-        Map<String, Regnskap> toPersist = new HashMap<>();
+    public static List<no.regnskap.model.persistance.Regnskap> mapFromXmlForPersistance(RegnskapXml[] regnskapXml) {
+        Map<String, no.regnskap.model.persistance.Regnskap> toPersist = new HashMap<>();
         for (RegnskapXml xml : regnskapXml) {
             String key = xml.getHead().getOrgnr() + xml.getHead().getRegnaar();
-            Regnskap mapped = toPersist.getOrDefault(key, new Regnskap());
+            no.regnskap.model.persistance.Regnskap mapped = toPersist.getOrDefault(key, new no.regnskap.model.persistance.Regnskap());
 
             mapped.setOrgnr(xml.getHead().getOrgnr());
             mapped.setAarsregnskapstype(xml.getHead().getAarsregnskapstype());
-            mapped.setAvslutningsdato(xml.getHead().getAvslutningsdato());
+            mapped.setJournalnr(xml.getHead().getJournalnr());
+            mapped.setMottakstype(xml.getHead().getMottakstype());
+            mapped.setOppstillingsplanVersjonsnr(xml.getHead().getOppstillingsplanVersjonsnr());
+            mapped.setOrgform(xml.getHead().getOrgform());
+            mapped.setRegnaar(xml.getHead().getRegnaar());
+            mapped.setRegnskapstype(xml.getHead().getRegnskapstype());
+            mapped.setValutakode(xml.getHead().getValutakode());
+
             mapped.setAvviklingsregnskap(xml.getHead().isAvviklingsregnskap());
             mapped.setBistandRegnskapsforer(xml.getHead().isBistandRegnskapsforer());
             mapped.setFeilvaloer(xml.getHead().isFeilvaloer());
             mapped.setFleksiblePoster(xml.getHead().isFleksiblePoster());
             mapped.setFravalgRevisjon(xml.getHead().isFravalgRevisjon());
-            mapped.setJournalnr(xml.getHead().getJournalnr());
             mapped.setLandForLand(xml.getHead().isLandForLand());
             mapped.setMorselskap(xml.getHead().isMorselskap());
-            mapped.setMottakstype(xml.getHead().getMottakstype());
-            mapped.setMottattDato(xml.getHead().getMottattDato());
-            mapped.setOppstillingsplanVersjonsnr(xml.getHead().getOppstillingsplanVersjonsnr());
-            mapped.setOrgform(xml.getHead().getOrgform());
             mapped.setReglerSmaa(xml.getHead().isReglerSmaa());
-            mapped.setRegnaar(xml.getHead().getRegnaar());
-            mapped.setRegnskapstype(xml.getHead().getRegnskapstype());
-            mapped.setStartdato(xml.getHead().getStartdato());
             mapped.setUtarbeidetRegnskapsforer(xml.getHead().isUtarbeidetRegnskapsforer());
-            mapped.setValutakode(xml.getHead().getValutakode());
 
-            Set<RegnskapFelt> fields = new HashSet<>();
-            if(mapped.getFelter() != null) {
-                fields.addAll(mapped.getFelter());
-            }
+            mapped.setAvslutningsdato(localDateFromXmlDateString(xml.getHead().getAvslutningsdato()));
+            mapped.setMottattDato(localDateFromXmlDateString(xml.getHead().getMottattDato()));
+            mapped.setStartdato(localDateFromXmlDateString(xml.getHead().getStartdato()));
 
-            for (RegnskapXmlInfo post : xml.getPosts()) {
-                RegnskapFelt field = new RegnskapFelt();
-
-                field.setFeltkode(post.getFeltkode());
-                field.setSum(post.getSum());
-
-                fields.add(field);
-            }
-
-            mapped.setFelter(new ArrayList<>(fields));
+            mapped.setFelter(RegnskapsFeltMapper.mapFieldsFromXmlData(mapped.getFelter(), xml.getPosts()));
 
             toPersist.put(key, mapped);
         }
@@ -66,10 +47,11 @@ public class RegnskapMapper {
         return new ArrayList<>(toPersist.values());
     }
 
-    public static no.regnskap.generated.model.Regnskap persistanceToGenerated(Regnskap persistanceDTO) {
-        no.regnskap.generated.model.Regnskap regnskap = new no.regnskap.generated.model.Regnskap();
+    public static Regnskap persistanceToGenerated(no.regnskap.model.persistance.Regnskap persistanceDTO) {
+        Regnskap regnskap = new Regnskap();
         regnskap.setId(persistanceDTO.getId());
         regnskap.setAvviklingsregnskap(persistanceDTO.isAvviklingsregnskap());
+        regnskap.setValuta(persistanceDTO.getValutakode());
 
         Virksomhet virksomhet = new Virksomhet();
         virksomhet.setOrganisasjonsnummer(persistanceDTO.getOrgnr());
@@ -77,7 +59,28 @@ public class RegnskapMapper {
         virksomhet.setMorselskap(persistanceDTO.isMorselskap());
         regnskap.setVirksomhet(virksomhet);
 
+        Tidsperiode tidsperiode = new Tidsperiode();
+        tidsperiode.setFraDato(persistanceDTO.getStartdato());
+        tidsperiode.setTilDato(persistanceDTO.getAvslutningsdato());
+        regnskap.setRegnskapsperiode(tidsperiode);
+
+        regnskap.setOppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistanceDTO.getAarsregnskapstype().toLowerCase()));
+
+        Revisjon revisjon = new Revisjon();
+        regnskap.setRevisjon(revisjon);
+
+        regnskap.setRegnkapsprinsipper(null);
+
+        regnskap.setResultatregnskapResultat(persistanceDTO.getFelter().getResultatregnskapResultat());
+        regnskap.setEgenkapitalGjeld(persistanceDTO.getFelter().getEgenkapitalGjeld());
+        regnskap.setEiendeler(persistanceDTO.getFelter().getEiendeler());
+
         return regnskap;
+    }
+
+    private static LocalDate localDateFromXmlDateString(String dateString) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return LocalDate.parse(dateString, dateTimeFormatter);
     }
 
 }

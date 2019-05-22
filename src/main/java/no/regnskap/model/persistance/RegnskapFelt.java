@@ -1,22 +1,38 @@
 package no.regnskap.model.persistance;
 
+import no.regnskap.generated.model.EgenkapitalGjeld;
+import no.regnskap.generated.model.Eiendeler;
+import no.regnskap.generated.model.ResultatregnskapResultat;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 public class RegnskapFelt {
-    private String feltkode;
-    private long sum;
+    private Eiendeler eiendeler;
+    @Field("egenkapital_gjeld")
+    private EgenkapitalGjeld egenkapitalGjeld;
+    @Field("resultatregnskap_resultat")
+    private ResultatregnskapResultat resultatregnskapResultat;
 
-    public String getFeltkode() {
-        return feltkode;
+    public Eiendeler getEiendeler() {
+        return eiendeler;
     }
 
-    public void setFeltkode(String feltkode) {
-        this.feltkode = feltkode;
+    public void setEiendeler(Eiendeler eiendeler) {
+        this.eiendeler = eiendeler;
     }
 
-    public long getSum() {
-        return sum;
+    public EgenkapitalGjeld getEgenkapitalGjeld() {
+        return egenkapitalGjeld;
     }
 
-    public void setSum(long sum) {
-        this.sum = sum;
+    public void setEgenkapitalGjeld(EgenkapitalGjeld egenkapitalGjeld) {
+        this.egenkapitalGjeld = egenkapitalGjeld;
+    }
+
+    public ResultatregnskapResultat getResultatregnskapResultat() {
+        return resultatregnskapResultat;
+    }
+
+    public void setResultatregnskapResultat(ResultatregnskapResultat resultatregnskapResultat) {
+        this.resultatregnskapResultat = resultatregnskapResultat;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Document("regnskap")
 public class Regnskap {
@@ -18,14 +18,14 @@ public class Regnskap {
     @Field("oppstillingsplan_versjonsnr")
     private String oppstillingsplanVersjonsnr;
     private String valutakode;
-    private String startdato;
-    private String avslutningsdato;
+    private LocalDate startdato;
+    private LocalDate avslutningsdato;
     private String mottakstype;
     private boolean avviklingsregnskap;
     private boolean feilvaloer;
     private String journalnr;
     @Field("mottatt_dato")
-    private String mottattDato;
+    private LocalDate mottattDato;
     private String orgform;
     @Field("mor_i_konsern")
     private boolean morselskap;
@@ -42,7 +42,7 @@ public class Regnskap {
     private String aarsregnskapstype;
     @Field("land_for_land")
     private boolean landForLand;
-    private List<RegnskapFelt> felter;
+    private RegnskapFelt felter;
 
     public String getId() {
         return _id;
@@ -92,19 +92,19 @@ public class Regnskap {
         this.valutakode = valutakode;
     }
 
-    public String getStartdato() {
+    public LocalDate getStartdato() {
         return startdato;
     }
 
-    public void setStartdato(String startdato) {
+    public void setStartdato(LocalDate startdato) {
         this.startdato = startdato;
     }
 
-    public String getAvslutningsdato() {
+    public LocalDate getAvslutningsdato() {
         return avslutningsdato;
     }
 
-    public void setAvslutningsdato(String avslutningsdato) {
+    public void setAvslutningsdato(LocalDate avslutningsdato) {
         this.avslutningsdato = avslutningsdato;
     }
 
@@ -140,11 +140,11 @@ public class Regnskap {
         this.journalnr = journalnr;
     }
 
-    public String getMottattDato() {
+    public LocalDate getMottattDato() {
         return mottattDato;
     }
 
-    public void setMottattDato(String mottattDato) {
+    public void setMottattDato(LocalDate mottattDato) {
         this.mottattDato = mottattDato;
     }
 
@@ -220,11 +220,11 @@ public class Regnskap {
         this.landForLand = landForLand;
     }
 
-    public List<RegnskapFelt> getFelter() {
+    public RegnskapFelt getFelter() {
         return felter;
     }
 
-    public void setFelter(List<RegnskapFelt> felter) {
+    public void setFelter(RegnskapFelt felter) {
         this.felter = felter;
     }
 }
