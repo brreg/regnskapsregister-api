@@ -185,9 +185,13 @@ components:
       properties:
         organisasjonsnummer:
           type: string
+        navn:
+          type: string
         organisasjonsform:
           type: string
         morselskap:
+          type: boolean
+        levertAarsregnskap:
           type: boolean
     Tidsperiode:
       type: object
@@ -207,6 +211,15 @@ components:
           type: boolean
     Regnskapsprinsipper:
       type: object
+      properties:
+        smaaForetak:
+          type: boolean
+        regskapsregler:
+          type: string
+          enum:
+            - IFRS
+            - forenkletAnvendelseIFRS
+            - regnskapslovenAlminneligRegler
     Egenkapital:
       type: object
       properties:
