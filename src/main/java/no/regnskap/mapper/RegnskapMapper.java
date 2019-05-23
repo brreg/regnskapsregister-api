@@ -3,19 +3,17 @@ package no.regnskap.mapper;
 import no.regnskap.generated.model.*;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.model.RegnskapXml;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static no.regnskap.mapper.RegnskapFieldsMapperKt.mapFieldsFromXmlData;
+
 @Component
 public class RegnskapMapper {
     private final String XML_TRUE_STRING = "J";
-
-    @Autowired
-    private RegnskapFieldsMapper fieldsMapper;
 
     public List<RegnskapDB> mapFromXmlForPersistance(List<RegnskapXml> regnskapXml) {
         Map<String, RegnskapDB> toPersist = new HashMap<>();
@@ -48,7 +46,7 @@ public class RegnskapMapper {
             mapped.setMottattDato(localDateFromXmlDateString(xml.getHead().getMottattDato()));
             mapped.setStartdato(localDateFromXmlDateString(xml.getHead().getStartdato()));
 
-            mapped.setFields(fieldsMapper.mapFieldsFromXmlData(mapped.getFields(), xml.getPosts()));
+            mapped.setFields(mapFieldsFromXmlData(mapped.getFields(), xml.getPosts()));
 
             toPersist.put(key, mapped);
         }

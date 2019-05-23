@@ -1,8 +1,6 @@
 package no.regnskap.model
 
-import no.regnskap.generated.model.EgenkapitalGjeld
-import no.regnskap.generated.model.Eiendeler
-import no.regnskap.generated.model.ResultatregnskapResultat
+import no.regnskap.generated.model.*
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
@@ -19,9 +17,31 @@ class Checksum (
 }
 
 data class RegnskapFieldsDB (
-    var eiendeler: Eiendeler? = null,
-    var egenkapitalGjeld: EgenkapitalGjeld? = null,
-    var resultatregnskapResultat: ResultatregnskapResultat? = null
+
+    val eiendeler: Eiendeler = Eiendeler()
+        .anleggsmidler(Anleggsmidler())
+        .omloepsmidler(Omloepsmidler()),
+
+    val egenkapitalGjeld: EgenkapitalGjeld = EgenkapitalGjeld()
+        .egenkapital(
+            Egenkapital()
+                .innskuttEgenkapital(InnskuttEgenkapital())
+                .opptjentEgenkapital(OpptjentEgenkapital()))
+        .gjeldOversikt(
+            Gjeld()
+                .kortsiktigGjeld(KortsiktigGjeld())
+                .langsiktigGjeld(LangsiktigGjeld())),
+
+    val resultatregnskapResultat: ResultatregnskapResultat = ResultatregnskapResultat()
+        .driftsresultat(
+            Driftsresultat()
+                .driftsinntekter(Driftsinntekter())
+                .driftskostnad(Driftskostnad()))
+        .finansresultat(
+            Finansresultat()
+                .finansinntekt(Finansinntekt())
+                .finanskostnad(Finanskostnad()))
+
 )
 
 @Document("regnskap")
