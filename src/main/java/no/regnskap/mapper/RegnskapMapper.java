@@ -1,7 +1,7 @@
 package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
-import no.regnskap.model.persistance.RegnskapDB;
+import no.regnskap.model.RegnskapDB;
 import no.regnskap.model.RegnskapXml;
 
 import java.time.LocalDate;
@@ -57,25 +57,25 @@ public class RegnskapMapper {
     public static Regnskap persistanceToGenerated(RegnskapDB persistanceDTO) {
         return new Regnskap()
             .id(persistanceDTO.getId())
-            .avviklingsregnskap(persistanceDTO.isAvviklingsregnskap())
+            .avviklingsregnskap(persistanceDTO.getAvviklingsregnskap())
             .valuta(persistanceDTO.getValutakode())
             .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistanceDTO.getAarsregnskapstype().toLowerCase()))
             .revisjon(
                 new Revisjon()
-                    .ikkeRevidertAarsregnskap(persistanceDTO.isRevisorberetningIkkeLevert()))
+                    .ikkeRevidertAarsregnskap(persistanceDTO.getRevisorberetningIkkeLevert()))
             .regnskapsperiode(
                 new Tidsperiode()
                 .fraDato(persistanceDTO.getStartdato())
                 .tilDato(persistanceDTO.getAvslutningsdato()))
             .regnkapsprinsipper(
                 new Regnskapsprinsipper()
-                    .smaaForetak(persistanceDTO.isReglerSmaa())
+                    .smaaForetak(persistanceDTO.getReglerSmaa())
                     .regskapsregler(null)) //TODO Change to correct value
             .virksomhet(
                 new Virksomhet()
                     .organisasjonsnummer(persistanceDTO.getOrgnr())
                     .organisasjonsform(persistanceDTO.getOrgform())
-                    .morselskap(persistanceDTO.isMorselskap())
+                    .morselskap(persistanceDTO.getMorselskap())
                     .levertAarsregnskap(true) // TODO Change to correct value
                     .navn(null)) // TODO Change to correct value
             .egenkapitalGjeld(persistanceDTO.getFields().getEgenkapitalGjeld())

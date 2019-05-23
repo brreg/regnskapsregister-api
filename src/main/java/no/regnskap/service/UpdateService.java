@@ -2,8 +2,8 @@ package no.regnskap.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import no.regnskap.mapper.RegnskapMapper;
-import no.regnskap.model.persistance.Checksum;
-import no.regnskap.model.persistance.RegnskapDB;
+import no.regnskap.model.Checksum;
+import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
 import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.model.RegnskapXmlWrap;

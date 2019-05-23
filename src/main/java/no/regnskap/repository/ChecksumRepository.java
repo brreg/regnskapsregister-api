@@ -1,6 +1,6 @@
 package no.regnskap.repository;
 
-import no.regnskap.model.persistance.Checksum;
+import no.regnskap.model.Checksum;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

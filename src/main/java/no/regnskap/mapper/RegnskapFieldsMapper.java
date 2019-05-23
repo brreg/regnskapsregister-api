@@ -1,7 +1,7 @@
 package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
-import no.regnskap.model.persistance.RegnskapFieldsDB;
+import no.regnskap.model.RegnskapFieldsDB;
 import no.regnskap.model.RegnskapXmlInfo;
 
 import java.util.List;
