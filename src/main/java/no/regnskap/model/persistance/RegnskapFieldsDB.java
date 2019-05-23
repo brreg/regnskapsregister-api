@@ -5,7 +5,7 @@ import no.regnskap.generated.model.Eiendeler;
 import no.regnskap.generated.model.ResultatregnskapResultat;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-public class RegnskapFelt {
+public class RegnskapFieldsDB {
     private Eiendeler eiendeler;
     @Field("egenkapital_gjeld")
     private EgenkapitalGjeld egenkapitalGjeld;

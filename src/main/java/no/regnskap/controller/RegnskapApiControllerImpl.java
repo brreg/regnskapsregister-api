@@ -2,7 +2,6 @@ package no.regnskap.controller;
 
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
-import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.service.RegnskapService;
 import no.regnskap.service.UpdateService;
 import no.regnskap.model.xml.RegnskapWrap;
@@ -32,9 +31,6 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
 
     @Autowired
     private RegnskapService regnskapService;
-
-    @Autowired
-    private RegnskapRepository repository;
 
     @RequestMapping(value="/ping", method=GET, produces={"text/plain"})
     public ResponseEntity<String> getPing() {

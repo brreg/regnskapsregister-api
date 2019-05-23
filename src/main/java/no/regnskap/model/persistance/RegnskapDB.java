@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 
 @Document("regnskap")
-public class Regnskap {
+public class RegnskapDB {
     @Id
     private String _id;
     @Indexed
@@ -44,7 +44,7 @@ public class Regnskap {
     private boolean landForLand;
     @Field("revisorberetning_ikke_levert")
     private boolean revisorberetningIkkeLevert;
-    private RegnskapFelt felter;
+    private RegnskapFieldsDB fields;
 
     public String getId() {
         return _id;
@@ -230,11 +230,11 @@ public class Regnskap {
         this.revisorberetningIkkeLevert = revisorberetningIkkeLevert;
     }
 
-    public RegnskapFelt getFelter() {
-        return felter;
+    public RegnskapFieldsDB getFields() {
+        return fields;
     }
 
-    public void setFelter(RegnskapFelt felter) {
-        this.felter = felter;
+    public void setFields(RegnskapFieldsDB fields) {
+        this.fields = fields;
     }
 }

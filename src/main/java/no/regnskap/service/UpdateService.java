@@ -3,7 +3,7 @@ package no.regnskap.service;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import no.regnskap.mapper.RegnskapMapper;
 import no.regnskap.model.persistance.Checksum;
-import no.regnskap.model.persistance.Regnskap;
+import no.regnskap.model.persistance.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
 import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.model.xml.RegnskapWrap;
@@ -16,7 +16,6 @@ import java.util.List;
 
 @Service
 public class UpdateService {
-    public static final String TRUE_STRING = "J";
 
     @Autowired
     private RegnskapRepository regnskapRepository;
@@ -30,7 +29,7 @@ public class UpdateService {
 
         if(checksumRepository.findOneByChecksum(checksum) == null) {
             RegnskapWrap deserialized = deserializeXmlString(xmlString);
-            List<Regnskap> listToPersist = RegnskapMapper.mapFromXmlForPersistance(deserialized.getList());
+            List<RegnskapDB> listToPersist = RegnskapMapper.mapFromXmlForPersistance(deserialized.getList());
 
             regnskapRepository.saveAll(listToPersist);
 

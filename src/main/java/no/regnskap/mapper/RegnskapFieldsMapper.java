@@ -1,10 +1,10 @@
 package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
-import no.regnskap.model.persistance.RegnskapFelt;
+import no.regnskap.model.persistance.RegnskapFieldsDB;
 import no.regnskap.model.xml.RegnskapXmlInfo;
 
-class RegnskapsFeltMapper {
+class RegnskapFieldsMapper {
     private final static String FELTKODE_EIENDELER = "219";
     private final static String FELTKODE_ANLEGGSMIDLER = "217";
     private final static String FELTKODE_OMLOEPSMIDLER = "194";
@@ -26,7 +26,7 @@ class RegnskapsFeltMapper {
     private final static String FELTKODE_FINANSKOSTNAD = "17130";
 
 
-    static RegnskapFelt mapFieldsFromXmlData(RegnskapFelt felter, RegnskapXmlInfo[] xmlData) {
+    static RegnskapFieldsDB mapFieldsFromXmlData(RegnskapFieldsDB felter, RegnskapXmlInfo[] xmlData) {
         Eiendeler eiendeler;
         Anleggsmidler anleggsmidler;
         Omloepsmidler omloepsmidler;
@@ -46,7 +46,7 @@ class RegnskapsFeltMapper {
         Finanskostnad finanskostnad;
 
         if (felter == null){
-            felter = new RegnskapFelt();
+            felter = new RegnskapFieldsDB();
             eiendeler = new Eiendeler();
             anleggsmidler = new Anleggsmidler();
             omloepsmidler = new Omloepsmidler();

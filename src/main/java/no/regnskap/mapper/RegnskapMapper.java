@@ -1,6 +1,7 @@
 package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
+import no.regnskap.model.persistance.RegnskapDB;
 import no.regnskap.model.xml.RegnskapXml;
 
 import java.time.LocalDate;
@@ -8,12 +9,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class RegnskapMapper {
+    private static final String XML_TRUE_STRING = "J";
 
-    public static List<no.regnskap.model.persistance.Regnskap> mapFromXmlForPersistance(RegnskapXml[] regnskapXml) {
-        Map<String, no.regnskap.model.persistance.Regnskap> toPersist = new HashMap<>();
+    public static List<RegnskapDB> mapFromXmlForPersistance(RegnskapXml[] regnskapXml) {
+        Map<String, RegnskapDB> toPersist = new HashMap<>();
         for (RegnskapXml xml : regnskapXml) {
             String key = xml.getHead().getOrgnr() + xml.getHead().getRegnaar();
-            no.regnskap.model.persistance.Regnskap mapped = toPersist.getOrDefault(key, new no.regnskap.model.persistance.Regnskap());
+            RegnskapDB mapped = toPersist.getOrDefault(key, new RegnskapDB());
 
             mapped.setOrgnr(xml.getHead().getOrgnr());
             mapped.setAarsregnskapstype(xml.getHead().getAarsregnskapstype());
@@ -25,22 +27,22 @@ public class RegnskapMapper {
             mapped.setRegnskapstype(xml.getHead().getRegnskapstype());
             mapped.setValutakode(xml.getHead().getValutakode());
 
-            mapped.setAvviklingsregnskap(xml.getHead().isAvviklingsregnskap());
-            mapped.setBistandRegnskapsforer(xml.getHead().isBistandRegnskapsforer());
-            mapped.setFeilvaloer(xml.getHead().isFeilvaloer());
-            mapped.setFleksiblePoster(xml.getHead().isFleksiblePoster());
-            mapped.setFravalgRevisjon(xml.getHead().isFravalgRevisjon());
-            mapped.setLandForLand(xml.getHead().isLandForLand());
-            mapped.setMorselskap(xml.getHead().isMorselskap());
-            mapped.setReglerSmaa(xml.getHead().isReglerSmaa());
-            mapped.setUtarbeidetRegnskapsforer(xml.getHead().isUtarbeidetRegnskapsforer());
-            mapped.setRevisorberetningIkkeLevert(xml.getHead().isRevisorberetningIkkeLevert());
+            mapped.setAvviklingsregnskap(booleanFromXmlData(xml.getHead().getAvviklingsregnskap()));
+            mapped.setBistandRegnskapsforer(booleanFromXmlData(xml.getHead().getBistandRegnskapsforer()));
+            mapped.setFeilvaloer(booleanFromXmlData(xml.getHead().getFeilvaloer()));
+            mapped.setFleksiblePoster(booleanFromXmlData(xml.getHead().getFleksiblePoster()));
+            mapped.setFravalgRevisjon(booleanFromXmlData(xml.getHead().getFravalgRevisjon()));
+            mapped.setLandForLand(booleanFromXmlData(xml.getHead().getLandForLand()));
+            mapped.setMorselskap(booleanFromXmlData(xml.getHead().getMorselskap()));
+            mapped.setReglerSmaa(booleanFromXmlData(xml.getHead().getReglerSmaa()));
+            mapped.setUtarbeidetRegnskapsforer(booleanFromXmlData(xml.getHead().getUtarbeidetRegnskapsforer()));
+            mapped.setRevisorberetningIkkeLevert(booleanFromXmlData(xml.getHead().getRevisorberetningIkkeLevert()));
 
             mapped.setAvslutningsdato(localDateFromXmlDateString(xml.getHead().getAvslutningsdato()));
             mapped.setMottattDato(localDateFromXmlDateString(xml.getHead().getMottattDato()));
             mapped.setStartdato(localDateFromXmlDateString(xml.getHead().getStartdato()));
 
-            mapped.setFelter(RegnskapsFeltMapper.mapFieldsFromXmlData(mapped.getFelter(), xml.getPosts()));
+            mapped.setFields(RegnskapFieldsMapper.mapFieldsFromXmlData(mapped.getFields(), xml.getPosts()));
 
             toPersist.put(key, mapped);
         }
@@ -48,7 +50,11 @@ public class RegnskapMapper {
         return new ArrayList<>(toPersist.values());
     }
 
-    public static Regnskap persistanceToGenerated(no.regnskap.model.persistance.Regnskap persistanceDTO) {
+    private static boolean booleanFromXmlData(String trueOrFalse) {
+        return XML_TRUE_STRING.equals(trueOrFalse);
+    }
+
+    public static Regnskap persistanceToGenerated(RegnskapDB persistanceDTO) {
         return new Regnskap()
             .id(persistanceDTO.getId())
             .avviklingsregnskap(persistanceDTO.isAvviklingsregnskap())
@@ -63,18 +69,18 @@ public class RegnskapMapper {
                 .tilDato(persistanceDTO.getAvslutningsdato()))
             .regnkapsprinsipper(
                 new Regnskapsprinsipper()
-                    .smaaForetak(persistanceDTO.isReglerSmaa()))
+                    .smaaForetak(persistanceDTO.isReglerSmaa())
+                    .regskapsregler(null)) //TODO Change to correct value
             .virksomhet(
                 new Virksomhet()
                     .organisasjonsnummer(persistanceDTO.getOrgnr())
                     .organisasjonsform(persistanceDTO.getOrgform())
                     .morselskap(persistanceDTO.isMorselskap())
-                    .levertAarsregnskap(true)
-                    .navn("HentFraEnhetsregisteret")
-            )
-            .egenkapitalGjeld(persistanceDTO.getFelter().getEgenkapitalGjeld())
-            .eiendeler(persistanceDTO.getFelter().getEiendeler())
-            .resultatregnskapResultat(persistanceDTO.getFelter().getResultatregnskapResultat());
+                    .levertAarsregnskap(true) // TODO Change to correct value
+                    .navn(null)) // TODO Change to correct value
+            .egenkapitalGjeld(persistanceDTO.getFields().getEgenkapitalGjeld())
+            .eiendeler(persistanceDTO.getFields().getEiendeler())
+            .resultatregnskapResultat(persistanceDTO.getFields().getResultatregnskapResultat());
     }
 
     private static LocalDate localDateFromXmlDateString(String dateString) {
