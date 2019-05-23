@@ -1,6 +1,22 @@
 package no.regnskap.model
 
-import no.regnskap.generated.model.*
+import no.regnskap.generated.model.Anleggsmidler
+import no.regnskap.generated.model.Driftsinntekter
+import no.regnskap.generated.model.Driftskostnad
+import no.regnskap.generated.model.Driftsresultat
+import no.regnskap.generated.model.Egenkapital
+import no.regnskap.generated.model.EgenkapitalGjeld
+import no.regnskap.generated.model.Eiendeler
+import no.regnskap.generated.model.Finansinntekt
+import no.regnskap.generated.model.Finanskostnad
+import no.regnskap.generated.model.Finansresultat
+import no.regnskap.generated.model.Gjeld
+import no.regnskap.generated.model.InnskuttEgenkapital
+import no.regnskap.generated.model.KortsiktigGjeld
+import no.regnskap.generated.model.LangsiktigGjeld
+import no.regnskap.generated.model.Omloepsmidler
+import no.regnskap.generated.model.OpptjentEgenkapital
+import no.regnskap.generated.model.ResultatregnskapResultat
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
@@ -46,29 +62,29 @@ data class RegnskapFieldsDB (
 
 @Document("regnskap")
 data class RegnskapDB (
-    @Indexed var orgnr: String? = null,
-    var regnskapstype: String? = null,
-    var regnaar: Int? = null,
-    var oppstillingsplanVersjonsnr: String? = null,
-    var valutakode: String? = null,
-    var startdato: LocalDate? = null,
-    var avslutningsdato: LocalDate? = null,
-    var mottakstype: String? = null,
-    var avviklingsregnskap: Boolean = false,
-    var feilvaloer: Boolean = false,
-    var journalnr: String? = null,
-    var mottattDato: LocalDate? = null,
-    var orgform: String? = null,
-    var morselskap: Boolean = false,
-    var reglerSmaa: Boolean = false,
-    var fleksiblePoster: Boolean = false,
-    var fravalgRevisjon: Boolean = false,
-    var utarbeidetRegnskapsforer: Boolean = false,
-    var bistandRegnskapsforer: Boolean = false,
-    var aarsregnskapstype: String? = null,
-    var landForLand: Boolean = false,
-    var revisorberetningIkkeLevert: Boolean = false,
-    var fields: RegnskapFieldsDB? = null
+    @Indexed val orgnr: String,
+    val regnskapstype: String,
+    val regnaar: Int,
+    val oppstillingsplanVersjonsnr: String,
+    val valutakode: String,
+    val startdato: LocalDate,
+    val avslutningsdato: LocalDate,
+    val mottakstype: String,
+    val avviklingsregnskap: Boolean,
+    val feilvaloer: Boolean,
+    val journalnr: String,
+    val mottattDato: LocalDate,
+    val orgform: String,
+    val morselskap: Boolean,
+    val reglerSmaa: Boolean,
+    val fleksiblePoster: Boolean,
+    val fravalgRevisjon: Boolean,
+    val utarbeidetRegnskapsforer: Boolean,
+    val bistandRegnskapsforer: Boolean,
+    val aarsregnskapstype: String,
+    val landForLand: Boolean,
+    val revisorberetningIkkeLevert: Boolean,
+    val fields: RegnskapFieldsDB = RegnskapFieldsDB()
 ) {
     @Id
     @Field("_id")

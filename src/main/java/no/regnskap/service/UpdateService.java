@@ -1,7 +1,6 @@
 package no.regnskap.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import no.regnskap.mapper.RegnskapMapper;
 import no.regnskap.model.Checksum;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
@@ -14,6 +13,8 @@ import org.springframework.util.DigestUtils;
 import java.io.*;
 import java.util.List;
 
+import static no.regnskap.mapper.RegnskapMapperKt.mapXmlListForPersistence;
+
 @Service
 public class UpdateService {
 
@@ -23,16 +24,13 @@ public class UpdateService {
     @Autowired
     private ChecksumRepository checksumRepository;
 
-    @Autowired
-    private RegnskapMapper regnskapMapper;
-
     public RegnskapXmlWrap update() throws IOException {
         String xmlString = getXmlString();
         String checksum = DigestUtils.md5DigestAsHex(xmlString.getBytes());
 
         if(checksumRepository.findOneByChecksum(checksum) == null) {
             RegnskapXmlWrap deserialized = deserializeXmlString(xmlString);
-            List<RegnskapDB> listToPersist = regnskapMapper.mapFromXmlForPersistance(deserialized.getList());
+            List<RegnskapDB> listToPersist = mapXmlListForPersistence(deserialized.getList());
 
             regnskapRepository.saveAll(listToPersist);
 
