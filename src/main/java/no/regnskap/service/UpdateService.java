@@ -6,7 +6,7 @@ import no.regnskap.model.persistance.Checksum;
 import no.regnskap.model.persistance.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.model.xml.RegnskapWrap;
+import no.regnskap.model.RegnskapXmlWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -23,12 +23,12 @@ public class UpdateService {
     @Autowired
     private ChecksumRepository checksumRepository;
 
-    public RegnskapWrap update() throws IOException {
+    public RegnskapXmlWrap update() throws IOException {
         String xmlString = getXmlString();
         String checksum = DigestUtils.md5DigestAsHex(xmlString.getBytes());
 
         if(checksumRepository.findOneByChecksum(checksum) == null) {
-            RegnskapWrap deserialized = deserializeXmlString(xmlString);
+            RegnskapXmlWrap deserialized = deserializeXmlString(xmlString);
             List<RegnskapDB> listToPersist = RegnskapMapper.mapFromXmlForPersistance(deserialized.getList());
 
             regnskapRepository.saveAll(listToPersist);
@@ -41,9 +41,9 @@ public class UpdateService {
         return null;
     }
 
-    private RegnskapWrap deserializeXmlString(String xmlString) throws IOException {
+    private RegnskapXmlWrap deserializeXmlString(String xmlString) throws IOException {
         XmlMapper xmlMapper = new XmlMapper();
-        return xmlMapper.readValue(xmlString, RegnskapWrap.class);
+        return xmlMapper.readValue(xmlString, RegnskapXmlWrap.class);
     }
 
     private String getXmlString() throws IOException {

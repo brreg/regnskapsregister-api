@@ -2,7 +2,9 @@ package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
 import no.regnskap.model.persistance.RegnskapFieldsDB;
-import no.regnskap.model.xml.RegnskapXmlInfo;
+import no.regnskap.model.RegnskapXmlInfo;
+
+import java.util.List;
 
 class RegnskapFieldsMapper {
     private final static String FELTKODE_EIENDELER = "219";
@@ -26,7 +28,7 @@ class RegnskapFieldsMapper {
     private final static String FELTKODE_FINANSKOSTNAD = "17130";
 
 
-    static RegnskapFieldsDB mapFieldsFromXmlData(RegnskapFieldsDB felter, RegnskapXmlInfo[] xmlData) {
+    static RegnskapFieldsDB mapFieldsFromXmlData(RegnskapFieldsDB felter, List<RegnskapXmlInfo> xmlData) {
         Eiendeler eiendeler;
         Anleggsmidler anleggsmidler;
         Omloepsmidler omloepsmidler;

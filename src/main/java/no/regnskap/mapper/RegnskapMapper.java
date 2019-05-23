@@ -2,7 +2,7 @@ package no.regnskap.mapper;
 
 import no.regnskap.generated.model.*;
 import no.regnskap.model.persistance.RegnskapDB;
-import no.regnskap.model.xml.RegnskapXml;
+import no.regnskap.model.RegnskapXml;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +11,7 @@ import java.util.*;
 public class RegnskapMapper {
     private static final String XML_TRUE_STRING = "J";
 
-    public static List<RegnskapDB> mapFromXmlForPersistance(RegnskapXml[] regnskapXml) {
+    public static List<RegnskapDB> mapFromXmlForPersistance(List<RegnskapXml> regnskapXml) {
         Map<String, RegnskapDB> toPersist = new HashMap<>();
         for (RegnskapXml xml : regnskapXml) {
             String key = xml.getHead().getOrgnr() + xml.getHead().getRegnaar();
