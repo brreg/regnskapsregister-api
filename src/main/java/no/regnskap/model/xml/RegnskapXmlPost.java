@@ -1,4 +1,4 @@
-package no.regnskap.service.xml;
+package no.regnskap.model.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -14,7 +14,7 @@ public class RegnskapXmlPost {
     @JacksonXmlProperty(isAttribute = true)
     private String nr;
 
-    private Long tall;
+    private BigDecimal tall;
     private String notehenvisning;
     private String fritekst;
 
@@ -34,12 +34,12 @@ public class RegnskapXmlPost {
         this.nr = nr;
     }
 
-    public Long getTall() {
+    public BigDecimal getTall() {
         return tall;
     }
 
     public void setTall(BigDecimal tall) {
-        this.tall = tall.longValue();
+        this.tall = tall;
     }
 
     public String getNotehenvisning() {

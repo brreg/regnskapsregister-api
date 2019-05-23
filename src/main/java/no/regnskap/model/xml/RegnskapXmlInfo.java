@@ -1,14 +1,15 @@
-package no.regnskap.service.xml;
+package no.regnskap.model.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import no.regnskap.model.xml.RegnskapXmlPost;
 
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegnskapXmlInfo {
     private String feltkode;
-    private Long sum;
+    private BigDecimal sum;
 
     @JacksonXmlElementWrapper(useWrapping = false)
     private RegnskapXmlPost[] post;
@@ -17,7 +18,7 @@ public class RegnskapXmlInfo {
         return feltkode;
     }
 
-    public Long getSum() {
+    public BigDecimal getSum() {
         return sum;
     }
 
@@ -30,7 +31,7 @@ public class RegnskapXmlInfo {
     }
 
     public void setSum(BigDecimal sum) {
-        this.sum = sum.longValue();
+        this.sum = sum;
     }
 
     public void setPost(RegnskapXmlPost[] post) {

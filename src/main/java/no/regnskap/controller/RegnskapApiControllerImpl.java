@@ -2,10 +2,9 @@ package no.regnskap.controller;
 
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
-import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.service.RegnskapService;
-import no.regnskap.service.xml.RegnskapWrap;
-import no.regnskap.service.xml.RegnskapXml;
+import no.regnskap.service.UpdateService;
+import no.regnskap.model.xml.RegnskapWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -29,10 +27,10 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     private static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiControllerImpl.class);
 
     @Autowired
-    private RegnskapService service;
+    private UpdateService updateService;
 
     @Autowired
-    private RegnskapRepository repository;
+    private RegnskapService regnskapService;
 
     @RequestMapping(value="/ping", method=GET, produces={"text/plain"})
     public ResponseEntity<String> getPing() {
@@ -45,33 +43,20 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
     }
 
     @RequestMapping(value="/regnskap/update", method=GET)
-    public ResponseEntity<RegnskapWrap> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException, SQLException {
-        return new ResponseEntity<>(service.update(), HttpStatus.OK);
+    public ResponseEntity<RegnskapWrap> checkForUpdatedFile(HttpServletRequest httpServletRequest) throws IOException {
+        return new ResponseEntity<>(updateService.update(), HttpStatus.OK);
     }
-/*
-    @RequestMapping(value="/regnskap/find", method=GET)
-    public ResponseEntity<List<RegnskapXml>> findOne(HttpServletRequest httpServletRequest) {
-        return new ResponseEntity<>(repository.findByListHeadOrgnr("980919676"), HttpStatus.OK);
-    }
-*/
+
     @Override
     public ResponseEntity<List<Regnskap>> getRegnskap(HttpServletRequest httpServletRequest, @ApiParam(value = "Virksomhetens organisasjonsnummer") @Valid @RequestParam(value = "orgNummer", required = false) String orgNummer) {
         List<Regnskap> regnskap;
 
         try {
-            //regnskap = repository.findByOrgOgRegInfoOrgnr(orgNummer);
+            regnskap = regnskapService.getByOrgnr(orgNummer);
         } catch (Exception e) {
             LOGGER.error("getRegnskap failed:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(regnskap, HttpStatus.OK);
     }
-/*
-        if (regnskap==null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity(regnskap, HttpStatus.OK);
-        }
-    }
-*/
 }
