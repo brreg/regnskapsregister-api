@@ -3,15 +3,21 @@ package no.regnskap.mapper;
 import no.regnskap.generated.model.*;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.model.RegnskapXml;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Component
 public class RegnskapMapper {
-    private static final String XML_TRUE_STRING = "J";
+    private final String XML_TRUE_STRING = "J";
 
-    public static List<RegnskapDB> mapFromXmlForPersistance(List<RegnskapXml> regnskapXml) {
+    @Autowired
+    private RegnskapFieldsMapper fieldsMapper;
+
+    public List<RegnskapDB> mapFromXmlForPersistance(List<RegnskapXml> regnskapXml) {
         Map<String, RegnskapDB> toPersist = new HashMap<>();
         for (RegnskapXml xml : regnskapXml) {
             String key = xml.getHead().getOrgnr() + xml.getHead().getRegnaar();
@@ -42,7 +48,7 @@ public class RegnskapMapper {
             mapped.setMottattDato(localDateFromXmlDateString(xml.getHead().getMottattDato()));
             mapped.setStartdato(localDateFromXmlDateString(xml.getHead().getStartdato()));
 
-            mapped.setFields(RegnskapFieldsMapper.mapFieldsFromXmlData(mapped.getFields(), xml.getPosts()));
+            mapped.setFields(fieldsMapper.mapFieldsFromXmlData(mapped.getFields(), xml.getPosts()));
 
             toPersist.put(key, mapped);
         }
@@ -50,11 +56,11 @@ public class RegnskapMapper {
         return new ArrayList<>(toPersist.values());
     }
 
-    private static boolean booleanFromXmlData(String trueOrFalse) {
+    private boolean booleanFromXmlData(String trueOrFalse) {
         return XML_TRUE_STRING.equals(trueOrFalse);
     }
 
-    public static Regnskap persistanceToGenerated(RegnskapDB persistanceDTO) {
+    public Regnskap persistanceToGenerated(RegnskapDB persistanceDTO) {
         return new Regnskap()
             .id(persistanceDTO.getId())
             .avviklingsregnskap(persistanceDTO.getAvviklingsregnskap())
@@ -83,7 +89,7 @@ public class RegnskapMapper {
             .resultatregnskapResultat(persistanceDTO.getFields().getResultatregnskapResultat());
     }
 
-    private static LocalDate localDateFromXmlDateString(String dateString) {
+    private LocalDate localDateFromXmlDateString(String dateString) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return LocalDate.parse(dateString, dateTimeFormatter);
     }

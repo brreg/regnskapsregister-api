@@ -23,13 +23,16 @@ public class UpdateService {
     @Autowired
     private ChecksumRepository checksumRepository;
 
+    @Autowired
+    private RegnskapMapper regnskapMapper;
+
     public RegnskapXmlWrap update() throws IOException {
         String xmlString = getXmlString();
         String checksum = DigestUtils.md5DigestAsHex(xmlString.getBytes());
 
         if(checksumRepository.findOneByChecksum(checksum) == null) {
             RegnskapXmlWrap deserialized = deserializeXmlString(xmlString);
-            List<RegnskapDB> listToPersist = RegnskapMapper.mapFromXmlForPersistance(deserialized.getList());
+            List<RegnskapDB> listToPersist = regnskapMapper.mapFromXmlForPersistance(deserialized.getList());
 
             regnskapRepository.saveAll(listToPersist);
 

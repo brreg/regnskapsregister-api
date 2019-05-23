@@ -3,32 +3,34 @@ package no.regnskap.mapper;
 import no.regnskap.generated.model.*;
 import no.regnskap.model.RegnskapFieldsDB;
 import no.regnskap.model.RegnskapXmlInfo;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 class RegnskapFieldsMapper {
-    private final static String FELTKODE_EIENDELER = "219";
-    private final static String FELTKODE_ANLEGGSMIDLER = "217";
-    private final static String FELTKODE_OMLOEPSMIDLER = "194";
-    private final static String FELTKODE_EGENKAPITAL_GJELD = "251";
-    private final static String FELTKODE_EGENKAPITAL = "250";
-    private final static String FELTKODE_INNSKUTT_EGENKAPITAL = "3730";
-    private final static String FELTKODE_OPPTJENT_EGENKAPITAL = "9702";
-    private final static String FELTKODE_GJELD = "1119";
-    private final static String FELTKODE_LANGSIKTIG_GJELD = "86";
-    private final static String FELTKODE_KORTSIKTIG_GJELD = "85";
-    private final static String FELTKODE_RESULTAT_AAR = "172";
-    private final static String FELTKODE_RESULTAT_TOTAL = "36633";
-    private final static String FELTKODE_RESULTAT_ORDINAERT = "167";
-    private final static String FELTKODE_DRIFTSRESULTAT = "146";
-    private final static String FELTKODE_DRIFTSINNTEKTER = "72";
-    private final static String FELTKODE_DRIFTSKOSTNAD = "17126";
-    private final static String FELTKODE_FINANSRESULTAT = "158";
-    private final static String FELTKODE_FINANSINNTEKT = "153";
-    private final static String FELTKODE_FINANSKOSTNAD = "17130";
+    private final String FELTKODE_EIENDELER = "219";
+    private final String FELTKODE_ANLEGGSMIDLER = "217";
+    private final String FELTKODE_OMLOEPSMIDLER = "194";
+    private final String FELTKODE_EGENKAPITAL_GJELD = "251";
+    private final String FELTKODE_EGENKAPITAL = "250";
+    private final String FELTKODE_INNSKUTT_EGENKAPITAL = "3730";
+    private final String FELTKODE_OPPTJENT_EGENKAPITAL = "9702";
+    private final String FELTKODE_GJELD = "1119";
+    private final String FELTKODE_LANGSIKTIG_GJELD = "86";
+    private final String FELTKODE_KORTSIKTIG_GJELD = "85";
+    private final String FELTKODE_RESULTAT_AAR = "172";
+    private final String FELTKODE_RESULTAT_TOTAL = "36633";
+    private final String FELTKODE_RESULTAT_ORDINAERT = "167";
+    private final String FELTKODE_DRIFTSRESULTAT = "146";
+    private final String FELTKODE_DRIFTSINNTEKTER = "72";
+    private final String FELTKODE_DRIFTSKOSTNAD = "17126";
+    private final String FELTKODE_FINANSRESULTAT = "158";
+    private final String FELTKODE_FINANSINNTEKT = "153";
+    private final String FELTKODE_FINANSKOSTNAD = "17130";
 
 
-    static RegnskapFieldsDB mapFieldsFromXmlData(RegnskapFieldsDB felter, List<RegnskapXmlInfo> xmlData) {
+    RegnskapFieldsDB mapFieldsFromXmlData(RegnskapFieldsDB felter, List<RegnskapXmlInfo> xmlData) {
         Eiendeler eiendeler;
         Anleggsmidler anleggsmidler;
         Omloepsmidler omloepsmidler;

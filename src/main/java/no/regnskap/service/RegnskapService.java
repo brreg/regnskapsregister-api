@@ -16,17 +16,20 @@ public class RegnskapService {
     @Autowired
     private RegnskapRepository regnskapRepository;
 
+    @Autowired
+    private RegnskapMapper regnskapMapper;
+
     public Optional<Regnskap> getById(String id) {
         return regnskapRepository
                 .findById(id)
-                .flatMap(persistedData -> Optional.of(RegnskapMapper.persistanceToGenerated(persistedData)));
+                .flatMap(persistedData -> Optional.of(regnskapMapper.persistanceToGenerated(persistedData)));
     }
 
     public List<Regnskap> getByOrgnr(String orgnr) {
         return regnskapRepository
                 .findByOrgnr(orgnr)
                 .stream()
-                .map(RegnskapMapper::persistanceToGenerated)
+                .map(regnskapMapper::persistanceToGenerated)
                 .collect(Collectors.toList());
     }
 }
