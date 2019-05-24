@@ -13,15 +13,17 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 private const val XML_TRUE_STRING = "J"
+private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
 fun mapXmlListForPersistence(regnskapXml: List<RegnskapXml>): List<RegnskapDB> {
     val toPersist: MutableMap<String, RegnskapDB> = HashMap()
-    for (xml in regnskapXml) {
-        if(xml.head != null) {
-            val key = xml.head.orgnr + xml.head.regnaar
-            val mapped = toPersist.getOrDefault(key, xml.head.createRegnskapDB())
 
-            toPersist[key] = mapped.copy(fields = mapFieldsFromXmlData(mapped.fields, xml.posts))
+    regnskapXml.forEach {
+        if(it.head != null) {
+            val key = it.head.orgnr + it.head.regnaar
+            val mapped = toPersist.getOrDefault(key, it.head.createRegnskapDB())
+
+            toPersist[key] = mapped.copy(fields = mapFieldsFromXmlData(mapped.fields, it.posts))
         }
     }
 
@@ -51,17 +53,16 @@ private fun RegnskapXmlHead.createRegnskapDB(): RegnskapDB =
         utarbeidetRegnskapsforer = booleanFromXmlData(utarbeidetRegnskapsforer),
         revisorberetningIkkeLevert = booleanFromXmlData(revisorberetningIkkeLevert),
 
-        avslutningsdato = localDateFromXmlDateString(avslutningsdato),
-        mottattDato = localDateFromXmlDateString(mottattDato),
-        startdato = localDateFromXmlDateString(startdato)
+        avslutningsdato = avslutningsdato.localDateFromXmlDateString(),
+        mottattDato = mottattDato.localDateFromXmlDateString(),
+        startdato = startdato.localDateFromXmlDateString()
     )
 
-private fun booleanFromXmlData(trueOrFalse: String?): Boolean {
-    return XML_TRUE_STRING == trueOrFalse
-}
+private fun booleanFromXmlData(trueOrFalse: String?): Boolean =
+    XML_TRUE_STRING == trueOrFalse
 
-fun persistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap {
-    return Regnskap()
+fun persistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
+    Regnskap()
         .id(persistenceDTO.id)
         .avviklingsregnskap(persistenceDTO.avviklingsregnskap)
         .valuta(persistenceDTO.valutakode)
@@ -87,10 +88,7 @@ fun persistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap {
         .egenkapitalGjeld(persistenceDTO.fields.egenkapitalGjeld)
         .eiendeler(persistenceDTO.fields.eiendeler)
         .resultatregnskapResultat(persistenceDTO.fields.resultatregnskapResultat)
-}
 
-private fun localDateFromXmlDateString(dateString: String?): LocalDate {
-    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-    return LocalDate.parse(dateString!!, dateTimeFormatter)
-}
+private fun String.localDateFromXmlDateString(): LocalDate =
+    LocalDate.parse(this, dateTimeFormatter)
 
