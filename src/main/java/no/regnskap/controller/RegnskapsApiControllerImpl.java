@@ -23,19 +23,17 @@ public class RegnskapsApiControllerImpl implements no.regnskap.generated.api.Reg
 
     @Override
     public ResponseEntity<Regnskap> getRegnskapById(HttpServletRequest httpServletRequest, @ApiParam(value = "id",required=true) @PathVariable("id") String id) {
-        Optional<Regnskap> regnskap;
+        ResponseEntity<Regnskap> response;
 
         try {
-            regnskap = regnskapService.getById(id);
+            response = regnskapService.getById(id)
+                .map(regnskap -> new ResponseEntity<>(regnskap, HttpStatus.OK))
+                .orElse( new ResponseEntity<>(HttpStatus.NO_CONTENT) );
         } catch (Exception e) {
-            LOGGER.error("GET_GETINVOICE failed:", e);
+            LOGGER.error("getRegnskapById failed:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (regnskap.isPresent()) {
-            return new ResponseEntity<>(regnskap.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        return response;
     }
 }
