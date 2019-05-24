@@ -1,18 +1,19 @@
 package no.regnskap.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import no.regnskap.mapper.RegnskapMapper;
-import no.regnskap.model.persistance.Checksum;
-import no.regnskap.model.persistance.RegnskapDB;
+import no.regnskap.model.Checksum;
+import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.model.xml.RegnskapWrap;
+import no.regnskap.model.RegnskapXmlWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.io.*;
 import java.util.List;
+
+import static no.regnskap.mapper.RegnskapMapperKt.mapXmlListForPersistence;
 
 @Service
 public class UpdateService {
@@ -23,13 +24,13 @@ public class UpdateService {
     @Autowired
     private ChecksumRepository checksumRepository;
 
-    public RegnskapWrap update() throws IOException {
+    public RegnskapXmlWrap update() throws IOException {
         String xmlString = getXmlString();
         String checksum = DigestUtils.md5DigestAsHex(xmlString.getBytes());
 
         if(checksumRepository.findOneByChecksum(checksum) == null) {
-            RegnskapWrap deserialized = deserializeXmlString(xmlString);
-            List<RegnskapDB> listToPersist = RegnskapMapper.mapFromXmlForPersistance(deserialized.getList());
+            RegnskapXmlWrap deserialized = deserializeXmlString(xmlString);
+            List<RegnskapDB> listToPersist = mapXmlListForPersistence(deserialized.getList());
 
             regnskapRepository.saveAll(listToPersist);
 
@@ -41,9 +42,9 @@ public class UpdateService {
         return null;
     }
 
-    private RegnskapWrap deserializeXmlString(String xmlString) throws IOException {
+    private RegnskapXmlWrap deserializeXmlString(String xmlString) throws IOException {
         XmlMapper xmlMapper = new XmlMapper();
-        return xmlMapper.readValue(xmlString, RegnskapWrap.class);
+        return xmlMapper.readValue(xmlString, RegnskapXmlWrap.class);
     }
 
     private String getXmlString() throws IOException {
