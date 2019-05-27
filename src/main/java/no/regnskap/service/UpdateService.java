@@ -1,6 +1,5 @@
 package no.regnskap.service;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import no.regnskap.model.Checksum;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.ChecksumRepository;
@@ -14,9 +13,11 @@ import java.io.*;
 import java.util.List;
 
 import static no.regnskap.mapper.RegnskapMapperKt.mapXmlListForPersistence;
+import static no.regnskap.mapper.RegnskapXmlMapperKt.deserializeXmlString;
 
 @Service
 public class UpdateService {
+
 
     @Autowired
     private RegnskapRepository regnskapRepository;
@@ -40,11 +41,6 @@ public class UpdateService {
         }
 
         return null;
-    }
-
-    private RegnskapXmlWrap deserializeXmlString(String xmlString) throws IOException {
-        XmlMapper xmlMapper = new XmlMapper();
-        return xmlMapper.readValue(xmlString, RegnskapXmlWrap.class);
     }
 
     private String getXmlString() throws IOException {

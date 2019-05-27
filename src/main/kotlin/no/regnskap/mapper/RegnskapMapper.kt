@@ -61,12 +61,12 @@ private fun RegnskapXmlHead.createRegnskapDB(): RegnskapDB =
 private fun booleanFromXmlData(trueOrFalse: String?): Boolean =
     XML_TRUE_STRING == trueOrFalse
 
-fun persistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
+fun mapPersistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
     Regnskap()
         .id(persistenceDTO.id)
         .avviklingsregnskap(persistenceDTO.avviklingsregnskap)
         .valuta(persistenceDTO.valutakode)
-        .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistenceDTO.aarsregnskapstype!!.toLowerCase()))
+        .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistenceDTO.aarsregnskapstype.toLowerCase()))
         .revisjon(
             Revisjon()
                 .ikkeRevidertAarsregnskap(persistenceDTO.revisorberetningIkkeLevert))
@@ -77,7 +77,7 @@ fun persistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
         .regnkapsprinsipper(
             Regnskapsprinsipper()
                 .smaaForetak(persistenceDTO.reglerSmaa)
-                .regskapsregler(null)) //TODO Change to correct value
+                .regnskapsregler(null)) //TODO Change to correct value
         .virksomhet(
             Virksomhet()
                 .organisasjonsnummer(persistenceDTO.orgnr)

@@ -57,6 +57,7 @@ public class RegnskapApiControllerImpl implements no.regnskap.generated.api.Regn
             LOGGER.error("getRegnskap failed:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(regnskap, HttpStatus.OK);
     }
 }

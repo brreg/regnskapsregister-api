@@ -5,7 +5,7 @@ import no.regnskap.repository.RegnskapRepository
 import org.springframework.stereotype.Service
 import java.util.Optional
 
-import no.regnskap.mapper.persistenceToGenerated
+import no.regnskap.mapper.mapPersistenceToGenerated
 
 @Service
 class RegnskapService (private val regnskapRepository: RegnskapRepository) {
@@ -13,10 +13,10 @@ class RegnskapService (private val regnskapRepository: RegnskapRepository) {
     fun getById(id: String): Optional<Regnskap> =
         regnskapRepository
             .findById(id)
-            .flatMap { persistedData -> Optional.of(persistenceToGenerated(persistedData)) }
+            .flatMap { persistedData -> Optional.of(mapPersistenceToGenerated(persistedData)) }
 
     fun getByOrgnr(orgnr: String): List<Regnskap> =
         regnskapRepository
             .findByOrgnr(orgnr)
-            .map { dto -> persistenceToGenerated(dto) }
+            .map { dto -> mapPersistenceToGenerated(dto) }
 }
