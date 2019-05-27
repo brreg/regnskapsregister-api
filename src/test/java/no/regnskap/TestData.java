@@ -26,7 +26,7 @@ public class TestData {
         .regnkapsprinsipper(
             new Regnskapsprinsipper()
                 .smaaForetak(true)
-                .regskapsregler(null))
+                .regnskapsregler(null))
         .virksomhet(
             new Virksomhet()
                 .organisasjonsnummer("orgnummer")
@@ -1621,4 +1621,43 @@ public class TestData {
         "    </info>\n" +
         "  </del>\n" +
         "</deler>";
+
+    public final static int ALPHA_FIELD_219 = 4655600;
+    public final static int ALPHA_FIELD_217 = 3314585;
+    public final static int ALPHA_FIELD_194 = 1341015;
+    public final static int ALPHA_FIELD_251 = 4655600;
+    public final static int ALPHA_FIELD_250 = 750287;
+    public final static int ALPHA_FIELD_3730 = 50000;
+    public final static int ALPHA_FIELD_9702 = 700287;
+    public final static int ALPHA_FIELD_1119 = 3905312;
+    public final static int ALPHA_FIELD_86 = 1530406;
+    public final static int ALPHA_FIELD_85 = 2374906;
+    public final static int ALPHA_FIELD_172 = 427946;
+    public final static int ALPHA_FIELD_36633 = 427946;
+    public final static int ALPHA_FIELD_167 = 567732;
+    public final static int ALPHA_FIELD_146 = 604176;
+    public final static int ALPHA_FIELD_72 = 10900358;
+    public final static int ALPHA_FIELD_17126 = 10296182;
+    public final static int ALPHA_FIELD_158 = -36445;
+    public final static int ALPHA_FIELD_153 = 3939;
+    public final static int ALPHA_FIELD_17130 = 40384;
+
+    public final static int BRAVO_FIELD_219 = 1123609;
+    public final static int BRAVO_FIELD_217 = 0;
+    public final static int BRAVO_FIELD_194 = 1123609;
+    public final static int BRAVO_FIELD_251 = 1123609;
+    public final static int BRAVO_FIELD_250 = 106310;
+    public final static int BRAVO_FIELD_3730 = 100000;
+    public final static int BRAVO_FIELD_9702 = 6310;
+    public final static int BRAVO_FIELD_1119 = 1017299;
+    public final static int BRAVO_FIELD_86 = 0;
+    public final static int BRAVO_FIELD_85 = 1017299;
+    public final static int BRAVO_FIELD_172 = 783775;
+    public final static int BRAVO_FIELD_167 = 1017890;
+    public final static int BRAVO_FIELD_146 = 1316195;
+    public final static int BRAVO_FIELD_72 = 6600000;
+    public final static int BRAVO_FIELD_17126 = 5283805;
+    public final static int BRAVO_FIELD_158 = -298306;
+    public final static int BRAVO_FIELD_153 = 18;
+    public final static int BRAVO_FIELD_17130 = 298324;
 }

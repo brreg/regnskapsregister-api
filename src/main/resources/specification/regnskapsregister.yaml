@@ -214,7 +214,7 @@ components:
       properties:
         smaaForetak:
           type: boolean
-        regskapsregler:
+        regnskapsregler:
           type: string
           enum:
             - IFRS
