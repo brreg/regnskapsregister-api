@@ -24,7 +24,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RegnskapApiIntegration {
-    private static MongoCollection<RegnskapDB> mongoCollection;
     private static String regnskapRootURL;
 
     @ClassRule
@@ -38,31 +37,47 @@ public class RegnskapApiIntegration {
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         MongoClient mongoClient = new MongoClient(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT));
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
-        mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
+        MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
         mongoCollection.insertOne(regnskap2017);
+        mongoCollection.insertOne(regnskap2018);
 
         regnskapRootURL = "http://" + compose.getServiceHost(API_SERVICE_NAME, API_PORT) + ":" + compose.getServicePort(API_SERVICE_NAME, API_PORT);
     }
 
     @Test
-    public void simpleMongoDbTest() {
-        RegnskapDB doc2 = mongoCollection.find().first();
-        Assert.assertEquals("An inserted record can be retrieved from MongoDB", regnskap2017.getRegnaar(), doc2.getRegnaar());
+    public void pingTest() throws Exception {
+        String response = simpleGet(regnskapRootURL + "/ping");
+        Assert.assertEquals("RegnskapAPI is available", "pong", response);
     }
 
     @Test
-    public void pingTest() throws Exception{
-        String address = regnskapRootURL + "/ping";
+    public void getByOrgnrTest() throws Exception {
+        String response = simpleGet(regnskapRootURL + "/regnskap?orgNummer=orgnummer");
+        Assert.assertEquals(EXPECTED_RESPONSE_ORGNR, response);
+    }
 
+    @Test
+    public void getById() throws Exception {
+        String response2018 = simpleGet(regnskapRootURL + "/regnskaps/" + GENERATED_ID_0.toHexString());
+        String response2017 = simpleGet(regnskapRootURL + "/regnskaps/" + GENERATED_ID_1.toHexString());
+        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2018), response2018);
+        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2017), response2017);
+    }
+
+    private String simpleGet(String address) throws Exception {
         URL obj = new URL(address);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String firstLine = reader.readLine();
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = reader.readLine()) != null) {
+            content.append(inputLine);
+        }
         reader.close();
 
-        Assert.assertEquals("RegnskapAPI is available", "pong", firstLine);
+        return content.toString();
     }
 }
