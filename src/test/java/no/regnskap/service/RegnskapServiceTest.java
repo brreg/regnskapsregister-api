@@ -33,10 +33,10 @@ public class RegnskapServiceTest {
     @Test
     public void emptyDatabaseResultForIdGivesEmptyOptional() {
         Optional<RegnskapDB> emptyDB = Optional.empty();
-        Mockito.when(repositoryMock.findById("id"))
+        Mockito.when(repositoryMock.findById(TestData.GENERATED_ID.toHexString()))
             .thenReturn(emptyDB);
 
-        Optional<Regnskap> actualResult = regnskapService.getById("id");
+        Optional<Regnskap> actualResult = regnskapService.getById(TestData.GENERATED_ID.toHexString());
         Optional<Regnskap> emptyResult = Optional.empty();
 
         Assert.assertEquals(actualResult, emptyResult);
@@ -45,10 +45,10 @@ public class RegnskapServiceTest {
     @Test
     public void databaseResultForIdIsMappedCorrectly() {
         Optional<RegnskapDB> regnskapDB = Optional.of(TestData.regnskapDB);
-        Mockito.when(repositoryMock.findById("id"))
+        Mockito.when(repositoryMock.findById(TestData.GENERATED_ID.toHexString()))
             .thenReturn(regnskapDB);
 
-        Optional<Regnskap> actual = regnskapService.getById("id");
+        Optional<Regnskap> actual = regnskapService.getById(TestData.GENERATED_ID.toHexString());
         Optional<Regnskap> expected = Optional.of(TestData.regnskap);
 
         Assert.assertTrue(actual.isPresent());

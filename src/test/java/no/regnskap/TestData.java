@@ -2,17 +2,27 @@ package no.regnskap;
 
 import no.regnskap.generated.model.*;
 import no.regnskap.model.*;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
+    public static final String API_SERVICE_NAME = "regnskapsregister";
+    public static final String MONGO_SERVICE_NAME = "mongodb";
+    public static final int API_PORT = 8080;
+    public static final int MONGO_PORT = 27017;
+    public static final String DATABASE_NAME = "test";
+    public static final String COLLECTION_NAME = "testRegnskap";
+
     private static LocalDate startOf2018 = LocalDate.of(2018, 1, 1);
     private static LocalDate endOf2018 = LocalDate.of(2018, 12, 31);
 
+    public static ObjectId GENERATED_ID = ObjectId.get();
+
     public static Regnskap regnskap = new Regnskap()
-        .id("id")
+        .id(GENERATED_ID.toHexString())
         .avviklingsregnskap(true)
         .valuta("valutakode")
         .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue("store"))
@@ -74,32 +84,32 @@ public class TestData {
     public static List<RegnskapDB> databaseList = createDatabaseList();
 
     private static RegnskapDB createRegnskapDB() {
-        RegnskapDB tmpRegnskapDB = new RegnskapDB(
-            "orgnummer",
-            "regnskapstype",
-            2018,
-            "oppstillingsplanVersjonsnr",
-            "valutakode",
-            startOf2018,
-            endOf2018,
-            "mottakstype",
-            true,
-            true,
-            "journalnr",
-            LocalDate.now(),
-            "orgform",
-            true,
-            true,
-            false,
-            false,
-            true,
-            true,
-            "STORE",
-            false,
-            true,
-            new RegnskapFieldsDB()
-        );
-        tmpRegnskapDB.setId("id");
+        RegnskapDB tmpRegnskapDB = new RegnskapDB();
+        tmpRegnskapDB.setOrgnr("orgnummer");
+        tmpRegnskapDB.setOrgform("orgform");
+        tmpRegnskapDB.setRegnskapstype("regnskapstype");
+        tmpRegnskapDB.setRegnaar(2018);
+        tmpRegnskapDB.setOppstillingsplanVersjonsnr("oppstillingsplanVersjonsnr");
+        tmpRegnskapDB.setValutakode("valutakode");
+        tmpRegnskapDB.setStartdato(startOf2018);
+        tmpRegnskapDB.setAvslutningsdato(endOf2018);
+        tmpRegnskapDB.setMottakstype("mottakstype");
+        tmpRegnskapDB.setAvviklingsregnskap(true);
+        tmpRegnskapDB.setBistandRegnskapsforer(true);
+        tmpRegnskapDB.setJournalnr("journalnr");
+        tmpRegnskapDB.setMottattDato(LocalDate.now());
+        tmpRegnskapDB.setFeilvaloer(true);
+        tmpRegnskapDB.setFleksiblePoster(true);
+        tmpRegnskapDB.setFravalgRevisjon(false);
+        tmpRegnskapDB.setLandForLand(false);
+        tmpRegnskapDB.setMorselskap(true);
+        tmpRegnskapDB.setReglerSmaa(true);
+        tmpRegnskapDB.setAarsregnskapstype("STORE");
+        tmpRegnskapDB.setUtarbeidetRegnskapsforer(false);
+        tmpRegnskapDB.setRevisorberetningIkkeLevert(true);
+        tmpRegnskapDB.setFields(new RegnskapFieldsDB());
+
+        tmpRegnskapDB.setId(GENERATED_ID);
 
         return tmpRegnskapDB;
     }
@@ -108,6 +118,18 @@ public class TestData {
         List<RegnskapDB> list = new ArrayList<>();
         list.add(regnskapDB);
         return list;
+    }
+
+    public static final RegnskapDB regnskap2017 = createRegnskapDB(2017);
+    public static final RegnskapDB regnskap2018 = createRegnskapDB(2018);
+
+    private static RegnskapDB createRegnskapDB(int year) {
+        RegnskapDB regnskapDB = new RegnskapDB();
+        regnskapDB.setOrgnr("orgnummer");
+        regnskapDB.setRegnaar(year);
+        regnskapDB.setFields(new RegnskapFieldsDB());
+
+        return regnskapDB;
     }
 
     public static String xmlTestString = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
