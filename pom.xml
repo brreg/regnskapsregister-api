@@ -264,6 +264,23 @@
                     </excludes>
                     <argLine>${surefireArgLine} -Dfile.encoding=${java.encoding}</argLine>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                            <includes>
+                                <include>${integration.test.pattern}</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

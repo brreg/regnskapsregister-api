@@ -23,7 +23,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceTest {
+public class RegnskapApiIntegration {
     private static MongoCollection<RegnskapDB> mongoCollection;
     private static String regnskapRootURL;
 
