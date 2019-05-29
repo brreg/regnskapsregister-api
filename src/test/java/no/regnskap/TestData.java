@@ -2,17 +2,32 @@ package no.regnskap;
 
 import no.regnskap.generated.model.*;
 import no.regnskap.model.*;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
-    private static LocalDate startOf2018 = LocalDate.of(2018, 1, 1);
-    private static LocalDate endOf2018 = LocalDate.of(2018, 12, 31);
+    public static final String API_SERVICE_NAME = "regnskapsregister";
+    public static final String MONGO_SERVICE_NAME = "mongodb";
+    public static final int API_PORT = 8080;
+    public static final int MONGO_PORT = 27017;
+    public static final String DATABASE_NAME = "regnskap";
+    public static final String COLLECTION_NAME = "regnskap";
+
+    private static LocalDate startOfYear(int year) {
+        return LocalDate.of(year, 1, 1);
+    }
+    private static LocalDate endOfYear(int year) {
+        return LocalDate.of(year, 12, 31);
+    }
+
+    public static ObjectId GENERATED_ID_0 = ObjectId.get();
+    public static ObjectId GENERATED_ID_1 = ObjectId.get();
 
     public static Regnskap regnskap = new Regnskap()
-        .id("id")
+        .id(GENERATED_ID_0.toHexString())
         .avviklingsregnskap(true)
         .valuta("valutakode")
         .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue("store"))
@@ -21,8 +36,8 @@ public class TestData {
                 .ikkeRevidertAarsregnskap(true))
         .regnskapsperiode(
             new Tidsperiode()
-                .fraDato(startOf2018)
-                .tilDato(endOf2018))
+                .fraDato(startOfYear(2018))
+                .tilDato(endOfYear(2018)))
         .regnkapsprinsipper(
             new Regnskapsprinsipper()
                 .smaaForetak(true)
@@ -69,44 +84,46 @@ public class TestData {
 
     public static List<RegnskapDB> emptyDatabaseList = new ArrayList<>();
 
-    public static RegnskapDB regnskapDB = createRegnskapDB();
+    public static final RegnskapDB regnskap2018 = createRegnskapDB(GENERATED_ID_0, 2018);
+    public static final RegnskapDB regnskap2017 = createRegnskapDB(GENERATED_ID_1, 2017);
 
     public static List<RegnskapDB> databaseList = createDatabaseList();
 
-    private static RegnskapDB createRegnskapDB() {
-        RegnskapDB tmpRegnskapDB = new RegnskapDB(
-            "orgnummer",
-            "regnskapstype",
-            2018,
-            "oppstillingsplanVersjonsnr",
-            "valutakode",
-            startOf2018,
-            endOf2018,
-            "mottakstype",
-            true,
-            true,
-            "journalnr",
-            LocalDate.now(),
-            "orgform",
-            true,
-            true,
-            false,
-            false,
-            true,
-            true,
-            "STORE",
-            false,
-            true,
-            new RegnskapFieldsDB()
-        );
-        tmpRegnskapDB.setId("id");
+    private static RegnskapDB createRegnskapDB(ObjectId id, int year) {
+        RegnskapDB tmpRegnskapDB = new RegnskapDB();
+        tmpRegnskapDB.setOrgnr("orgnummer");
+        tmpRegnskapDB.setOrgform("orgform");
+        tmpRegnskapDB.setRegnskapstype("regnskapstype");
+        tmpRegnskapDB.setOppstillingsplanVersjonsnr("oppstillingsplanVersjonsnr");
+        tmpRegnskapDB.setValutakode("valutakode");
+        tmpRegnskapDB.setStartdato(startOfYear(year));
+        tmpRegnskapDB.setAvslutningsdato(endOfYear(year));
+        tmpRegnskapDB.setMottakstype("mottakstype");
+        tmpRegnskapDB.setAvviklingsregnskap(true);
+        tmpRegnskapDB.setBistandRegnskapsforer(true);
+        tmpRegnskapDB.setJournalnr("journalnr");
+        tmpRegnskapDB.setMottattDato(LocalDate.now());
+        tmpRegnskapDB.setFeilvaloer(true);
+        tmpRegnskapDB.setFleksiblePoster(true);
+        tmpRegnskapDB.setFravalgRevisjon(false);
+        tmpRegnskapDB.setLandForLand(false);
+        tmpRegnskapDB.setMorselskap(true);
+        tmpRegnskapDB.setReglerSmaa(true);
+        tmpRegnskapDB.setAarsregnskapstype("STORE");
+        tmpRegnskapDB.setUtarbeidetRegnskapsforer(false);
+        tmpRegnskapDB.setRevisorberetningIkkeLevert(true);
+        tmpRegnskapDB.setFields(new RegnskapFieldsDB());
+
+        tmpRegnskapDB.setRegnaar(year);
+
+        tmpRegnskapDB.setId(id);
 
         return tmpRegnskapDB;
     }
 
     private static List<RegnskapDB> createDatabaseList() {
         List<RegnskapDB> list = new ArrayList<>();
-        list.add(regnskapDB);
+        list.add(regnskap2018);
         return list;
     }
 
@@ -1660,4 +1677,19 @@ public class TestData {
     public final static int BRAVO_FIELD_158 = -298306;
     public final static int BRAVO_FIELD_153 = 18;
     public final static int BRAVO_FIELD_17130 = 298324;
+
+    public final static String EXPECTED_RESPONSE_ORGNR = "[" + buildExpectedDatabaseResponse(GENERATED_ID_1, 2017) + "," + buildExpectedDatabaseResponse(GENERATED_ID_0, 2018) + "]";
+
+    public static String buildExpectedDatabaseResponse(ObjectId id, int year) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{\"id\":\"");
+        stringBuilder.append(id.toHexString());
+        stringBuilder.append("\",\"virksomhet\":{\"organisasjonsnummer\":\"orgnummer\",\"navn\":null,\"organisasjonsform\":\"orgform\",\"morselskap\":false,\"levertAarsregnskap\":true},\"regnskapsperiode\":{\"fraDato\":\"");
+        stringBuilder.append(year);
+        stringBuilder.append("-01-01\",\"tilDato\":\"");
+        stringBuilder.append(year);
+        stringBuilder.append("-12-31\"},\"valuta\":\"valutakode\",\"avviklingsregnskap\":true,\"oppstillingsplan\":\"store\",\"revisjon\":{\"ikkeRevidertAarsregnskap\":false},\"regnkapsprinsipper\":{\"smaaForetak\":false,\"regnskapsregler\":null},\"egenkapitalGjeld\":{\"sumEgenkapitalGjeld\":null,\"egenkapital\":{\"sumEgenkapital\":null,\"opptjentEgenkapital\":{\"sumOpptjentEgenkapital\":null},\"innskuttEgenkapital\":{\"sumInnskuttEgenkaptial\":null}},\"gjeldOversikt\":{\"sumGjeld\":null,\"kortsiktigGjeld\":{\"sumKortsiktigGjeld\":null},\"langsiktigGjeld\":{\"sumLangsiktigGjeld\":null}}},\"eiendeler\":{\"sumEiendeler\":null,\"omloepsmidler\":{\"sumOmloepsmidler\":null},\"anleggsmidler\":{\"sumAnleggsmidler\":null}},\"resultatregnskapResultat\":{\"ordinaertResultatFoerSkattekostnad\":null,\"aarsresultat\":null,\"totalresultat\":null,\"finansresultat\":{\"nettoFinans\":null,\"finansinntekt\":{\"sumFinansinntekter\":null},\"finanskostnad\":{\"sumFinanskostnad\":null}},\"driftsresultat\":{\"driftsresultat\":null,\"driftsinntekter\":{\"sumDriftsinntekter\":null},\"driftskostnad\":{\"sumDriftskostnad\":null}}}}");
+
+        return stringBuilder.toString();
+    }
 }

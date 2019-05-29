@@ -1,0 +1,10 @@
+version: "2.0"
+
+services:
+  regnskapsregister:
+    image: brreg/regnskapsregister-api:latest
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest

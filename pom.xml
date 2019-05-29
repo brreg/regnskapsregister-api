@@ -33,7 +33,7 @@
         <kotlin.version>1.3.21</kotlin.version>
 
         <start-class>no.regnskap.Application</start-class>
-        <docker.image.name>regnskap/test</docker.image.name>
+        <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
         <docker.image.tag>latest</docker.image.tag>
 
         <surefireArgLine/>
@@ -50,6 +50,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>2.1.5.RELEASE</version>
         </dependency>
 
         <!-- TEST -->
@@ -77,6 +78,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.11.2</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Generated code dependencies -->
@@ -257,6 +264,23 @@
                     </excludes>
                     <argLine>${surefireArgLine} -Dfile.encoding=${java.encoding}</argLine>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                            <includes>
+                                <include>${integration.test.pattern}</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

@@ -21,7 +21,6 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
-import java.time.LocalDate
 
 @Document("regnskap_log")
 class Checksum (
@@ -59,34 +58,3 @@ data class RegnskapFieldsDB (
                 .finanskostnad(Finanskostnad()))
 
 )
-
-@Document("regnskap")
-data class RegnskapDB (
-    @Indexed val orgnr: String,
-    val regnskapstype: String,
-    val regnaar: Int,
-    val oppstillingsplanVersjonsnr: String,
-    val valutakode: String,
-    val startdato: LocalDate,
-    val avslutningsdato: LocalDate,
-    val mottakstype: String,
-    val avviklingsregnskap: Boolean,
-    val feilvaloer: Boolean,
-    val journalnr: String,
-    val mottattDato: LocalDate,
-    val orgform: String,
-    val morselskap: Boolean,
-    val reglerSmaa: Boolean,
-    val fleksiblePoster: Boolean,
-    val fravalgRevisjon: Boolean,
-    val utarbeidetRegnskapsforer: Boolean,
-    val bistandRegnskapsforer: Boolean,
-    val aarsregnskapstype: String,
-    val landForLand: Boolean,
-    val revisorberetningIkkeLevert: Boolean,
-    val fields: RegnskapFieldsDB = RegnskapFieldsDB()
-) {
-    @Id
-    @Field("_id")
-    var id: String? = null
-}
