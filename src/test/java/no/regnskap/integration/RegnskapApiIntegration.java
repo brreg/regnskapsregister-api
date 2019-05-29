@@ -67,13 +67,10 @@ public class RegnskapApiIntegration {
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
         con.setRequestMethod("GET");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
         StringBuilder content = new StringBuilder();
-        while ((inputLine = reader.readLine()) != null) {
-            content.append(inputLine);
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            reader.lines().forEach(line -> content.append(line));
         }
-        reader.close();
 
         return content.toString();
     }
