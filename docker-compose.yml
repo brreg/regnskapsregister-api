@@ -7,13 +7,12 @@ services:
       - mongodb
     restart: always
     ports:
-      - 127.0.0.1:8080:8080
+      - 8080:8080
 
   mongodb:
     image: mongo:latest
-    volumes:
-      - $HOME/data/springboot-repository-data:/data/db
-      - $HOME/data/springboot-repository-bkp:/data/bkp
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=regnskapAdmin
+      - MONGO_INITDB_ROOT_PASSWORD=qwer1234
     ports:
       - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet

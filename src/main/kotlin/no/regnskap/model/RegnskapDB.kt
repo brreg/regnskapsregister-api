@@ -20,14 +20,12 @@ import no.regnskap.generated.model.ResultatregnskapResultat
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 
 @Document("regnskap_log")
 class Checksum (
     @Indexed(unique = true) val checksum: String
 ) {
     @Id
-    @Field("_id")
     var id: String? = null
 }
 

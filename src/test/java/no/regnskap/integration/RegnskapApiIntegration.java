@@ -1,6 +1,6 @@
 package no.regnskap.integration;
 
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import no.regnskap.model.RegnskapDB;
@@ -22,7 +22,7 @@ import java.net.URL;
 import static no.regnskap.TestData.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
+/*
 @RunWith(MockitoJUnitRunner.class)
 @Ignore //ignore service test until it is working on Jenkins
 public class RegnskapApiIntegration {
@@ -36,7 +36,12 @@ public class RegnskapApiIntegration {
     @BeforeClass
     public static void mongoSetup() {
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-        MongoClient mongoClient = new MongoClient(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT));
+        //MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
+        //ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT));
+        //List<ServerAddress> addressList = Collections.singletonList(serverAddress);
+        //MongoClientOptions options = MongoClientOptions.builder().build();
+        MongoClientURI uri = new MongoClientURI(MONGO_URI);
+        MongoClient mongoClient = new MongoClient(uri);
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
@@ -79,4 +84,4 @@ public class RegnskapApiIntegration {
     private URL buildRegnskapURL(String address) throws MalformedURLException {
         return new URL("http", compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT), address);
     }
-}
+}*/

@@ -1,10 +1,17 @@
 version: "2.0"
 
 services:
-  regnskapsregister:
+  testregister:
     image: brreg/regnskapsregister-api:latest
     depends_on:
-      - mongodb
+      - testdb
+    ports:
+      - 8081:8081
 
-  mongodb:
+  testdb:
     image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=testAdmin
+      - MONGO_INITDB_ROOT_PASSWORD=qwer1234
+    ports:
+      - 27018:27018

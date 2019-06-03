@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Document("regnskap")
 public class RegnskapDB {
     @Id
-    private ObjectId _id;
+    private ObjectId id;
     @Indexed
     private String orgnr;
     private String regnskapstype;
@@ -48,11 +48,11 @@ public class RegnskapDB {
     private RegnskapFieldsDB fields;
 
     public ObjectId getId() {
-        return _id;
+        return id;
     }
 
     public void setId(ObjectId id) {
-        this._id = id;
+        this.id = id;
     }
 
     public String getOrgnr() {

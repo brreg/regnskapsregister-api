@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
-    public static final String API_SERVICE_NAME = "regnskapsregister";
-    public static final String MONGO_SERVICE_NAME = "mongodb";
-    public static final int API_PORT = 8080;
-    public static final int MONGO_PORT = 27017;
-    public static final String DATABASE_NAME = "regnskap";
+    public static final String API_SERVICE_NAME = "testregister";
+    public static final String MONGO_SERVICE_NAME = "testdb";
+    public static final int API_PORT = 8081;
+    public static final int MONGO_PORT = 27018;
+    public static final String DATABASE_NAME = "regnskapAPI";
     public static final String COLLECTION_NAME = "regnskap";
+    public static final String MONGO_URI = "mongodb://testAdmin:qwer1234@testdb:27017/regnskapAPI/?authSource=admin&authMechanism=SCRAM-SHA-1";
 
     private static LocalDate startOfYear(int year) {
         return LocalDate.of(year, 1, 1);
