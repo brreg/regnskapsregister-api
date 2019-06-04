@@ -1694,4 +1694,18 @@ public class TestData {
 
         return stringBuilder.toString();
     }
+
+    public static String TEST_COMPOSE = "version: \"2.0\"\n" +
+        "\n" +
+        "services:\n" +
+        "  regnskapsregister:\n" +
+        "    image: brreg/regnskapsregister-api:latest\n" +
+        "    depends_on:\n" +
+        "      - mongodb\n" +
+        "\n" +
+        "  mongodb:\n" +
+        "    image: mongo:latest\n" +
+        "    environment:\n" +
+        "      - MONGO_INITDB_ROOT_USERNAME=regnskapAdmin\n" +
+        "      - MONGO_INITDB_ROOT_PASSWORD=qwer1234\n";
 }

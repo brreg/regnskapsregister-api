@@ -15,13 +15,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import static no.regnskap.TestData.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -31,13 +31,11 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @Ignore //ignore service test until it is working on Jenkins
 @TestPropertySource(locations="classpath:test.properties")
 public class RegnskapApiIntegration {
-    private static ClassLoader classLoader = RegnskapApiIntegration.class.getClassLoader();
+    private static File testComposeFile = createTmpComposeFile();
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIntegration.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
-
-    @ClassRule
-    public static DockerComposeContainer compose = new DockerComposeContainer<>(new File(classLoader.getResource("test-compose.yml").getFile()))
+    private static DockerComposeContainer compose = new DockerComposeContainer<>(testComposeFile)
         .withExposedService(MONGO_SERVICE_NAME, MONGO_PORT, Wait.forListeningPort())
         .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ping").forStatusCode(200))
         .withPull(false)
@@ -45,7 +43,9 @@ public class RegnskapApiIntegration {
         .withLogConsumer(API_SERVICE_NAME, apiLog);
 
     @BeforeClass
-    public static void mongoSetup() {
+    public static void setup() {
+        compose.start();
+
         /*CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT));
         MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
@@ -56,6 +56,14 @@ public class RegnskapApiIntegration {
 
         mongoCollection.insertOne(regnskap2017);
         mongoCollection.insertOne(regnskap2018);*/
+    }
+
+    @AfterClass
+    public static void teardown() {
+        compose.stop();
+
+        boolean deleted = testComposeFile.delete();
+        logger.debug("Delete temporary test-compose.yml: " + deleted);
     }
 
     @Test
@@ -92,5 +100,25 @@ public class RegnskapApiIntegration {
 
     private URL buildRegnskapURL(String address) throws MalformedURLException {
         return new URL("http", compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT), address);
+    }
+
+    private static File createTmpComposeFile() {
+        try {
+            File tmpComposeFile = File.createTempFile("test-compose", ".yml");
+            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, Charset.defaultCharset());
+
+            try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
+                int read;
+                byte[] bytes = new byte[1024];
+
+                while ((read = testCompseStream.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+            }
+
+            return tmpComposeFile;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
