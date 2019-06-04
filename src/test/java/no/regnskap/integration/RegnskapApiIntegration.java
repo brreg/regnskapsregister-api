@@ -24,7 +24,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore //ignore service test until it is working on Jenkins
+@Ignore //ignore service test until it is working on Jenkins trigger build
 public class RegnskapApiIntegration {
 
     @ClassRule
