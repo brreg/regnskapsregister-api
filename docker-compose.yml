@@ -6,13 +6,16 @@ services:
     depends_on:
       - mongodb
     restart: always
+    environment:
+      - RRAPI_MONGO_USERNAME
+      - RRAPI_MONGO_PASSWORD
     ports:
       - 8080:8080
 
   mongodb:
     image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=regnskapAdmin
-      - MONGO_INITDB_ROOT_PASSWORD=qwer1234
+      - MONGO_INITDB_ROOT_USERNAME=$RRAPI_MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$RRAPI_MONGO_PASSWORD
     ports:
       - 27017:27017

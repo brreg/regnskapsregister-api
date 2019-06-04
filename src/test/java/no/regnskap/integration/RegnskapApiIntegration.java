@@ -1,4 +1,4 @@
-package no.regnskap.integration;
+/*package no.regnskap.integration;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
@@ -56,7 +56,7 @@ public class RegnskapApiIntegration {
             logger.debug("Unable to create temporary test-compose.yml");
         }
 
-        /*CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT));
         MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
         MongoClientOptions options = MongoClientOptions.builder().build();
@@ -65,7 +65,7 @@ public class RegnskapApiIntegration {
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
         mongoCollection.insertOne(regnskap2017);
-        mongoCollection.insertOne(regnskap2018);*/
+        mongoCollection.insertOne(regnskap2018);
     }
 
     @AfterClass
@@ -78,7 +78,7 @@ public class RegnskapApiIntegration {
         String response = simpleGet(buildRegnskapURL("/ping"));
         Assert.assertEquals("RegnskapAPI is available", "pong", response);
     }
-/*
+
     @Test
     public void getByOrgnrTest() throws Exception {
         String response = simpleGet(buildRegnskapURL("/regnskap?orgNummer=orgnummer"));
@@ -92,7 +92,7 @@ public class RegnskapApiIntegration {
         Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2018), response2018);
         Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2017), response2017);
     }
-*/
+
     private String simpleGet(URL address) throws Exception {
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
         con.setRequestMethod("GET");
@@ -112,6 +112,7 @@ public class RegnskapApiIntegration {
     private static File createTestComposeFile() {
         try {
             File tmpComposeFile = tmpFolder.newFile("test-compose.yml");
+
             InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, Charset.defaultCharset());
 
             try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
@@ -128,4 +129,4 @@ public class RegnskapApiIntegration {
             return null;
         }
     }
-}
+}*/
