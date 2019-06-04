@@ -23,9 +23,8 @@ import static no.regnskap.TestData.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-//ignore service test until it is working on Jenkins
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
+@Ignore //ignore service test until it is working on Jenkins
 public class RegnskapApiIntegration {
 
     @ClassRule
