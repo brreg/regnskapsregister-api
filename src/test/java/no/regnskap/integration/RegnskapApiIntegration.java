@@ -28,7 +28,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore //ignore service test until it is working on Jenkins
 @TestPropertySource(locations="classpath:test.properties")
 public class RegnskapApiIntegration {
     private static File testComposeFile = createTmpComposeFile();
@@ -39,19 +38,21 @@ public class RegnskapApiIntegration {
 
     @BeforeClass
     public static void setup() {
-        if (testComposeFile != null) {
+        if (testComposeFile != null && testComposeFile.exists()) {
             compose = new DockerComposeContainer<>(testComposeFile)
                 .withExposedService(MONGO_SERVICE_NAME, MONGO_PORT, Wait.forListeningPort())
-                .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ping").forStatusCode(200))
+                .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ready").forStatusCode(200))
+                .withTailChildContainers(true)
                 .withPull(false)
+                .withLocalCompose(true)
                 .withLogConsumer(MONGO_SERVICE_NAME, mongoLog)
                 .withLogConsumer(API_SERVICE_NAME, apiLog);
 
             compose.start();
         } else {
-            logger.debug("Unable to create temporary test-compose.yml");
+            logger.debug("Unable to start containers, missing test-compose.yml");
         }
-
+/*
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT));
         MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
@@ -61,15 +62,18 @@ public class RegnskapApiIntegration {
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
         mongoCollection.insertOne(regnskap2017);
-        mongoCollection.insertOne(regnskap2018);
+        mongoCollection.insertOne(regnskap2018);*/
     }
 
     @AfterClass
     public static void teardown() {
-        compose.stop();
+        if (testComposeFile != null && testComposeFile.exists()) {
+            compose.stop();
 
-        boolean deleted = testComposeFile.delete();
-        logger.debug("Delete temporary test-compose.yml: " + deleted);
+            logger.debug("Delete temporary test-compose.yml: " + testComposeFile.delete());
+        } else {
+            logger.debug("Teardown skipped, missing test-compose.yml");
+        }
     }
 
     @Test
@@ -79,12 +83,14 @@ public class RegnskapApiIntegration {
     }
 
     @Test
+    @Ignore
     public void getByOrgnrTest() throws Exception {
         String response = simpleGet(buildRegnskapURL("/regnskap?orgNummer=orgnummer"));
         Assert.assertEquals(EXPECTED_RESPONSE_ORGNR, response);
     }
 
     @Test
+    @Ignore
     public void getById() throws Exception {
         String response2018 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_0.toHexString()));
         String response2017 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_1.toHexString()));
