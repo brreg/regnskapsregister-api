@@ -1,4 +1,4 @@
-/*package no.regnskap.integration;
+package no.regnskap.integration;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
@@ -7,7 +7,6 @@ import no.regnskap.model.RegnskapDB;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.*;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
@@ -32,17 +31,14 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @Ignore //ignore service test until it is working on Jenkins
 @TestPropertySource(locations="classpath:test.properties")
 public class RegnskapApiIntegration {
+    private static File testComposeFile = createTmpComposeFile();
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIntegration.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
     private static DockerComposeContainer compose;
 
-    @ClassRule
-    public static TemporaryFolder tmpFolder = new TemporaryFolder();
-
     @BeforeClass
     public static void setup() {
-        File testComposeFile = createTestComposeFile();
         if (testComposeFile != null) {
             compose = new DockerComposeContainer<>(testComposeFile)
                 .withExposedService(MONGO_SERVICE_NAME, MONGO_PORT, Wait.forListeningPort())
@@ -71,6 +67,9 @@ public class RegnskapApiIntegration {
     @AfterClass
     public static void teardown() {
         compose.stop();
+
+        boolean deleted = testComposeFile.delete();
+        logger.debug("Delete temporary test-compose.yml: " + deleted);
     }
 
     @Test
@@ -109,10 +108,9 @@ public class RegnskapApiIntegration {
         return new URL("http", compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT), address);
     }
 
-    private static File createTestComposeFile() {
+    private static File createTmpComposeFile() {
         try {
-            File tmpComposeFile = tmpFolder.newFile("test-compose.yml");
-
+            File tmpComposeFile = File.createTempFile("test-compose", ".yml");
             InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, Charset.defaultCharset());
 
             try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
@@ -129,4 +127,4 @@ public class RegnskapApiIntegration {
             return null;
         }
     }
-}*/
+}
