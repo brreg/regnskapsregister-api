@@ -9,12 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
+    private static final String MONGO_USER = "testuser";
+    private static final String MONGO_PASSWORD = "testpassword";
+
     public static final String API_SERVICE_NAME = "regnskapsregister";
     public static final String MONGO_SERVICE_NAME = "mongodb";
     public static final int API_PORT = 8080;
     public static final int MONGO_PORT = 27017;
-    public static final String DATABASE_NAME = "regnskap";
+    public static final String DATABASE_NAME = "regnskapAPI";
     public static final String COLLECTION_NAME = "regnskap";
+
+    public static String buildMongoURI(String host, int port) {
+        return "mongodb://" + MONGO_USER + ":" + MONGO_PASSWORD + "@" + host + ":" + port + "/" + DATABASE_NAME + "?authSource=admin&authMechanism=SCRAM-SHA-1";
+    }
 
     private static LocalDate startOfYear(int year) {
         return LocalDate.of(year, 1, 1);
@@ -148,14 +155,14 @@ public class TestData {
         "  regnskapsregister:\n" +
         "    image: brreg/regnskapsregister-api:latest\n" +
         "    environment:\n" +
-        "      - RRAPI_MONGO_USERNAME=testUser\n" +
-        "      - RRAPI_MONGO_PASSWORD=testPassword\n" +
+        "      - RRAPI_MONGO_USERNAME=" + MONGO_USER + "\n" +
+        "      - RRAPI_MONGO_PASSWORD=" + MONGO_PASSWORD + "\n" +
         "    depends_on:\n" +
         "      - mongodb\n" +
         "\n" +
         "  mongodb:\n" +
         "    image: mongo:latest\n" +
         "    environment:\n" +
-        "      - MONGO_INITDB_ROOT_USERNAME=testUser\n" +
-        "      - MONGO_INITDB_ROOT_PASSWORD=testPassword\n";
+        "      - MONGO_INITDB_ROOT_USERNAME=" + MONGO_USER + "\n" +
+        "      - MONGO_INITDB_ROOT_PASSWORD=" + MONGO_PASSWORD + "\n";
 }

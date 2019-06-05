@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -28,7 +27,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations="classpath:test.properties")
 public class RegnskapApiIntegration {
     private static File testComposeFile = createTmpComposeFile();
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIntegration.class);
@@ -52,17 +50,17 @@ public class RegnskapApiIntegration {
         } else {
             logger.debug("Unable to start containers, missing test-compose.yml");
         }
-/*
+
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-        ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT));
-        MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
-        MongoClientOptions options = MongoClientOptions.builder().build();
-        MongoClient mongoClient = new MongoClient(serverAddress, credentials, options);
+        MongoClientURI uri = new MongoClientURI(buildMongoURI(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT)));
+        MongoClient mongoClient = new MongoClient(uri);
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
         mongoCollection.insertOne(regnskap2017);
-        mongoCollection.insertOne(regnskap2018);*/
+        mongoCollection.insertOne(regnskap2018);
+
+        mongoClient.close();
     }
 
     @AfterClass
@@ -83,14 +81,12 @@ public class RegnskapApiIntegration {
     }
 
     @Test
-    @Ignore
     public void getByOrgnrTest() throws Exception {
         String response = simpleGet(buildRegnskapURL("/regnskap?orgNummer=orgnummer"));
         Assert.assertEquals(EXPECTED_RESPONSE_ORGNR, response);
     }
 
     @Test
-    @Ignore
     public void getById() throws Exception {
         String response2018 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_0.toHexString()));
         String response2017 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_1.toHexString()));
