@@ -15,6 +15,8 @@ public class TestData {
     public static final int MONGO_PORT = 27017;
     public static final String DATABASE_NAME = "regnskap";
     public static final String COLLECTION_NAME = "regnskap";
+    public static final String MONGO_USER = "regnskapAdmin";
+    public static final char[] MONGO_PASSWORD = "qwer1234".toCharArray();
 
     private static LocalDate startOfYear(int year) {
         return LocalDate.of(year, 1, 1);
@@ -1692,4 +1694,18 @@ public class TestData {
 
         return stringBuilder.toString();
     }
+
+    public static String TEST_COMPOSE = "version: \"2.0\"\n" +
+        "\n" +
+        "services:\n" +
+        "  regnskapsregister:\n" +
+        "    image: brreg/regnskapsregister-api:latest\n" +
+        "    depends_on:\n" +
+        "      - mongodb\n" +
+        "\n" +
+        "  mongodb:\n" +
+        "    image: mongo:latest\n" +
+        "    environment:\n" +
+        "      - MONGO_INITDB_ROOT_USERNAME=regnskapAdmin\n" +
+        "      - MONGO_INITDB_ROOT_PASSWORD=qwer1234\n";
 }

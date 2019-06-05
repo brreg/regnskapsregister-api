@@ -8,5 +8,3 @@ ARG JAR_FILE
 ADD target/${JAR_FILE} app.jar
 RUN sh -c 'touch /app.jar'
 CMD java -jar $JAVA_OPTS app.jar
-
-CMD ["java", "-Dspring.data.mongodb.uri=mongodb://mongodb:27017/regnskap","-Djava.security.egd=file:/dev/./urandom","-jar","./app.jar"]

@@ -6,14 +6,16 @@ services:
     depends_on:
       - mongodb
     restart: always
+    environment:
+      - RRAPI_MONGO_USERNAME
+      - RRAPI_MONGO_PASSWORD
     ports:
-      - 127.0.0.1:8080:8080
+      - 8080:8080
 
   mongodb:
     image: mongo:latest
-    volumes:
-      - $HOME/data/springboot-repository-data:/data/db
-      - $HOME/data/springboot-repository-bkp:/data/bkp
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$RRAPI_MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$RRAPI_MONGO_PASSWORD
     ports:
       - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
