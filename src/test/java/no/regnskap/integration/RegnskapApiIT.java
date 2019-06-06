@@ -4,11 +4,11 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import no.regnskap.model.RegnskapDB;
+import no.regnskap.testcategories.IntegrationTest;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.DockerComposeContainer;
@@ -20,16 +20,16 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static no.regnskap.TestData.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RegnskapApiIntegration {
+@Category(IntegrationTest.class)
+public class RegnskapApiIT {
     private static File testComposeFile = createTmpComposeFile();
-    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIntegration.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIT.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
     private static DockerComposeContainer compose;
@@ -113,7 +113,7 @@ public class RegnskapApiIntegration {
     private static File createTmpComposeFile() {
         try {
             File tmpComposeFile = File.createTempFile("test-compose", ".yml");
-            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, Charset.defaultCharset());
+            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, StandardCharsets.UTF_8);
 
             try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
                 int read;

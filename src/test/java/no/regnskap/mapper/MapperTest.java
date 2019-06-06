@@ -5,9 +5,11 @@ import no.regnskap.generated.model.Regnskap;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.model.RegnskapFieldsDB;
 import no.regnskap.model.RegnskapXmlWrap;
+import no.regnskap.testcategories.UnitTest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -19,6 +21,7 @@ import static no.regnskap.mapper.RegnskapXmlMapperKt.deserializeXmlString;
 import static no.regnskap.mapper.RegnskapMapperKt.mapXmlListForPersistence;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTest.class)
 public class MapperTest {
 
     private static RegnskapXmlWrap xmlWrap;

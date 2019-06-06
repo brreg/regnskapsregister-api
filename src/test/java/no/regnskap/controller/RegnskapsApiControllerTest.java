@@ -3,9 +3,11 @@ package no.regnskap.controller;
 import no.regnskap.TestData;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.RegnskapService;
+import no.regnskap.testcategories.UnitTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTest.class)
 public class RegnskapsApiControllerTest {
 
     @Mock
