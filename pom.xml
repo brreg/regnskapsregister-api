@@ -281,6 +281,9 @@
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <groups>${unittest.category}</groups>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                     <argLine>${surefireArgLine} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
                 </configuration>
             </plugin>
@@ -292,6 +295,10 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <groups>${integrationtest.category}</groups>
+                    <excludedGroups>${unittest.category}</excludedGroups>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
                 <executions>

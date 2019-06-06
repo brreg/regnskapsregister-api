@@ -27,9 +27,9 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Category(IntegrationTest.class)
-public class RegnskapApiIT {
+public class RegnskapApiTest {
     private static File testComposeFile = createTmpComposeFile();
-    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIT.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
     private static DockerComposeContainer compose;
