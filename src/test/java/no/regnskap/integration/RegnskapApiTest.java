@@ -4,14 +4,13 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import no.regnskap.model.RegnskapDB;
+import no.regnskap.testcategories.IntegrationTest;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -21,55 +20,58 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static no.regnskap.TestData.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-@RunWith(MockitoJUnitRunner.class)
-@Ignore //ignore service test until it is working on Jenkins
-@TestPropertySource(locations="classpath:test.properties")
-public class RegnskapApiIntegration {
+@Category(IntegrationTest.class)
+public class RegnskapApiTest {
     private static File testComposeFile = createTmpComposeFile();
-    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiIntegration.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
     private static DockerComposeContainer compose;
 
     @BeforeClass
     public static void setup() {
-        if (testComposeFile != null) {
+        if (testComposeFile != null && testComposeFile.exists()) {
             compose = new DockerComposeContainer<>(testComposeFile)
                 .withExposedService(MONGO_SERVICE_NAME, MONGO_PORT, Wait.forListeningPort())
-                .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ping").forStatusCode(200))
+                .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ready").forStatusCode(200))
+                .withTailChildContainers(true)
                 .withPull(false)
+                .withLocalCompose(true)
                 .withLogConsumer(MONGO_SERVICE_NAME, mongoLog)
                 .withLogConsumer(API_SERVICE_NAME, apiLog);
 
             compose.start();
         } else {
-            logger.debug("Unable to create temporary test-compose.yml");
+            logger.debug("Unable to start containers, missing test-compose.yml");
         }
 
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-        ServerAddress serverAddress = new ServerAddress(compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT));
-        MongoCredential credentials = MongoCredential.createScramSha1Credential(MONGO_USER, DATABASE_NAME, MONGO_PASSWORD);
-        MongoClientOptions options = MongoClientOptions.builder().build();
-        MongoClient mongoClient = new MongoClient(serverAddress, credentials, options);
+        MongoClientURI uri = new MongoClientURI(buildMongoURI(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT)));
+        MongoClient mongoClient = new MongoClient(uri);
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
         mongoCollection.insertOne(regnskap2017);
         mongoCollection.insertOne(regnskap2018);
+
+        mongoClient.close();
     }
 
     @AfterClass
     public static void teardown() {
-        compose.stop();
+        if (testComposeFile != null && testComposeFile.exists()) {
+            compose.stop();
 
-        boolean deleted = testComposeFile.delete();
-        logger.debug("Delete temporary test-compose.yml: " + deleted);
+            logger.debug("Delete temporary test-compose.yml: " + testComposeFile.delete());
+        } else {
+            logger.debug("Teardown skipped, missing test-compose.yml");
+        }
     }
 
     @Test
@@ -111,7 +113,7 @@ public class RegnskapApiIntegration {
     private static File createTmpComposeFile() {
         try {
             File tmpComposeFile = File.createTempFile("test-compose", ".yml");
-            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, Charset.defaultCharset());
+            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, StandardCharsets.UTF_8);
 
             try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
                 int read;
