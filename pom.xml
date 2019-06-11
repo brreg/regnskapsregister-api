@@ -30,7 +30,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <kotlin.version>1.3.21</kotlin.version>
+        <kotlin.version>1.3.31</kotlin.version>
 
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
