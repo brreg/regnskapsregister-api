@@ -1,10 +1,10 @@
 openapi: 3.0.2
 info:
-  description: Tilgjengliggjoer noekkeltall fra virksomheters aarsregnskap
+  description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
   version: '1.0'
   title: Regnskapsregisteret API
   contact:
-    name: Broennoeysundregistrene
+    name: Brønnøysundregistrene
     url: 'https://fellesdatakatalog.brreg.no'
     email: fellesdatakatalog@brreg.no
   license:
@@ -21,7 +21,7 @@ paths:
       tags:
         - regnskap
       summary: Query for regnskaps.
-      description: Returnerer en samling aarsregnskap
+      description: Returnerer en samling årsregnskap
       operationId: getRegnskap
       parameters:
         - name: orgNummer
@@ -45,7 +45,7 @@ paths:
     get:
       tags:
         - regnskap
-      description: Hent et spesifikt aarsregnskap for en virksomhet
+      description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
         - name: id
@@ -67,7 +67,7 @@ components:
   schemas:
     Regnskap:
         type: object
-        description: Et regnskap for et gitt aar
+        description: Et regnskap for et gitt år
         properties:
           id:
             type: string
@@ -181,7 +181,7 @@ components:
           type: number
     Virksomhet:
       type: object
-      description: Virksomheten som regnskapet tilhoerer
+      description: Virksomheten som regnskapet tilhører
       properties:
         organisasjonsnummer:
           type: string
