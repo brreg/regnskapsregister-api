@@ -14,7 +14,8 @@ tags:
   - name: regnskapsregisteret
     description: Regnskapsregister API
 servers:
-  - url: 'https://data.brreg.no/regnskapsregisteret'
+  - url: 'http://rreg.ut1.rreg-dev.brreg.no'
+    description: Server i utviklingsmiljø
 paths:
   /regnskap:
     get:
