@@ -40,8 +40,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Regnskap'
-        '404':
-          description: Ikke funnet
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Regnskap'
   /regnskap/{id}:
     get:
       tags:
@@ -62,8 +65,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Regnskap"
-        '404':
-          description: Ikke funnet
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Regnskap"
 components:
   schemas:
     Regnskap:
@@ -213,7 +217,7 @@ components:
       properties:
         smaaForetak:
           type: boolean
-        regskapsregler:
+        regnskapsregler:
           type: string
           enum:
             - IFRS

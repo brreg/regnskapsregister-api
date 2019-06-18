@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "90ff3339-5705-44f9-b5d2-f467910bb398",
+		"name": "RegnskapsAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "LOCALHOST:8080/regnskaps/5ce64e54857aba00011d8a38",
+					"host": [
+						"LOCALHOST"
+					],
+					"port": "8080",
+					"path": [
+						"regnskaps",
+						"5ce64e54857aba00011d8a38"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by Orgnr",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "LOCALHOST:8080/regnskap?orgNummer=980919676",
+					"host": [
+						"LOCALHOST"
+					],
+					"port": "8080",
+					"path": [
+						"regnskap"
+					],
+					"query": [
+						{
+							"key": "orgNummer",
+							"value": "980919676"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update local db with testdata",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "LOCALHOST:8080/regnskap/update?filename=20190327213825-masse-2",
+					"host": [
+						"LOCALHOST"
+					],
+					"port": "8080",
+					"path": [
+						"regnskap",
+						"update"
+					],
+					"query": [
+						{
+							"key": "filename",
+							"value": "20190327213825-masse-2"
+						},
+						{
+							"key": "filename",
+							"value": "test-data",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

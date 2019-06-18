@@ -2,11 +2,20 @@ version: "3.5"
 
 services:
   regnskapsregister:
-    build:
-      context: ./
-      args:
-        JAR_FILE: regnskapsregister-api-1.0.0-SNAPSHOT.jar
-    image: regnskap/test:latest
+    image: brreg/regnskapsregister-api:latest
+    depends_on:
+      - mongodb
     restart: always
+    environment:
+      - RRAPI_MONGO_USERNAME
+      - RRAPI_MONGO_PASSWORD
     ports:
-      - 127.0.0.1:8080:8080
+      - 8080:8080
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$RRAPI_MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$RRAPI_MONGO_PASSWORD
+    ports:
+      - 27017:27017
