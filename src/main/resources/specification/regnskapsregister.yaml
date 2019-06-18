@@ -1,10 +1,10 @@
 openapi: 3.0.2
 info:
-  description: Tilgjengliggjoer noekkeltall fra virksomheters aarsregnskap
-  version: '1.0'
+  description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
+  version: '1.0.1'
   title: Regnskapsregisteret API
   contact:
-    name: Broennoeysundregistrene
+    name: Brønnøysundregistrene
     url: 'https://fellesdatakatalog.brreg.no'
     email: fellesdatakatalog@brreg.no
   license:
@@ -14,20 +14,21 @@ tags:
   - name: regnskapsregisteret
     description: Regnskapsregister API
 servers:
-  - url: 'https://data.brreg.no/regnskapsregisteret'
+  - url: 'http://rreg.ut1.rreg-dev.brreg.no'
+    description: Server i utviklingsmiljø
 paths:
   /regnskap:
     get:
       tags:
         - regnskap
-      summary: Query for regnskaps.
-      description: Returnerer en samling aarsregnskap
+      summary: Query for regnskap.
+      description: Returnerer en samling årsregnskap
       operationId: getRegnskap
       parameters:
         - name: orgNummer
           in: query
           description: Virksomhetens organisasjonsnummer
-          required: false
+          required: true
           schema:
             type: string
       responses:
@@ -44,11 +45,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Regnskap'
-  /regnskaps/{id}:
+  /regnskap/{id}:
     get:
       tags:
         - regnskap
-      description: Hent et spesifikt aarsregnskap for en virksomhet
+      description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
         - name: id
@@ -71,7 +72,7 @@ components:
   schemas:
     Regnskap:
         type: object
-        description: Et regnskap for et gitt aar
+        description: Et regnskap for et gitt år
         properties:
           id:
             type: string
@@ -185,7 +186,7 @@ components:
           type: number
     Virksomhet:
       type: object
-      description: Virksomheten som regnskapet tilhoerer
+      description: Virksomheten som regnskapet tilhører
       properties:
         organisasjonsnummer:
           type: string
@@ -194,8 +195,6 @@ components:
         organisasjonsform:
           type: string
         morselskap:
-          type: boolean
-        levertAarsregnskap:
           type: boolean
     Tidsperiode:
       type: object
