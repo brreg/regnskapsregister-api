@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
-  version: '1.0'
+  version: '1.0.1'
   title: Regnskapsregisteret API
   contact:
     name: Brønnøysundregistrene
@@ -21,14 +21,14 @@ paths:
     get:
       tags:
         - regnskap
-      summary: Query for regnskaps.
+      summary: Query for regnskap.
       description: Returnerer en samling årsregnskap
       operationId: getRegnskap
       parameters:
         - name: orgNummer
           in: query
           description: Virksomhetens organisasjonsnummer
-          required: false
+          required: true
           schema:
             type: string
       responses:
@@ -42,7 +42,7 @@ paths:
                   $ref: '#/components/schemas/Regnskap'
         '404':
           description: Ikke funnet
-  /regnskaps/{id}:
+  /regnskap/{id}:
     get:
       tags:
         - regnskap
@@ -191,8 +191,6 @@ components:
         organisasjonsform:
           type: string
         morselskap:
-          type: boolean
-        levertAarsregnskap:
           type: boolean
     Tidsperiode:
       type: object
