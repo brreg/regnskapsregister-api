@@ -1,6 +1,6 @@
 # regnskapsregister-API
 
-Nøkkeltall fra årsregnskapet for siste regnskapsår som åpne data.
+Key values from annual accounts for the last accounting year as open data.
 
 # Local development
 
