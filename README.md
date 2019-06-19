@@ -4,7 +4,7 @@ Key values from annual accounts for the last accounting year as open data.
 
 # Local development
 
-## Install java, git, maven, docker og docker-compose
+## Install java, git, maven, docker and docker-compose
 
 ##### Linux
 ```
