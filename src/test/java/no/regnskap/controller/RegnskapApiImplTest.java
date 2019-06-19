@@ -19,10 +19,11 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)
-public class RegnskapApiControllerTest {
+public class RegnskapApiImplTest {
 
     @Mock
     HttpServletRequest httpServletRequestMock;
@@ -34,34 +35,62 @@ public class RegnskapApiControllerTest {
     UpdateService updateServiceMock;
 
     @InjectMocks
-    RegnskapApiControllerImpl regnskapApiController;
+    RegnskapApiImpl regnskapApi;
 
     @Before
     public void resetMocks() {
-        Mockito.reset();
+        Mockito.reset(
+            httpServletRequestMock,
+            regnskapServiceMock,
+            updateServiceMock
+        );
     }
 
     @Test
-    public void okResponseWhenEmptyResult() {
+    public void getRegnskapOkWhenEmpty() {
         List<Regnskap> emptyList = TestData.emptyRegnskapList;
         Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
             .thenReturn(emptyList);
 
-        ResponseEntity<List<Regnskap>> response = regnskapApiController.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(response.getBody(), TestData.emptyRegnskapList);
     }
 
     @Test
-    public void okResponseWhenNonEmptyResult() {
+    public void getRegnskapOkWhenNonEmpty() {
         List<Regnskap> regnskapList = TestData.regnskapList;
         Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
             .thenReturn(regnskapList);
 
-        ResponseEntity<List<Regnskap>> response = regnskapApiController.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(response.getBody(), TestData.regnskapList);
+    }
+
+    @Test
+    public void getRegnskapByIdNotFoundWhenEmpty() {
+        Optional<Regnskap> empty = Optional.empty();
+        Mockito.when(regnskapServiceMock.getById("id"))
+            .thenReturn(empty);
+
+        ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertNull(response.getBody());
+    }
+
+    @Test
+    public void getRegnskapByIdOkWhenNonEmpty() {
+        Optional<Regnskap> regnskap = Optional.of(TestData.regnskap);
+        Mockito.when(regnskapServiceMock.getById("id"))
+            .thenReturn(regnskap);
+
+        ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), TestData.regnskap);
     }
 }

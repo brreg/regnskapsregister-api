@@ -81,15 +81,15 @@ public class RegnskapApiTest {
     }
 
     @Test
-    public void getByOrgnrTest() throws Exception {
+    public void getByOrgnr() throws Exception {
         String response = simpleGet(buildRegnskapURL("/regnskap?orgNummer=orgnummer"));
         Assert.assertEquals(EXPECTED_RESPONSE_ORGNR, response);
     }
 
     @Test
     public void getById() throws Exception {
-        String response2018 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_0.toHexString()));
-        String response2017 = simpleGet(buildRegnskapURL("/regnskaps/" + GENERATED_ID_1.toHexString()));
+        String response2018 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_0.toHexString()));
+        String response2017 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_1.toHexString()));
         Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2018), response2018);
         Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2017), response2017);
     }
