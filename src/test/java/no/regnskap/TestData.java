@@ -54,7 +54,6 @@ public class TestData {
                 .organisasjonsnummer("orgnummer")
                 .organisasjonsform("orgform")
                 .morselskap(true)
-                .levertAarsregnskap(true)
                 .navn(null))
         .egenkapitalGjeld(
             new EgenkapitalGjeld().egenkapital(
@@ -140,7 +139,7 @@ public class TestData {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{\"id\":\"");
         stringBuilder.append(id.toHexString());
-        stringBuilder.append("\",\"virksomhet\":{\"organisasjonsnummer\":\"orgnummer\",\"navn\":null,\"organisasjonsform\":\"orgform\",\"morselskap\":false,\"levertAarsregnskap\":true},\"regnskapsperiode\":{\"fraDato\":\"");
+        stringBuilder.append("\",\"virksomhet\":{\"organisasjonsnummer\":\"orgnummer\",\"navn\":null,\"organisasjonsform\":\"orgform\",\"morselskap\":false},\"regnskapsperiode\":{\"fraDato\":\"");
         stringBuilder.append(year);
         stringBuilder.append("-01-01\",\"tilDato\":\"");
         stringBuilder.append(year);

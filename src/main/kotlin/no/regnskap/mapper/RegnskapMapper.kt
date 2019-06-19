@@ -91,7 +91,6 @@ fun mapPersistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
                 .organisasjonsnummer(persistenceDTO.orgnr)
                 .organisasjonsform(persistenceDTO.orgform)
                 .morselskap(persistenceDTO.morselskap)
-                .levertAarsregnskap(true) // TODO Change to correct value
                 .navn(null)) // TODO Change to correct value
         .egenkapitalGjeld(persistenceDTO.fields.egenkapitalGjeld)
         .eiendeler(persistenceDTO.fields.eiendeler)
