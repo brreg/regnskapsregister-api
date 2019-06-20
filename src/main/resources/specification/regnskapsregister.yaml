@@ -1,8 +1,8 @@
 openapi: 3.0.2
 info:
-  description: Tilgjengliggjør nøkkeltall fra virksomheters årsregnskap
+  title: Nøkkeltall frå årsregnskapet
+  description: Tilgjengeliggjøring av nøkkeltall fra virksomheters årsregnskap
   version: '1.0.1'
-  title: Regnskapsregisteret API
   contact:
     name: Brønnøysundregistrene
     url: 'https://fellesdatakatalog.brreg.no'
