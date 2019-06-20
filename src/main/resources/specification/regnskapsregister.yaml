@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
-  title: Nøkkeltall frå årsregnskapet
-  description: Tilgjengeliggjøring av nøkkeltall fra virksomheters årsregnskap
+  title: Nøkkeltall fra årsregnskapet
+  description: Tilgjengeliggjøring av nøkkeltall fra virksomheters siste innsendte årsregnskap som er godkjent i Regnskapsregisteret. Gir kun tilgang til årsregnskap som følger ordinær oppstillingsplan. Årsregnskap som følger særoppsett for bank og forsikring er ikke tilgjengelig.
   version: '1.0.1'
   contact:
     name: Brønnøysundregistrene
