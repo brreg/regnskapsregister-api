@@ -42,7 +42,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @RequestMapping(value="/regnskap/update", method=GET)
     public ResponseEntity queueUpdateTask(HttpServletRequest httpServletRequest) {
-        UpdateService.addTask(Task.CHECK_FOR_UPDATES);
+        UpdateService.addTask(Task.UPDATE_ACCOUNTING_DATA);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

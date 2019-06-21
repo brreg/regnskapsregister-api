@@ -7,8 +7,8 @@ import no.regnskap.generated.model.Tidsperiode
 import no.regnskap.generated.model.Virksomhet
 import no.regnskap.model.RegnskapDB
 import no.regnskap.model.RegnskapFieldsDB
-import no.regnskap.model.RegnskapXml
 import no.regnskap.model.RegnskapXmlHead
+import no.regnskap.model.RegnskapXmlWrap
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -16,10 +16,10 @@ import java.time.format.DateTimeFormatter
 private const val XML_TRUE_STRING = "J"
 private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
-fun mapXmlListForPersistence(regnskapXml: List<RegnskapXml>): List<RegnskapDB> {
+fun RegnskapXmlWrap.mapXmlListForPersistence(): List<RegnskapDB> {
     val toPersist: MutableMap<String, RegnskapDB> = HashMap()
 
-    regnskapXml.forEach {
+    list.forEach {
         if(it.head != null) {
             val key = it.head.orgnr + it.head.regnaar
             val mapped = toPersist.getOrDefault(key, it.head.createRegnskapDB())
@@ -69,32 +69,32 @@ private fun RegnskapXmlHead.createRegnskapDB(): RegnskapDB {
 private fun booleanFromXmlData(trueOrFalse: String?): Boolean =
     XML_TRUE_STRING == trueOrFalse
 
-fun mapPersistenceToGenerated(persistenceDTO: RegnskapDB): Regnskap =
+fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
     Regnskap()
-        .id(persistenceDTO.id?.toHexString())
-        .avviklingsregnskap(persistenceDTO.avviklingsregnskap)
-        .valuta(persistenceDTO.valutakode)
-        .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(persistenceDTO.aarsregnskapstype.toLowerCase()))
+        .id(id?.toHexString())
+        .avviklingsregnskap(avviklingsregnskap)
+        .valuta(valutakode)
+        .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
         .revisjon(
             Revisjon()
-                .ikkeRevidertAarsregnskap(persistenceDTO.revisorberetningIkkeLevert))
+                .ikkeRevidertAarsregnskap(revisorberetningIkkeLevert))
         .regnskapsperiode(
             Tidsperiode()
-                .fraDato(persistenceDTO.startdato)
-                .tilDato(persistenceDTO.avslutningsdato))
+                .fraDato(startdato)
+                .tilDato(avslutningsdato))
         .regnkapsprinsipper(
             Regnskapsprinsipper()
-                .smaaForetak(persistenceDTO.reglerSmaa)
+                .smaaForetak(reglerSmaa)
                 .regnskapsregler(null)) //TODO Change to correct value
         .virksomhet(
             Virksomhet()
-                .organisasjonsnummer(persistenceDTO.orgnr)
-                .organisasjonsform(persistenceDTO.orgform)
-                .morselskap(persistenceDTO.morselskap)
+                .organisasjonsnummer(orgnr)
+                .organisasjonsform(orgform)
+                .morselskap(morselskap)
                 .navn(null)) // TODO Change to correct value
-        .egenkapitalGjeld(persistenceDTO.fields.egenkapitalGjeld)
-        .eiendeler(persistenceDTO.fields.eiendeler)
-        .resultatregnskapResultat(persistenceDTO.fields.resultatregnskapResultat)
+        .egenkapitalGjeld(fields.egenkapitalGjeld)
+        .eiendeler(fields.eiendeler)
+        .resultatregnskapResultat(fields.resultatregnskapResultat)
 
 private fun String.localDateFromXmlDateString(): LocalDate =
     LocalDate.parse(this, dateTimeFormatter)

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface RegnskapRepository extends MongoRepository<RegnskapDB, String> {
-    public List<RegnskapDB> findByOrgnr(String orgnr);
+    List<RegnskapDB> findByOrgnrOrderByJournalnrDesc(String orgnr);
 }

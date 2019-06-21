@@ -22,8 +22,8 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document("regnskap_log")
-class Checksum (
-    @Indexed(unique = true) val checksum: String
+class RegnskapLog (
+    @Indexed(unique = true) val filename: String
 ) {
     @Id
     var id: String? = null

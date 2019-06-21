@@ -57,8 +57,9 @@ public class RegnskapApiTest {
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
         MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
 
+        mongoCollection.insertOne(regnskap2018Second);
         mongoCollection.insertOne(regnskap2017);
-        mongoCollection.insertOne(regnskap2018);
+        mongoCollection.insertOne(regnskap2018First);
 
         mongoClient.close();
     }
@@ -88,10 +89,10 @@ public class RegnskapApiTest {
 
     @Test
     public void getById() throws Exception {
-        String response2018 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_0.toHexString()));
-        String response2017 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_1.toHexString()));
-        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2018), response2018);
-        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2017), response2017);
+        String response2018 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_1.toHexString()));
+        String response2017 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_0.toHexString()));
+        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2018), response2018);
+        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2017), response2017);
     }
 
     private String simpleGet(URL address) throws Exception {
