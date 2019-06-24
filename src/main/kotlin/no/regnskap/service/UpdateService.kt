@@ -21,7 +21,6 @@ import java.io.InputStream
 
 private val LOGGER = LoggerFactory.getLogger(UpdateService::class.java)
 private val scheduledTasks = LinkedList<String>()
-private val sftpProperties = SftpProperties()
 
 enum class Task { UPDATE_ACCOUNTING_DATA, NO_TASKS }
 
@@ -63,6 +62,8 @@ class UpdateService(
         try {
             val jsch = JSch()
             val config = Properties()
+            val sftpProperties = SftpProperties()
+
             config["StrictHostKeyChecking"] = "no"
 
             session = jsch.getSession(sftpProperties.user, sftpProperties.host, sftpProperties.port)

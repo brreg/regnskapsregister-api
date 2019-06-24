@@ -90,8 +90,7 @@ fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
             Virksomhet()
                 .organisasjonsnummer(orgnr)
                 .organisasjonsform(orgform)
-                .morselskap(morselskap)
-                .navn(null)) // TODO Change to correct value
+                .morselskap(morselskap))
         .egenkapitalGjeld(fields.egenkapitalGjeld)
         .eiendeler(fields.eiendeler)
         .resultatregnskapResultat(fields.resultatregnskapResultat)
