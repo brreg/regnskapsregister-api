@@ -103,7 +103,6 @@ components:
             $ref: "#/components/schemas/ResultatregnskapResultat"
     ResultatregnskapResultat:
       type: object
-      description: bladibladibla
       externalDocs:
         description: Begrepsreferanse
         url: https://jira.brreg.no/browse/BEGREP-821
@@ -189,8 +188,6 @@ components:
       description: Virksomheten som regnskapet tilhører
       properties:
         organisasjonsnummer:
-          type: string
-        navn:
           type: string
         organisasjonsform:
           type: string
