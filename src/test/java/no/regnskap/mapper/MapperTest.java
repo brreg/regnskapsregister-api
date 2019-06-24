@@ -31,7 +31,7 @@ public class MapperTest {
     @BeforeClass
     public static void mappingFromXmlToResponse() throws IOException {
         xmlWrap = deserializeXmlString(XmlTestData.xmlTestString);
-        listRegnskapDB = mapXmlListForPersistence(xmlWrap.getList());
+        listRegnskapDB = mapXmlListForPersistence(xmlWrap);
 
         listRegnskap = listRegnskapDB
             .stream()

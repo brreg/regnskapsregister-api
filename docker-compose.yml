@@ -9,6 +9,11 @@ services:
     environment:
       - RRAPI_MONGO_USERNAME
       - RRAPI_MONGO_PASSWORD
+      - RRAPI_SFTP_SERVER
+      - RRAPI_SFTP_USER
+      - RRAPI_SFTP_PASSWORD
+      - RRAPI_SFTP_PORT
+      - RRAPI_SFTP_DIRECTORY
     ports:
       - 8080:8080
 

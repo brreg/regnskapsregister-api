@@ -49,6 +49,11 @@ Open ~/.bashrc and add the lines
 ```
 export RRAPI_MONGO_USERNAME="rr_db"
 export RRAPI_MONGO_PASSWORD="Passw0rd"
+export RRAPI_SFTP_SERVER="rr_sftp_host"
+export RRAPI_SFTP_USER="rr_sftp_user"
+export RRAPI_SFTP_PASSWORD="rr_sftp_pass"
+export RRAPI_SFTP_PORT="rr_sftp_port"
+export RRAPI_SFTP_DIRECTORY="rr_sftp_dir"
 ```
 Update from ~/.bashrc with
 ```
