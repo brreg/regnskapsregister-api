@@ -21,7 +21,8 @@ class RegnskapService (private val regnskapRepository: RegnskapRepository) {
             .distinctBy { it.regnaar } // Filters the list by the first objects with a distinct year, since it's already sorted the list will be the most recent data for each year
             .maxBy { it.regnaar } // Only return data from the last registered year
             .let {
-                if(it != null) Collections.singletonList(it.mapPersistenceToGenerated())
+                if(it != null) Collections.singletonList(it)
                 else emptyList()
             } // Return as list
+            .map { it.mapPersistenceToGenerated() }
 }
