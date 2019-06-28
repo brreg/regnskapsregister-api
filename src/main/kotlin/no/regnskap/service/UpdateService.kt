@@ -16,6 +16,7 @@ import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.Session
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
 import java.io.InputStream
 
@@ -41,18 +42,20 @@ class UpdateService(
     fun startSchedule() =
         addTask(Task.UPDATE_ACCOUNTING_DATA)
 
-    private fun InputStream.persist(filename: String) {
-        LOGGER.debug("Persistence of Regnskap, filename: {}", filename)
+    private fun InputStream.persist(filename: String) =
+        try {
+            regnskapRepository.saveAll(
+                bufferedReader()
+                    .use(BufferedReader::readText)
+                    .deserializeXmlString()
+                    .mapXmlListForPersistence()
+                    .filter { it.essentialFieldsIncluded() }
+            )
 
-        regnskapRepository.saveAll(
-            bufferedReader()
-                .use(BufferedReader::readText)
-                .deserializeXmlString()
-                .mapXmlListForPersistence()
-        )
-
-        regnskapLogRepository.save(RegnskapLog(filename))
-    }
+            regnskapLogRepository.save(RegnskapLog(filename))
+        } catch (ex: Exception) {
+            LOGGER.debug("Persistence failed for: $filename: ", ex.printStackTrace())
+        }
 
     private fun updateAccountingData() {
         var session: Session? = null
@@ -83,7 +86,8 @@ class UpdateService(
             //Iterate through list of folder content
             fileList?.let{
                 for (item in it) {
-                    if (!item.attrs.isDir && regnskapLogRepository.findOneByFilename(item.filename) == null) { // Do not download if it's a directory or if the file already has been persisted
+                    val extension = item.filename.substring(item.filename.lastIndexOf('.') + 1)
+                    if (!item.attrs.isDir && extension.equals("xml") && regnskapLogRepository.findOneByFilename(item.filename) == null) { // Do not download if it's a directory, not xml or if the file already has been persisted
                         channelSftp
                             .get(sftpProperties.directory + "/" + item.filename) // get InputStream for file
                             .persist(item.filename) // Persist data from InputStream
