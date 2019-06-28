@@ -56,9 +56,8 @@ private fun RegnskapXmlHead.createRegnskapDB(): RegnskapDB {
     regnskapDB.utarbeidetRegnskapsforer = booleanFromXmlData(utarbeidetRegnskapsforer)
     regnskapDB.revisorberetningIkkeLevert = booleanFromXmlData(revisorberetningIkkeLevert)
 
-    regnskapDB.avslutningsdato = avslutningsdato.localDateFromXmlDateString()
-    regnskapDB.mottattDato = mottattDato.localDateFromXmlDateString()
-    regnskapDB.startdato = startdato.localDateFromXmlDateString()
+    regnskapDB.avslutningsdato = avslutningsdato?.localDateFromXmlDateString()
+    regnskapDB.startdato = startdato?.localDateFromXmlDateString()
 
     regnskapDB.fields = RegnskapFieldsDB()
 
@@ -98,3 +97,5 @@ fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
 private fun String.localDateFromXmlDateString(): LocalDate =
     LocalDate.parse(this, dateTimeFormatter)
 
+fun RegnskapDB.essentialFieldsIncluded() =
+    orgnr != null && avslutningsdato != null && startdato != null && journalnr != null

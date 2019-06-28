@@ -27,6 +27,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Category(IntegrationTest.class)
+@Ignore
 public class RegnskapApiTest {
     private static File testComposeFile = createTmpComposeFile();
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);

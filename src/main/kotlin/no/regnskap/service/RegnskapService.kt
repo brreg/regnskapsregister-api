@@ -13,7 +13,7 @@ class RegnskapService (private val regnskapRepository: RegnskapRepository) {
     fun getById(id: String): Optional<Regnskap> =
         regnskapRepository
             .findById(id)
-            .flatMap { Optional.of(it.mapPersistenceToGenerated()) }
+            .map { it.mapPersistenceToGenerated() }
 
     fun getByOrgnr(orgnr: String): List<Regnskap> =
         regnskapRepository
