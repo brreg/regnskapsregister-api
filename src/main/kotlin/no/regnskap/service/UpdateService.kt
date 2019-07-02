@@ -53,8 +53,6 @@ class UpdateService(
             )
 
             regnskapLogRepository.save(RegnskapLog(filename))
-
-            LOGGER.info("$filename persisted")
         } catch (ex: Exception) {
             LOGGER.error("Persistence failed for: $filename: ", ex.printStackTrace())
         }
@@ -98,7 +96,7 @@ class UpdateService(
             }
 
         } catch (ex: Exception) {
-            LOGGER.error("Exception when downloading accounting files", ex.message)
+            LOGGER.error("Exception when downloading accounting files", ex.printStackTrace())
         } finally {
             channelSftp?.disconnect()
             channel?.disconnect()
