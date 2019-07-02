@@ -53,8 +53,10 @@ class UpdateService(
             )
 
             regnskapLogRepository.save(RegnskapLog(filename))
+
+            LOGGER.info("$filename persisted")
         } catch (ex: Exception) {
-            LOGGER.debug("Persistence failed for: $filename: ", ex.printStackTrace())
+            LOGGER.error("Persistence failed for: $filename: ", ex.printStackTrace())
         }
 
     private fun updateAccountingData() {
@@ -96,7 +98,7 @@ class UpdateService(
             }
 
         } catch (ex: Exception) {
-            LOGGER.debug("Exception when downloading accounting files", ex.message)
+            LOGGER.error("Exception when downloading accounting files", ex.message)
         } finally {
             channelSftp?.disconnect()
             channel?.disconnect()
@@ -117,10 +119,10 @@ class UpdateService(
         fun addTask(task: Task) =
             synchronized(scheduledTasks) {
                 if (scheduledTasks.contains(task.name)) {
-                    LOGGER.debug("{} already added to queue, duplicate not added", task)
+                    LOGGER.info("{} already added to queue, duplicate not added", task)
                 } else {
                     scheduledTasks.add(task.name)
-                    LOGGER.debug("{} added to queue", task)
+                    LOGGER.info("{} added to queue", task)
                 }
             }
     }
