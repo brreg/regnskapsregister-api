@@ -27,14 +27,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "LOCALHOST:8080/regnskaps/5ce64e54857aba00011d8a38",
+					"raw": "LOCALHOST:8080/regnskap/5d1aed9d2f5af00006573c78",
 					"host": [
 						"LOCALHOST"
 					],
 					"port": "8080",
 					"path": [
-						"regnskaps",
-						"5ce64e54857aba00011d8a38"
+						"regnskap",
+						"5d1aed9d2f5af00006573c78"
 					]
 				}
 			},
@@ -62,7 +62,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "LOCALHOST:8080/regnskap?orgNummer=980919676",
+					"raw": "LOCALHOST:8080/regnskap?orgNummer=989957562",
 					"host": [
 						"LOCALHOST"
 					],
@@ -73,7 +73,7 @@
 					"query": [
 						{
 							"key": "orgNummer",
-							"value": "980919676"
+							"value": "989957562"
 						}
 					]
 				}
@@ -81,7 +81,7 @@
 			"response": []
 		},
 		{
-			"name": "Update local db with testdata",
+			"name": "Update",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -96,7 +96,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "LOCALHOST:8080/regnskap/update?filename=20190327213825-masse-2",
+					"raw": "LOCALHOST:8080/regnskap/update",
 					"host": [
 						"LOCALHOST"
 					],
@@ -104,17 +104,6 @@
 					"path": [
 						"regnskap",
 						"update"
-					],
-					"query": [
-						{
-							"key": "filename",
-							"value": "20190327213825-masse-2"
-						},
-						{
-							"key": "filename",
-							"value": "test-data",
-							"disabled": true
-						}
 					]
 				}
 			},
