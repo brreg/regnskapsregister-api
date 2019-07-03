@@ -44,13 +44,11 @@ class UpdateService(
         addTask(Task.UPDATE_ACCOUNTING_DATA)
 */
     fun updateDatabase(file: MultipartFile) {
-        GlobalScope.launch {
             val filename = file.originalFilename
             val extension = filename?.substring(filename.lastIndexOf('.') + 1)
             if(filename != null && extension.equals("xml") && regnskapLogRepository.findOneByFilename(filename) == null) {
                 file.inputStream.persist(filename)
             }
-        }
     }
 
     fun InputStream.persist(filename: String) =

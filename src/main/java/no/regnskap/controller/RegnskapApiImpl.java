@@ -3,7 +3,6 @@ package no.regnskap.controller;
 import io.swagger.annotations.ApiParam;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.RegnskapService;
-import no.regnskap.service.Task;
 import no.regnskap.service.UpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -49,7 +46,11 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @RequestMapping(value="/regnskap/update", method=POST)
     public ResponseEntity update(@RequestParam("file") MultipartFile file) {
-        updateService.updateDatabase(file);
+        try {
+            updateService.updateDatabase(file);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
