@@ -18,6 +18,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
+import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 
 private val LOGGER = LoggerFactory.getLogger(UpdateService::class.java)
@@ -30,7 +31,7 @@ class UpdateService(
     private val regnskapRepository: RegnskapRepository,
     private val regnskapLogRepository: RegnskapLogRepository
 ) {
-
+/*
     @PostConstruct
     @Scheduled(fixedDelay = 60000)
     fun pollScheduledTasks() {
@@ -41,9 +42,21 @@ class UpdateService(
     @Scheduled(cron = "0 15 5 * * *") // Check server for new accounting files once a day at 05:15
     fun startSchedule() =
         addTask(Task.UPDATE_ACCOUNTING_DATA)
+*/
+    fun updateDatabase(file: MultipartFile) {
+        GlobalScope.launch {
+            val filename = file.originalFilename
+            val extension = filename?.substring(filename.lastIndexOf('.') + 1)
+            if(filename != null && extension.equals("xml") && regnskapLogRepository.findOneByFilename(filename) == null) {
+                file.inputStream.persist(filename)
+            }
+        }
+    }
 
-    private fun InputStream.persist(filename: String) =
+    fun InputStream.persist(filename: String) =
         try {
+            regnskapLogRepository.save(RegnskapLog(filename))
+            
             regnskapRepository.saveAll(
                 bufferedReader()
                     .use(BufferedReader::readText)
@@ -51,8 +64,6 @@ class UpdateService(
                     .mapXmlListForPersistence()
                     .filter { it.essentialFieldsIncluded() }
             )
-
-            regnskapLogRepository.save(RegnskapLog(filename))
         } catch (ex: Exception) {
             LOGGER.error("Persistence failed for: $filename: ", ex.printStackTrace())
         }

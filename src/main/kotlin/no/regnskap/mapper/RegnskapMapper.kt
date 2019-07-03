@@ -17,11 +17,11 @@ private const val XML_TRUE_STRING = "J"
 private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
 fun RegnskapXmlWrap.mapXmlListForPersistence(): List<RegnskapDB> {
-    val toPersist: MutableMap<String, RegnskapDB> = HashMap()
+    val toPersist: MutableMap<Int, RegnskapDB> = HashMap()
 
     list.forEach {
         if(it.head != null) {
-            val key = it.head.orgnr + it.head.regnaar
+            val key = it.head.hashCode()
             val mapped = toPersist.getOrDefault(key, it.head.createRegnskapDB())
 
             mapped.fields = mapFieldsFromXmlData(mapped.fields, it.posts)
@@ -73,7 +73,12 @@ fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
         .id(id?.toHexString())
         .avviklingsregnskap(avviklingsregnskap)
         .valuta(valutakode)
-        .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
+        .oppstillingsplan(
+            when(aarsregnskapstype.toLowerCase()){
+                "store" -> Regnskap.OppstillingsplanEnum.STORE
+                "smaa" -> Regnskap.OppstillingsplanEnum.SMAA
+                else -> Regnskap.OppstillingsplanEnum.OEVRIGE
+            })
         .revisjon(
             Revisjon()
                 .ikkeRevidertAarsregnskap(revisorberetningIkkeLevert))

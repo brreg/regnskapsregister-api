@@ -12,16 +12,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import java.io.InputStream;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
@@ -29,6 +33,9 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @Autowired
     private RegnskapService regnskapService;
+
+    @Autowired
+    private UpdateService updateService;
 
     @RequestMapping(value="/ping", method=GET, produces={"text/plain"})
     public ResponseEntity<String> getPing() {
@@ -40,9 +47,9 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="/regnskap/update", method=GET)
-    public ResponseEntity queueUpdateTask(HttpServletRequest httpServletRequest) {
-        UpdateService.addTask(Task.UPDATE_ACCOUNTING_DATA);
+    @RequestMapping(value="/regnskap/update", method=POST)
+    public ResponseEntity update(@RequestParam("file") MultipartFile file) {
+        updateService.updateDatabase(file);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

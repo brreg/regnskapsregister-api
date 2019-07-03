@@ -60,7 +60,6 @@ data class RegnskapXmlHead (
     @JacksonXmlProperty(localName = "regnaar") val regnaar: Int? = null,
     @JacksonXmlProperty(localName = "oppstillingsplan_versjonsnr") val oppstillingsplanVersjonsnr: String? = null,
     @JacksonXmlProperty(localName = "valutakode") val valutakode: String? = null,
-    @JacksonXmlProperty(localName = "regnskap_dokumenttype") val regnskapDokumenttype: String? = null,
     @JacksonXmlProperty(localName = "startdato") val startdato: String? = null,
     @JacksonXmlProperty(localName = "avslutningsdato") val avslutningsdato: String? = null,
     @JacksonXmlProperty(localName = "mottakstype") val mottakstype: String? = null,

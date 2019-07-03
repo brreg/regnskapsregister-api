@@ -61,48 +61,48 @@ public class MapperTest {
 
     @Test
     public void correctSumsInPersistenceFields() {
-        RegnskapFieldsDB fieldsOne = listRegnskapDB.get(0).getFields();
-        RegnskapFieldsDB fieldsTwo = listRegnskapDB.get(1).getFields();
+        RegnskapFieldsDB fieldsAlpha = listRegnskapDB.get(1).getFields();
+        RegnskapFieldsDB fieldsBravo = listRegnskapDB.get(0).getFields();
 
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_219, fieldsOne.getEiendeler().getSumEiendeler().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_217, fieldsOne.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_194, fieldsOne.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_251, fieldsOne.getEgenkapitalGjeld().getSumEgenkapitalGjeld().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_250, fieldsOne.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_3730, fieldsOne.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_9702, fieldsOne.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_1119, fieldsOne.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_86, fieldsOne.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_85, fieldsOne.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_172, fieldsOne.getResultatregnskapResultat().getAarsresultat().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_36633, fieldsOne.getResultatregnskapResultat().getTotalresultat().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_167, fieldsOne.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_146, fieldsOne.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_72, fieldsOne.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_17126, fieldsOne.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_158, fieldsOne.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_153, fieldsOne.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
-        Assert.assertEquals(XmlTestData.ALPHA_FIELD_17130, fieldsOne.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_219, fieldsAlpha.getEiendeler().getSumEiendeler().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_217, fieldsAlpha.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_194, fieldsAlpha.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_251, fieldsAlpha.getEgenkapitalGjeld().getSumEgenkapitalGjeld().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_250, fieldsAlpha.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_3730, fieldsAlpha.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_9702, fieldsAlpha.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_1119, fieldsAlpha.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_86, fieldsAlpha.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_85, fieldsAlpha.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_172, fieldsAlpha.getResultatregnskapResultat().getAarsresultat().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_36633, fieldsAlpha.getResultatregnskapResultat().getTotalresultat().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_167, fieldsAlpha.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_146, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_72, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_17126, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_158, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_153, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
+        Assert.assertEquals(XmlTestData.ALPHA_FIELD_17130, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
 
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_219, fieldsTwo.getEiendeler().getSumEiendeler().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_217, fieldsTwo.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_194, fieldsTwo.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_251, fieldsTwo.getEgenkapitalGjeld().getSumEgenkapitalGjeld().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_250, fieldsTwo.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_3730, fieldsTwo.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_9702, fieldsTwo.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_1119, fieldsTwo.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_86, fieldsTwo.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_85, fieldsTwo.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_172, fieldsTwo.getResultatregnskapResultat().getAarsresultat().intValue());
-        Assert.assertNull(fieldsTwo.getResultatregnskapResultat().getTotalresultat());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_167, fieldsTwo.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_146, fieldsTwo.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_72, fieldsTwo.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_17126, fieldsTwo.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_158, fieldsTwo.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_153, fieldsTwo.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
-        Assert.assertEquals(XmlTestData.BRAVO_FIELD_17130, fieldsTwo.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_219, fieldsBravo.getEiendeler().getSumEiendeler().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_217, fieldsBravo.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_194, fieldsBravo.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_251, fieldsBravo.getEgenkapitalGjeld().getSumEgenkapitalGjeld().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_250, fieldsBravo.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_3730, fieldsBravo.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_9702, fieldsBravo.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_1119, fieldsBravo.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_86, fieldsBravo.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_85, fieldsBravo.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_172, fieldsBravo.getResultatregnskapResultat().getAarsresultat().intValue());
+        Assert.assertNull(fieldsBravo.getResultatregnskapResultat().getTotalresultat());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_167, fieldsBravo.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_146, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_72, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_17126, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_158, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_153, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
+        Assert.assertEquals(XmlTestData.BRAVO_FIELD_17130, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
     }
 
     @Test
