@@ -17,17 +17,6 @@ import no.regnskap.generated.model.LangsiktigGjeld
 import no.regnskap.generated.model.Omloepsmidler
 import no.regnskap.generated.model.OpptjentEgenkapital
 import no.regnskap.generated.model.ResultatregnskapResultat
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.index.Indexed
-import org.springframework.data.mongodb.core.mapping.Document
-
-@Document("regnskap_log")
-class RegnskapLog (
-    @Indexed(unique = true) val filename: String
-) {
-    @Id
-    var id: String? = null
-}
 
 data class RegnskapFieldsDB (
 

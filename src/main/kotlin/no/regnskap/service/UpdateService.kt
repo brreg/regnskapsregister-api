@@ -57,7 +57,8 @@ class UpdateService(
 
     fun InputStream.persist(filename: String) {
         try {
-            regnskapLogRepository.save(RegnskapLog(filename))
+
+            regnskapLogRepository.save(filename.buildLogEntry())
 
             regnskapRepository.saveAll(
                 bufferedReader()
@@ -140,6 +141,13 @@ class UpdateService(
             }
     }
 
+}
+
+private fun String.buildLogEntry(): RegnskapLog {
+    val logEntry = RegnskapLog()
+    logEntry.filename = this
+
+    return logEntry
 }
 
 private class SftpProperties (
