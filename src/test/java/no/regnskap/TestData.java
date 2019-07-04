@@ -93,7 +93,7 @@ public class TestData {
         RegnskapDB tmpRegnskapDB = new RegnskapDB();
         tmpRegnskapDB.setOrgnr("orgnummer");
         tmpRegnskapDB.setOrgform("orgform");
-        tmpRegnskapDB.setRegnskapstype("regnskapstype");
+        tmpRegnskapDB.setRegnskapstype("S");
         tmpRegnskapDB.setOppstillingsplanVersjonsnr("oppstillingsplanVersjonsnr");
         tmpRegnskapDB.setValutakode("valutakode");
         tmpRegnskapDB.setStartdato(LocalDate.of(year, 1, 1));
