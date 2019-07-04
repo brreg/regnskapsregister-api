@@ -49,9 +49,9 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         try {
             updateService.updateDatabase(file);
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override

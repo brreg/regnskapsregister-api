@@ -7,15 +7,11 @@ import no.regnskap.mapper.mapXmlListForPersistence
 import no.regnskap.repository.RegnskapLogRepository
 import no.regnskap.repository.RegnskapRepository
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.util.*
-import javax.annotation.PostConstruct
 import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.Session
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
 import org.springframework.web.multipart.MultipartFile
@@ -44,17 +40,25 @@ class UpdateService(
         addTask(Task.UPDATE_ACCOUNTING_DATA)
 */
     fun updateDatabase(file: MultipartFile) {
-            val filename = file.originalFilename
-            val extension = filename?.substring(filename.lastIndexOf('.') + 1)
-            if(filename != null && extension.equals("xml") && regnskapLogRepository.findOneByFilename(filename) == null) {
-                file.inputStream.persist(filename)
+        val filename = file.originalFilename
+        val extension = filename?.substring(filename.lastIndexOf('.') + 1)
+        if(filename != null && extension.equals("xml") && regnskapLogRepository.findOneByFilename(filename) == null) {
+            file.inputStream.persist(filename)
+        } else {
+            val msg = when {
+                filename == null -> "Unable to update, no filename"
+                !extension.equals("xml") -> "Will not update, wrong file extension: $extension"
+                else -> "File already persisted: $filename"
             }
+            LOGGER.error(msg)
+            throw Exception(msg)
+        }
     }
 
-    fun InputStream.persist(filename: String) =
+    fun InputStream.persist(filename: String) {
         try {
             regnskapLogRepository.save(RegnskapLog(filename))
-            
+
             regnskapRepository.saveAll(
                 bufferedReader()
                     .use(BufferedReader::readText)
@@ -62,9 +66,11 @@ class UpdateService(
                     .mapXmlListForPersistence()
                     .filter { it.essentialFieldsIncluded() }
             )
+            LOGGER.info("Persistence completed for: $filename")
         } catch (ex: Exception) {
             LOGGER.error("Persistence failed for: $filename: ", ex.printStackTrace())
         }
+    }
 
     private fun updateAccountingData() {
         var session: Session? = null
