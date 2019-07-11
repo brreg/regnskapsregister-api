@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.1.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -30,15 +30,14 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <kotlin.version>1.3.40</kotlin.version>
+        <kotlin.version>1.3.41</kotlin.version>
+        <jupiter.version>5.3.2</jupiter.version>
+        <mockito.version>3.0.0</mockito.version>
+        <testcontainers.version>1.11.4</testcontainers.version>
 
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
         <docker.image.tag>latest</docker.image.tag>
-
-        <surefireArgLine/>
-        <unittest.category/>
-        <integrationtest.category/>
     </properties>
 
     <dependencies>
@@ -51,7 +50,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
-            <version>2.1.5.RELEASE</version>
         </dependency>
 
         <!-- TEST -->
@@ -68,22 +66,60 @@
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.25.1</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.11.2</version>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- TEST JUnit5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -145,24 +181,6 @@
             <version>0.1.55</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>unit-test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <unittest.category>no.regnskap.testcategories.UnitTest</unittest.category>
-            </properties>
-        </profile>
-        <profile>
-            <id>integration-test</id>
-            <properties>
-                <integrationtest.category>no.regnskap.testcategories.IntegrationTest</integrationtest.category>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <resources>
@@ -292,11 +310,7 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
-                    <groups>${unittest.category}</groups>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                    <argLine>${surefireArgLine} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                    <groups>unit</groups>
                 </configuration>
             </plugin>
 
@@ -306,21 +320,12 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
-                    <groups>${integrationtest.category}</groups>
-                    <excludedGroups>${unittest.category}</excludedGroups>
+                    <groups>service</groups>
+                    <excludedGroups>unit</excludedGroups>
                     <includes>
                         <include>**/*.java</include>
                     </includes>
-                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
