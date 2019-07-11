@@ -4,23 +4,27 @@ import no.regnskap.TestData;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.testcategories.UnitTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(MockitoJUnitRunner.class)
-@Category(UnitTest.class)
-public class RegnskapServiceTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
+@Tag("unit")
+class RegnskapServiceTest {
 
     @Mock
     RegnskapRepository repositoryMock;
@@ -28,55 +32,61 @@ public class RegnskapServiceTest {
     @InjectMocks
     RegnskapService regnskapService;
 
-    @Before
-    public void resetMocks() {
+    @BeforeEach
+    void resetMocks() {
         Mockito.reset();
     }
 
-    @Test
-    public void emptyDatabaseResultForIdGivesEmptyOptional() {
-        Optional<RegnskapDB> emptyDB = Optional.empty();
-        Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
-            .thenReturn(emptyDB);
+    @Nested
+    class FindById {
+        @Test
+        void emptyOptionalWhenNotFoundInDB() {
+            Optional<RegnskapDB> emptyDB = Optional.empty();
+            Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
+                .thenReturn(emptyDB);
 
-        Optional<Regnskap> actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
-        Optional<Regnskap> emptyResult = Optional.empty();
+            Optional<Regnskap> actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
+            Optional<Regnskap> emptyResult = Optional.empty();
 
-        Assert.assertEquals(actualResult, emptyResult);
+            assertEquals(actualResult, emptyResult);
+        }
+
+        @Test
+        void mappingIsCorrect() {
+            Optional<RegnskapDB> regnskapDB = Optional.of(TestData.DB_REGNSKAP_2018_SECOND);
+            Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
+                .thenReturn(regnskapDB);
+
+            Optional<Regnskap> actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
+
+            assertTrue(actual.isPresent());
+            assertEquals(actual.get(), TestData.REGNSKAP_2018);
+        }
     }
 
-    @Test
-    public void databaseResultForIdIsMappedCorrectly() {
-        Optional<RegnskapDB> regnskapDB = Optional.of(TestData.regnskap2018Second);
-        Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
-            .thenReturn(regnskapDB);
+    @Nested
+    class FindByOrgnr {
+        @Test
+        void emptyListWhenNotFoundInDB() {
+            List<RegnskapDB> emptyDatabaseList = TestData.EMPTY_DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                .thenReturn(emptyDatabaseList);
 
-        Optional<Regnskap> actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer");
 
-        Assert.assertTrue(actual.isPresent());
-        Assert.assertEquals(actual.get(), TestData.regnskap);
-    }
+            assertTrue(result.isEmpty());
+        }
 
-    @Test
-    public void emptyDatabaseResultForOrgnrGivesEmptyList() {
-        List<RegnskapDB> emptyDatabaseList = TestData.emptyDatabaseList;
-        Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
-            .thenReturn(emptyDatabaseList);
+        @Test
+        void mappingIsCorrect() {
+            List<RegnskapDB> dbList = TestData.DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                .thenReturn(dbList);
 
-        List<Regnskap> result = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
 
-        Assert.assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void databaseResultForOrgnrIsMappedCorrectly() {
-        List<RegnskapDB> dbList = TestData.databaseList;
-        Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
-            .thenReturn(dbList);
-
-        List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
-
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual, TestData.regnskapList);
+            assertFalse(actual.isEmpty());
+            assertEquals(actual, TestData.REGNSKAP_LIST);
+        }
     }
 }

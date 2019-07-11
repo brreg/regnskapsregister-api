@@ -1,134 +1,94 @@
 package no.regnskap.integration;
 
-import com.mongodb.*;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import no.regnskap.model.RegnskapDB;
-import no.regnskap.testcategories.IntegrationTest;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.junit.*;
-import org.junit.experimental.categories.Category;
+import no.regnskap.controller.RegnskapApiImpl;
+import no.regnskap.generated.model.Regnskap;
+import no.regnskap.repository.RegnskapRepository;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static no.regnskap.TestData.*;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Category(IntegrationTest.class)
-@Ignore
-public class RegnskapApiTest {
-    private static File testComposeFile = createTmpComposeFile();
+@Testcontainers
+@SpringBootTest
+@ContextConfiguration(initializers = {RegnskapApiTest.Initializer.class})
+@Tag("service")
+class RegnskapApiTest {
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
-    private static Slf4jLogConsumer apiLog = new Slf4jLogConsumer(logger).withPrefix("api-container");
-    private static DockerComposeContainer compose;
 
-    @BeforeClass
-    public static void setup() {
-        if (testComposeFile != null && testComposeFile.exists()) {
-            compose = new DockerComposeContainer<>(testComposeFile)
-                .withExposedService(MONGO_SERVICE_NAME, MONGO_PORT, Wait.forListeningPort())
-                .withExposedService(API_SERVICE_NAME, API_PORT, Wait.forHttp("/ready").forStatusCode(200))
-                .withTailChildContainers(true)
-                .withPull(false)
-                .withLocalCompose(true)
-                .withLogConsumer(MONGO_SERVICE_NAME, mongoLog)
-                .withLogConsumer(API_SERVICE_NAME, apiLog);
+    @Mock
+    HttpServletRequest httpServletRequestMock;
 
-            compose.start();
-        } else {
-            logger.debug("Unable to start containers, missing test-compose.yml");
+    @Autowired
+    private RegnskapApiImpl RegnskapApiImpl;
+
+    @Container
+    private static final GenericContainer mongoContainer = new GenericContainer("mongo:latest")
+        .withEnv(MONGO_ENV_VALUES)
+        .withLogConsumer(mongoLog)
+        .withExposedPorts(MONGO_PORT)
+        .waitingFor(Wait.forListeningPort());
+
+    static class Initializer
+        implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                "spring.data.mongodb.database=" + DATABASE_NAME,
+                "spring.data.mongodb.uri=" + buildMongoURI(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MONGO_PORT), false)
+            ).applyTo(configurableApplicationContext.getEnvironment());
         }
-
-        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-        MongoClientURI uri = new MongoClientURI(buildMongoURI(compose.getServiceHost(MONGO_SERVICE_NAME, MONGO_PORT), compose.getServicePort(MONGO_SERVICE_NAME, MONGO_PORT)));
-        MongoClient mongoClient = new MongoClient(uri);
-        MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
-        MongoCollection<RegnskapDB> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME).withDocumentClass(RegnskapDB.class);
-
-        mongoCollection.insertOne(regnskap2018Second);
-        mongoCollection.insertOne(regnskap2017);
-        mongoCollection.insertOne(regnskap2018First);
-
-        mongoClient.close();
     }
 
-    @AfterClass
-    public static void teardown() {
-        if (testComposeFile != null && testComposeFile.exists()) {
-            compose.stop();
-
-            logger.debug("Delete temporary test-compose.yml: " + testComposeFile.delete());
-        } else {
-            logger.debug("Teardown skipped, missing test-compose.yml");
-        }
+    @BeforeAll
+    static void init(@Autowired RegnskapRepository repository) {
+        repository.saveAll(DB_REGNSKAP_LIST);
     }
 
     @Test
-    public void pingTest() throws Exception {
-        String response = simpleGet(buildRegnskapURL("/ping"));
-        Assert.assertEquals("RegnskapAPI is available", "pong", response);
+    void ping() {
+        ResponseEntity<String> response = RegnskapApiImpl.getPing();
+        ResponseEntity<String> expected = new ResponseEntity<>("pong", HttpStatus.OK);
+        assertEquals(expected, response);
     }
 
     @Test
-    public void getByOrgnr() throws Exception {
-        String response = simpleGet(buildRegnskapURL("/regnskap?orgNummer=orgnummer"));
-        Assert.assertEquals(EXPECTED_RESPONSE_ORGNR, response);
+    void getByOrgnr() {
+        ResponseEntity<List<Regnskap>> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<List<Regnskap>> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
+        assertEquals(expected, response);
     }
 
     @Test
-    public void getById() throws Exception {
-        String response2018 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_1.toHexString()));
-        String response2017 = simpleGet(buildRegnskapURL("/regnskap/" + GENERATED_ID_0.toHexString()));
-        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_1, 2018), response2018);
-        Assert.assertEquals(buildExpectedDatabaseResponse(GENERATED_ID_0, 2017), response2017);
-    }
+    void getById() {
+        ResponseEntity<Regnskap> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
+        ResponseEntity<Regnskap> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
 
-    private String simpleGet(URL address) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) address.openConnection();
-        con.setRequestMethod("GET");
+        ResponseEntity<Regnskap> expected2018 = new ResponseEntity<>(REGNSKAP_2018, HttpStatus.OK);
+        ResponseEntity<Regnskap> expected2017 = new ResponseEntity<>(REGNSKAP_2017, HttpStatus.OK);
 
-        StringBuilder content = new StringBuilder();
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            reader.lines().forEach(line -> content.append(line));
-        }
-
-        return content.toString();
-    }
-
-    private URL buildRegnskapURL(String address) throws MalformedURLException {
-        return new URL("http", compose.getServiceHost(API_SERVICE_NAME, API_PORT), compose.getServicePort(API_SERVICE_NAME, API_PORT), address);
-    }
-
-    private static File createTmpComposeFile() {
-        try {
-            File tmpComposeFile = File.createTempFile("test-compose", ".yml");
-            InputStream testCompseStream = IOUtils.toInputStream(TEST_COMPOSE, StandardCharsets.UTF_8);
-
-            try (FileOutputStream outputStream = new FileOutputStream(tmpComposeFile)) {
-                int read;
-                byte[] bytes = new byte[1024];
-
-                while ((read = testCompseStream.read(bytes)) != -1) {
-                    outputStream.write(bytes, 0, read);
-                }
-            }
-
-            return tmpComposeFile;
-        } catch (IOException e) {
-            return null;
-        }
+        assertEquals(expected2018, response2018);
+        assertEquals(expected2017, response2017);
     }
 }
