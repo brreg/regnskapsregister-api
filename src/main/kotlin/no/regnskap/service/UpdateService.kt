@@ -12,10 +12,14 @@ import java.io.BufferedReader
 import java.util.*
 import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.Session
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
+import javax.annotation.PostConstruct
 
 private val LOGGER = LoggerFactory.getLogger(UpdateService::class.java)
 private val scheduledTasks = LinkedList<String>()
@@ -27,7 +31,7 @@ class UpdateService(
     private val regnskapRepository: RegnskapRepository,
     private val regnskapLogRepository: RegnskapLogRepository
 ) {
-/*
+
     @PostConstruct
     @Scheduled(fixedDelay = 60000)
     fun pollScheduledTasks() {
@@ -38,7 +42,7 @@ class UpdateService(
     @Scheduled(cron = "0 15 5 * * *") // Check server for new accounting files once a day at 05:15
     fun startSchedule() =
         addTask(Task.UPDATE_ACCOUNTING_DATA)
-*/
+
     fun updateDatabase(file: MultipartFile) {
         val filename = file.originalFilename
         val extension = filename?.substring(filename.lastIndexOf('.') + 1)
