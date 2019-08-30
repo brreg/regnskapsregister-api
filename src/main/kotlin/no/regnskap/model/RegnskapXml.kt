@@ -76,5 +76,9 @@ data class RegnskapXmlHead (
     @JacksonXmlProperty(localName = "bistand_regnskapsforer") val bistandRegnskapsforer: String? = null,
     @JacksonXmlProperty(localName = "aarsregnskapstype") val aarsregnskapstype: String? = null,
     @JacksonXmlProperty(localName = "land_for_land") val landForLand: String? = null,
-    @JacksonXmlProperty(localName = "revisorberetning_ikke_levert") val revisorberetningIkkeLevert: String? = null
+    @JacksonXmlProperty(localName = "revisorberetning_ikke_levert") val revisorberetningIkkeLevert: String? = null,
+    @JacksonXmlProperty(localName = "ifrs_selskap") val ifrsSelskap: String? = null,
+    @JacksonXmlProperty(localName = "forenklet_ifrs_selskap") val forenkletIfrsSelskap: String? = null,
+    @JacksonXmlProperty(localName = "ifrs_konsern") val ifrsKonsern: String? = null,
+    @JacksonXmlProperty(localName = "forenklet_ifrs_konsern") val forenkletIfrsKonsern: String? = null
 )

@@ -56,7 +56,7 @@ public class TestData {
             .regnkapsprinsipper(
                 new Regnskapsprinsipper()
                     .smaaForetak(true)
-                    .regnskapsregler(null))
+                    .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER))
             .virksomhet(
                 new Virksomhet()
                     .organisasjonsnummer("orgnummer")
@@ -121,6 +121,10 @@ public class TestData {
         tmpRegnskapDB.setAarsregnskapstype("STORE");
         tmpRegnskapDB.setUtarbeidetRegnskapsforer(false);
         tmpRegnskapDB.setRevisorberetningIkkeLevert(true);
+        tmpRegnskapDB.setIfrsSelskap(false);
+        tmpRegnskapDB.setForenkletIfrsSelskap(false);
+        tmpRegnskapDB.setIfrsKonsern(false);
+        tmpRegnskapDB.setForenkletIfrsKonsern(false);
         tmpRegnskapDB.setFields(new RegnskapFieldsDB());
 
         tmpRegnskapDB.setRegnaar(year);

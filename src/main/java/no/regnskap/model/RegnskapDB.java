@@ -45,6 +45,14 @@ public class RegnskapDB {
     private boolean landForLand;
     @Field("revisorberetning_ikke_levert")
     private boolean revisorberetningIkkeLevert;
+    @Field("ifrs_selskap")
+    private boolean ifrsSelskap;
+    @Field("forenklet_ifrs_selskap")
+    private boolean forenkletIfrsSelskap;
+    @Field("ifrs_konsern")
+    private boolean ifrsKonsern;
+    @Field("forenklet_ifrs_konsern")
+    private boolean forenkletIfrsKonsern;
     private RegnskapFieldsDB fields;
 
     public ObjectId getId() {
@@ -229,6 +237,38 @@ public class RegnskapDB {
 
     public void setRevisorberetningIkkeLevert(boolean revisorberetningIkkeLevert) {
         this.revisorberetningIkkeLevert = revisorberetningIkkeLevert;
+    }
+
+    public boolean getIfrsSelskap() {
+        return ifrsSelskap;
+    }
+
+    public void setIfrsSelskap(boolean ifrsSelskap) {
+        this.ifrsSelskap = ifrsSelskap;
+    }
+
+    public boolean getForenkletIfrsSelskap() {
+        return forenkletIfrsSelskap;
+    }
+
+    public void setForenkletIfrsSelskap(boolean forenkletIfrsSelskap) {
+        this.forenkletIfrsSelskap = forenkletIfrsSelskap;
+    }
+
+    public boolean getIfrsKonsern() {
+        return ifrsKonsern;
+    }
+
+    public void setIfrsKonsern(boolean ifrsKonsern) {
+        this.ifrsKonsern = ifrsKonsern;
+    }
+
+    public boolean getForenkletIfrsKonsern() {
+        return forenkletIfrsKonsern;
+    }
+
+    public void setForenkletIfrsKonsern(boolean forenkletIfrsKonsern) {
+        this.forenkletIfrsKonsern = forenkletIfrsKonsern;
     }
 
     public RegnskapFieldsDB getFields() {

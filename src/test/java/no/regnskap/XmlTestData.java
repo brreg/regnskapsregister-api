@@ -68,6 +68,10 @@ public class XmlTestData {
         "      <fravalg_revisjon>N</fravalg_revisjon>\n" +
         "      <utarbeidet_regnskapsforer>N</utarbeidet_regnskapsforer>\n" +
         "      <bistand_regnskapsforer>N</bistand_regnskapsforer>\n" +
+        "      <ifrs_selskap>J</ifrs_selskap>\n" +
+        "      <forenklet_ifrs_selskap>N</forenklet_ifrs_selskap>\n" +
+        "      <ifrs_konsern>N</ifrs_konsern>\n" +
+        "      <forenklet_ifrs_konsern>N</forenklet_ifrs_konsern>\n" +
         "    </hode>\n" +
         "    <info>\n" +
         "      <feltkode>72</feltkode>\n" +
@@ -423,6 +427,10 @@ public class XmlTestData {
         "      <fravalg_revisjon>N</fravalg_revisjon>\n" +
         "      <utarbeidet_regnskapsforer>N</utarbeidet_regnskapsforer>\n" +
         "      <bistand_regnskapsforer>N</bistand_regnskapsforer>\n" +
+        "      <ifrs_selskap>J</ifrs_selskap>\n" +
+        "      <forenklet_ifrs_selskap>N</forenklet_ifrs_selskap>\n" +
+        "      <ifrs_konsern>N</ifrs_konsern>\n" +
+        "      <forenklet_ifrs_konsern>N</forenklet_ifrs_konsern>\n" +
         "    </hode>\n" +
         "    <info>\n" +
         "      <feltkode>47</feltkode>\n" +
@@ -899,6 +907,10 @@ public class XmlTestData {
         "      <fravalg_revisjon>N</fravalg_revisjon>\n" +
         "      <utarbeidet_regnskapsforer>J</utarbeidet_regnskapsforer>\n" +
         "      <bistand_regnskapsforer>J</bistand_regnskapsforer>\n" +
+        "      <ifrs_selskap>N</ifrs_selskap>\n" +
+        "      <forenklet_ifrs_selskap>N</forenklet_ifrs_selskap>\n" +
+        "      <ifrs_konsern>N</ifrs_konsern>\n" +
+        "      <forenklet_ifrs_konsern>N</forenklet_ifrs_konsern>\n" +
         "    </hode>\n" +
         "    <info>\n" +
         "      <feltkode>72</feltkode>\n" +
@@ -1218,6 +1230,10 @@ public class XmlTestData {
         "      <fravalg_revisjon>N</fravalg_revisjon>\n" +
         "      <utarbeidet_regnskapsforer>J</utarbeidet_regnskapsforer>\n" +
         "      <bistand_regnskapsforer>J</bistand_regnskapsforer>\n" +
+        "      <ifrs_selskap>N</ifrs_selskap>\n" +
+        "      <forenklet_ifrs_selskap>N</forenklet_ifrs_selskap>\n" +
+        "      <ifrs_konsern>N</ifrs_konsern>\n" +
+        "      <forenklet_ifrs_konsern>N</forenklet_ifrs_konsern>\n" +
         "    </hode>\n" +
         "    <info>\n" +
         "      <feltkode>80</feltkode>\n" +

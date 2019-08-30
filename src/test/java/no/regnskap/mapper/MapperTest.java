@@ -2,6 +2,7 @@ package no.regnskap.mapper;
 
 import no.regnskap.XmlTestData;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.generated.model.Regnskapsprinsipper;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.model.RegnskapFieldsDB;
 import no.regnskap.model.RegnskapXmlWrap;
@@ -31,7 +32,7 @@ class MapperTest {
     private static List<Regnskap> listRegnskap;
 
     @BeforeAll
-    static void mappingFromXmlToResponse() throws IOException {
+    static void mappingFromXmlToResponse() {
         xmlWrap = deserializeXmlString(XmlTestData.xmlTestString);
         listRegnskapDB = mapXmlListForPersistence(xmlWrap);
 
@@ -63,8 +64,8 @@ class MapperTest {
 
     @Test
     void correctSumsInPersistenceFields() {
-        RegnskapFieldsDB fieldsAlpha = listRegnskapDB.get(1).getFields();
-        RegnskapFieldsDB fieldsBravo = listRegnskapDB.get(0).getFields();
+        RegnskapFieldsDB fieldsAlpha = listRegnskapDB.get(0).getFields();
+        RegnskapFieldsDB fieldsBravo = listRegnskapDB.get(1).getFields();
 
         assertEquals(XmlTestData.ALPHA_FIELD_219, fieldsAlpha.getEiendeler().getSumEiendeler().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_217, fieldsAlpha.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
@@ -122,7 +123,7 @@ class MapperTest {
         assertEquals(dbAlpha.getStartdato(), alpha.getRegnskapsperiode().getFraDato());
         assertEquals(dbAlpha.getAvslutningsdato(), alpha.getRegnskapsperiode().getTilDato());
         assertEquals(dbAlpha.getReglerSmaa(), alpha.getRegnkapsprinsipper().getSmaaForetak());
-        //assertEquals(dbAlpha.getSomething(), alpha.getRegnkapsprinsipper().getRegnskapsregler()); TODO
+        assertEquals(Regnskapsprinsipper.RegnskapsreglerEnum.IFRS, alpha.getRegnkapsprinsipper().getRegnskapsregler());
         assertEquals(dbAlpha.getOrgnr(), alpha.getVirksomhet().getOrganisasjonsnummer());
         assertEquals(dbAlpha.getOrgform(), alpha.getVirksomhet().getOrganisasjonsform());
         assertEquals(dbAlpha.getMorselskap(), alpha.getVirksomhet().getMorselskap());
@@ -135,7 +136,7 @@ class MapperTest {
         assertEquals(dbBravo.getStartdato(), bravo.getRegnskapsperiode().getFraDato());
         assertEquals(dbBravo.getAvslutningsdato(), bravo.getRegnskapsperiode().getTilDato());
         assertEquals(dbBravo.getReglerSmaa(), bravo.getRegnkapsprinsipper().getSmaaForetak());
-        //assertEquals(dbBravo.getSomething(), bravo.getRegnkapsprinsipper().getRegnskapsregler()); TODO
+        assertEquals(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER, bravo.getRegnkapsprinsipper().getRegnskapsregler());
         assertEquals(dbBravo.getOrgnr(), bravo.getVirksomhet().getOrganisasjonsnummer());
         assertEquals(dbBravo.getOrgform(), bravo.getVirksomhet().getOrganisasjonsform());
         assertEquals(dbBravo.getMorselskap(), bravo.getVirksomhet().getMorselskap());
