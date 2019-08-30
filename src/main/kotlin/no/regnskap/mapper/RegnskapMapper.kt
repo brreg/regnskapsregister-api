@@ -55,6 +55,10 @@ private fun RegnskapXmlHead.createRegnskapDB(): RegnskapDB {
     regnskapDB.reglerSmaa = booleanFromXmlData(reglerSmaa)
     regnskapDB.utarbeidetRegnskapsforer = booleanFromXmlData(utarbeidetRegnskapsforer)
     regnskapDB.revisorberetningIkkeLevert = booleanFromXmlData(revisorberetningIkkeLevert)
+    regnskapDB.ifrsSelskap = booleanFromXmlData(ifrsSelskap)
+    regnskapDB.forenkletIfrsSelskap = booleanFromXmlData(forenkletIfrsSelskap)
+    regnskapDB.ifrsKonsern = booleanFromXmlData(ifrsKonsern)
+    regnskapDB.forenkletIfrsKonsern = booleanFromXmlData(forenkletIfrsKonsern)
 
     regnskapDB.avslutningsdato = avslutningsdato?.localDateFromXmlDateString()
     regnskapDB.startdato = startdato?.localDateFromXmlDateString()
@@ -89,7 +93,13 @@ fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
         .regnkapsprinsipper(
             Regnskapsprinsipper()
                 .smaaForetak(reglerSmaa)
-                .regnskapsregler(null)) //TODO Change to correct value
+                .regnskapsregler(
+                    when {
+                        ifrsSelskap -> Regnskapsprinsipper.RegnskapsreglerEnum.IFRS
+                        forenkletIfrsSelskap -> Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS
+                        else -> Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER
+                    }
+                ))
         .virksomhet(
             Virksomhet()
                 .organisasjonsnummer(orgnr)
