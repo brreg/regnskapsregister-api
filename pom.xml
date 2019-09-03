@@ -4,13 +4,14 @@
 
     <groupId>no.regnskap</groupId>
     <artifactId>regnskapsregister-api</artifactId>
+    <name>Regnskapsregister</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.5.RELEASE</version>
+        <version>2.1.7.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -38,6 +39,13 @@
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
         <docker.image.tag>latest</docker.image.tag>
+
+        <!-- Sonar properties -->
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>Informasjonsforvaltning_regnskapsregister-api</sonar.projectKey>
+        <sonar.organization>informasjonsforvaltning</sonar.organization>
+        <!--suppress UnresolvedMavenProperty -->
+        <sonar.login>${env.SONAR_LOGIN}</sonar.login>
     </properties>
 
     <dependencies>
@@ -396,10 +404,42 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <id>jacoco-report</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
+                <executions>
+                    <execution>
+                        <id>sonar-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sonar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.dellroad</groupId>
+                <artifactId>dellroad-stuff-maven-plugin</artifactId>
+                <version>2.4.2</version>
+                <executions>
+                    <execution>
+                        <id>set-sonar-branch-name</id>
+                        <configuration>
+                            <propertyName>sonar.branch.name</propertyName>
+                            <command>./src/main/resources/gitBranchName.sh</command>
+                        </configuration>
+                        <goals>
+                            <goal>exec-set-property</goal>
                         </goals>
                     </execution>
                 </executions>
