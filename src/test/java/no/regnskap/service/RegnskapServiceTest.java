@@ -3,6 +3,8 @@ package no.regnskap.service;
 import no.regnskap.TestData;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.model.RegnskapDB;
+import no.regnskap.model.RegnskapLog;
+import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,9 @@ class RegnskapServiceTest {
 
     @Mock
     RegnskapRepository repositoryMock;
+
+    @Mock
+    RegnskapLogRepository logRepositoryMock;
 
     @InjectMocks
     RegnskapService regnskapService;
@@ -87,6 +93,35 @@ class RegnskapServiceTest {
 
             assertFalse(actual.isEmpty());
             assertEquals(actual, TestData.REGNSKAP_LIST);
+        }
+    }
+
+    @Nested
+    class Log {
+        @Test
+        void emptyListWhenNoEntriesInDB() {
+            List<RegnskapLog> emptyList = new ArrayList<>();
+            Mockito.when(logRepositoryMock.findAll(TestData.DB_SORT))
+                .thenReturn(emptyList);
+
+            List<String> result = regnskapService.getLog();
+
+            assertTrue(result.isEmpty());
+        }
+
+        @Test
+        void allEntriesIncluded() {
+            List<RegnskapLog> list = TestData.DB_LOG;
+            Mockito.when(logRepositoryMock.findAll(TestData.DB_SORT))
+                .thenReturn(list);
+
+            List<String> result = regnskapService.getLog();
+
+            assertEquals(result.size(), 4);
+            assertTrue(result.contains("file0.xml"));
+            assertTrue(result.contains("file1.xml"));
+            assertTrue(result.contains("file2.xml"));
+            assertTrue(result.contains("file3.xml"));
         }
     }
 }

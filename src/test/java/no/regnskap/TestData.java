@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import no.regnskap.generated.model.*;
 import no.regnskap.model.*;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -140,5 +141,23 @@ public class TestData {
         list.add(DB_REGNSKAP_2018_SECOND);
         list.add(DB_REGNSKAP_2018_FIRST);
         return list;
+    }
+
+    public static List<RegnskapLog> DB_LOG = createLog();
+    public static Sort DB_SORT = new Sort(Sort.Direction.ASC, "filename");
+
+    private static List<RegnskapLog> createLog(){
+        List<RegnskapLog> list = new ArrayList<>();
+        list.add(createLogEntry("file0.xml"));
+        list.add(createLogEntry("file1.xml"));
+        list.add(createLogEntry("file2.xml"));
+        list.add(createLogEntry("file3.xml"));
+        return list;
+    }
+
+    private static RegnskapLog createLogEntry(String filename){
+        RegnskapLog entry = new RegnskapLog();
+        entry.setFilename(filename);
+        return entry;
     }
 }

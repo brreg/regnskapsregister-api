@@ -72,6 +72,28 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Regnskap"
+
+  /regnskap/log:
+    get:
+      tags:
+        - regnskap
+      summary: Query for log.
+      description: Returnerer en logg over filer som har blitt lastet inn i systemet
+      operationId: getLog
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: string
 components:
   schemas:
     Regnskap:

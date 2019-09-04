@@ -5,12 +5,17 @@ import no.regnskap.repository.RegnskapRepository
 import org.springframework.stereotype.Service
 
 import no.regnskap.mapper.mapPersistenceToGenerated
+import no.regnskap.repository.RegnskapLogRepository
+import org.springframework.data.domain.Sort
 import java.util.*
 
 private const val REGNSKAPSTYPE_SELSKAP = "s"
 
 @Service
-class RegnskapService (private val regnskapRepository: RegnskapRepository) {
+class RegnskapService (
+    private val regnskapRepository: RegnskapRepository,
+    private val logRepository: RegnskapLogRepository
+) {
 
     fun getById(id: String): Optional<Regnskap> =
         regnskapRepository
@@ -29,4 +34,9 @@ class RegnskapService (private val regnskapRepository: RegnskapRepository) {
                 else emptyList()
             } // Return as list
             .map { it.mapPersistenceToGenerated() }
+
+    fun getLog(): List<String> =
+        logRepository
+            .findAll(Sort(Sort.Direction.ASC, "filename"))
+            .map { entry -> entry.filename }
 }

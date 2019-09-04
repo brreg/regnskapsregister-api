@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,6 @@ class RegnskapApiImplTest {
     @Mock
     RegnskapService regnskapServiceMock;
 
-    @Mock
-    UpdateService updateServiceMock;
-
     @InjectMocks
     RegnskapApiImpl regnskapApi;
 
@@ -46,8 +44,7 @@ class RegnskapApiImplTest {
     void resetMocks() {
         Mockito.reset(
             httpServletRequestMock,
-            regnskapServiceMock,
-            updateServiceMock
+            regnskapServiceMock
         );
     }
 
@@ -102,6 +99,24 @@ class RegnskapApiImplTest {
 
             assertEquals(response.getStatusCode(), HttpStatus.OK);
             assertEquals(response.getBody(), TestData.REGNSKAP_2018);
+        }
+    }
+
+    @Nested
+    class GetLog {
+        @Test
+        void answersWithList() {
+            List<String> list = new ArrayList<>();
+            list.add("entry.xml");
+            list.add("anotherEntry.xml");
+
+            Mockito.when(regnskapServiceMock.getLog())
+                .thenReturn(list);
+
+            ResponseEntity<List<String>> response = regnskapApi.getLog(httpServletRequestMock);
+
+            assertEquals(response.getStatusCode(), HttpStatus.OK);
+            assertEquals(response.getBody(), list);
         }
     }
 }
