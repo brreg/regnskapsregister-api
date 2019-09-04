@@ -78,7 +78,7 @@ fun RegnskapDB.mapPersistenceToGenerated(): Regnskap =
         .avviklingsregnskap(avviklingsregnskap)
         .valuta(valutakode)
         .oppstillingsplan(
-            when(aarsregnskapstype.toLowerCase()){
+            when(aarsregnskapstype?.toLowerCase()){
                 "store" -> Regnskap.OppstillingsplanEnum.STORE
                 "smaa" -> Regnskap.OppstillingsplanEnum.SMAA
                 else -> Regnskap.OppstillingsplanEnum.OEVRIGE
