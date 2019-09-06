@@ -51,6 +51,12 @@ class RegnskapApiImplTest {
         );
     }
 
+    @Test
+    void ready() {
+        HttpStatus responseStatus = regnskapApi.getReady().getStatusCode();
+        assertEquals(HttpStatus.OK, responseStatus);
+    }
+
     @Nested
     class GetRegnskap {
         @Test
@@ -61,8 +67,8 @@ class RegnskapApiImplTest {
 
             ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
-            assertEquals(response.getStatusCode(), HttpStatus.OK);
-            assertEquals(response.getBody(), TestData.EMPTY_REGNSKAP_LIST);
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(TestData.EMPTY_REGNSKAP_LIST, response.getBody());
         }
 
         @Test
@@ -73,8 +79,19 @@ class RegnskapApiImplTest {
 
             ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
-            assertEquals(response.getStatusCode(), HttpStatus.OK);
-            assertEquals(response.getBody(), TestData.REGNSKAP_LIST);
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(TestData.REGNSKAP_LIST, response.getBody());
+        }
+
+        @Test
+        void unknownError() {
+            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
+                .thenAnswer(invocation -> {
+                    throw new Exception("Test error message");
+                });
+
+            HttpStatus responseStatus = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer").getStatusCode();
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseStatus);
         }
     }
 
@@ -88,7 +105,7 @@ class RegnskapApiImplTest {
 
             ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
-            assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
             assertNull(response.getBody());
         }
 
@@ -100,8 +117,19 @@ class RegnskapApiImplTest {
 
             ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
-            assertEquals(response.getStatusCode(), HttpStatus.OK);
-            assertEquals(response.getBody(), TestData.REGNSKAP_2018);
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(TestData.REGNSKAP_2018, response.getBody());
+        }
+
+        @Test
+        void unknownError() {
+            Mockito.when(regnskapServiceMock.getById("id"))
+                .thenAnswer(invocation -> {
+                    throw new Exception("Test error message");
+                });
+
+            HttpStatus responseStatus = regnskapApi.getRegnskapById(httpServletRequestMock, "id").getStatusCode();
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseStatus);
         }
     }
 }
