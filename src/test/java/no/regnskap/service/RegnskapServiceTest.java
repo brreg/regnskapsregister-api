@@ -54,7 +54,7 @@ class RegnskapServiceTest {
             Optional<Regnskap> actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
             Optional<Regnskap> emptyResult = Optional.empty();
 
-            assertEquals(actualResult, emptyResult);
+            assertEquals(emptyResult, actualResult);
         }
 
         @Test
@@ -66,7 +66,7 @@ class RegnskapServiceTest {
             Optional<Regnskap> actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
 
             assertTrue(actual.isPresent());
-            assertEquals(actual.get(), TestData.REGNSKAP_2018);
+            assertEquals(TestData.REGNSKAP_2018, actual.get());
         }
     }
 
@@ -92,7 +92,25 @@ class RegnskapServiceTest {
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
 
             assertFalse(actual.isEmpty());
-            assertEquals(actual, TestData.REGNSKAP_LIST);
+            assertEquals(TestData.REGNSKAP_LIST, actual);
+        }
+
+        @Test
+        void filtersWork() {
+            List<RegnskapDB> list = new ArrayList<>();
+
+            RegnskapDB db0 = TestData.createRegnskapDB(TestData.GENERATED_ID_0, 2019,"0");
+            db0.setAarsregnskapstype("SMAA");
+            list.add(db0);
+            RegnskapDB db1 = TestData.createRegnskapDB(TestData.GENERATED_ID_1, 2019,"1");
+            db1.setRegnskapstype("K");
+            list.add(db1);
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                .thenReturn(list);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
+
+            assertTrue(actual.isEmpty());
         }
     }
 

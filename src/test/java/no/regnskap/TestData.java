@@ -99,7 +99,7 @@ public class TestData {
 
     public static List<RegnskapDB> DB_REGNSKAP_LIST = createDatabaseList();
 
-    private static RegnskapDB createRegnskapDB(ObjectId id, int year, String journalnr) {
+    public static RegnskapDB createRegnskapDB(ObjectId id, int year, String journalnr) {
         RegnskapDB tmpRegnskapDB = new RegnskapDB();
         tmpRegnskapDB.setOrgnr("orgnummer");
         tmpRegnskapDB.setOrgform("orgform");

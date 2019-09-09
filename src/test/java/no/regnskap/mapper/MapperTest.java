@@ -15,9 +15,11 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static no.regnskap.mapper.RegnskapMapperKt.essentialFieldsIncluded;
 import static no.regnskap.mapper.RegnskapXmlMapperKt.deserializeXmlString;
 import static no.regnskap.mapper.RegnskapMapperKt.mapXmlListForPersistence;
 import static org.junit.jupiter.api.Assertions.*;
@@ -141,5 +143,23 @@ class MapperTest {
         assertEquals(dbBravo.getOrgform(), bravo.getVirksomhet().getOrganisasjonsform());
         assertEquals(dbBravo.getMorselskap(), bravo.getVirksomhet().getMorselskap());
         assertEquals(dbBravo.getAvviklingsregnskap(), bravo.getAvviklingsregnskap());
+    }
+
+    @Test
+    void essentialFieldsTest() {
+        RegnskapDB regnskapDB = new RegnskapDB();
+        assertFalse(essentialFieldsIncluded(regnskapDB));
+
+        regnskapDB.setOrgnr("orgnr");
+        assertFalse(essentialFieldsIncluded(regnskapDB));
+
+        regnskapDB.setAvslutningsdato(LocalDate.now());
+        assertFalse(essentialFieldsIncluded(regnskapDB));
+
+        regnskapDB.setStartdato(LocalDate.now());
+        assertFalse(essentialFieldsIncluded(regnskapDB));
+
+        regnskapDB.setJournalnr("journalnr");
+        assertTrue(essentialFieldsIncluded(regnskapDB));
     }
 }
