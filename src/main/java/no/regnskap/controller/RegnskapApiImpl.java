@@ -31,9 +31,6 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
     @Autowired
     private RegnskapService regnskapService;
 
-    @Autowired
-    private UpdateService updateService;
-
     @RequestMapping(value="/ping", method=GET, produces={"text/plain"})
     public ResponseEntity<String> getPing() {
         return ResponseEntity.ok("pong");
@@ -44,14 +41,10 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="/regnskap/update", method=POST)
-    public ResponseEntity update(@RequestParam("file") MultipartFile file) {
-        try {
-            updateService.updateDatabase(file);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @Override
+    public ResponseEntity<List<String>> getLog(HttpServletRequest httpServletRequest) {
+        List<String> log = regnskapService.getLog();
+        return new ResponseEntity<>(log, HttpStatus.OK);
     }
 
     @Override
