@@ -1,5 +1,6 @@
 package no.regnskap.integration;
 
+import no.regnskap.TestUtils;
 import no.regnskap.controller.RegnskapApiImpl;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.repository.RegnskapRepository;
@@ -25,6 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.regnskap.TestData.*;
@@ -37,12 +39,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RegnskapApiTest {
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
+    private static Slf4jLogConsumer sftpLog = new Slf4jLogConsumer(logger).withPrefix("sftp-container");
 
     @Mock
     HttpServletRequest httpServletRequestMock;
 
     @Autowired
     private RegnskapApiImpl RegnskapApiImpl;
+
+    @Container
+    private static final GenericContainer sftpContainer = new GenericContainer<>("atmoz/sftp")
+        .withEnv(SFTP_ENV_VALUES)
+        .withLogConsumer(sftpLog)
+        .withExposedPorts(SFTP_PORT)
+        .waitingFor(Wait.defaultWaitStrategy());
 
     @Container
     private static final GenericContainer mongoContainer = new GenericContainer("mongo:latest")
@@ -56,13 +66,20 @@ class RegnskapApiTest {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
             TestPropertyValues.of(
                 "spring.data.mongodb.database=" + DATABASE_NAME,
-                "spring.data.mongodb.uri=" + buildMongoURI(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MONGO_PORT), false)
+                "spring.data.mongodb.uri=" + buildMongoURI(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MONGO_PORT), false),
+                "regnskap.sftp.host=" + sftpContainer.getContainerIpAddress(),
+                "regnskap.sftp.port=" + sftpContainer.getMappedPort(SFTP_PORT),
+                "regnskap.sftp.user=" + SFTP_USER,
+                "regnskap.sftp.password=" + SFTP_PWD,
+                "regnskap.sftp.directory=" + SFTP_DIR
             ).applyTo(configurableApplicationContext.getEnvironment());
+
+            TestUtils.sftpUploadFile(sftpContainer.getContainerIpAddress(), sftpContainer.getMappedPort(SFTP_PORT), "log-test.xml");
         }
     }
 
     @BeforeAll
-    static void init(@Autowired RegnskapRepository repository) {
+    static void initDb(@Autowired RegnskapRepository repository) {
         repository.saveAll(DB_REGNSKAP_LIST);
     }
 
@@ -90,5 +107,15 @@ class RegnskapApiTest {
 
         assertEquals(expected2018, response2018);
         assertEquals(expected2017, response2017);
+    }
+
+    @Test
+    void getLog() {
+        List<String> expectedLogList = new ArrayList<>();
+        expectedLogList.add("log-test.xml");
+
+        ResponseEntity<List<String>> response = RegnskapApiImpl.getLog(httpServletRequestMock);
+        ResponseEntity<List<String>> expected = new ResponseEntity<>(expectedLogList, HttpStatus.OK);
+        assertEquals(expected, response);
     }
 }

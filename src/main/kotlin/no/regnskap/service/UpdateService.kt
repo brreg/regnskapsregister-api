@@ -14,10 +14,10 @@ import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.Session
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import no.regnskap.SftpProperties
 import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 import javax.annotation.PostConstruct
 
@@ -29,7 +29,8 @@ enum class Task { UPDATE_ACCOUNTING_DATA, NO_TASKS }
 @Service
 class UpdateService(
     private val regnskapRepository: RegnskapRepository,
-    private val regnskapLogRepository: RegnskapLogRepository
+    private val regnskapLogRepository: RegnskapLogRepository,
+    private val sftpProperties: SftpProperties
 ) {
 
     @PostConstruct
@@ -42,22 +43,6 @@ class UpdateService(
     @Scheduled(cron = "0 15 5 * * *") // Check server for new accounting files once a day at 05:15
     fun startSchedule() =
         addTask(Task.UPDATE_ACCOUNTING_DATA)
-
-    fun updateDatabase(file: MultipartFile) {
-        val filename = file.originalFilename
-        val extension = filename?.substring(filename.lastIndexOf('.') + 1)
-        if(filename != null && extension.equals("xml") && regnskapLogRepository.findOneByFilename(filename) == null) {
-            file.inputStream.persist(filename)
-        } else {
-            val msg = when {
-                filename == null -> "Unable to update, no filename"
-                !extension.equals("xml") -> "Will not update, wrong file extension: $extension"
-                else -> "File already persisted: $filename"
-            }
-            LOGGER.error(msg)
-            throw Exception(msg)
-        }
-    }
 
     fun InputStream.persist(filename: String) {
         try {
@@ -85,11 +70,10 @@ class UpdateService(
         try {
             val jsch = JSch()
             val config = Properties()
-            val sftpProperties = SftpProperties()
 
             config["StrictHostKeyChecking"] = "no"
 
-            session = jsch.getSession(sftpProperties.user, sftpProperties.host, sftpProperties.port)
+            session = jsch.getSession(sftpProperties.user, sftpProperties.host, sftpProperties.port.toInt())
             session.setPassword(sftpProperties.password)
             session.setConfig(config)
             session.connect() // Create SFTP Session
@@ -116,7 +100,7 @@ class UpdateService(
             }
 
         } catch (ex: Exception) {
-            LOGGER.error("Exception when downloading accounting files", ex.printStackTrace())
+            LOGGER.error("Exception when downloading accounting files", ex)
         } finally {
             channelSftp?.disconnect()
             channel?.disconnect()
@@ -153,11 +137,3 @@ private fun String.buildLogEntry(): RegnskapLog {
 
     return logEntry
 }
-
-private class SftpProperties (
-    val host: String = System.getenv("RRAPI_SFTP_SERVER"),
-    val port: Int = System.getenv("RRAPI_SFTP_PORT").toInt(),
-    val user: String = System.getenv("RRAPI_SFTP_USER"),
-    val password: String = System.getenv("RRAPI_SFTP_PASSWORD"),
-    val directory: String = System.getenv("RRAPI_SFTP_DIRECTORY")
-)
