@@ -23,6 +23,13 @@ public class TestData {
         "MONGO_INITDB_ROOT_USERNAME", MONGO_USER,
         "MONGO_INITDB_ROOT_PASSWORD", MONGO_PASSWORD);
 
+    public static final String SFTP_USER = "sftpuser";
+    public static final String SFTP_PWD = "sftppwd";
+    public static final int SFTP_PORT = 22;
+    private static final String SFTP_DIRECTORY = "sftpdir";
+    public static final String SFTP_DIR = "/" + SFTP_DIRECTORY;
+    public static final Map<String, String> SFTP_ENV_VALUES =
+        ImmutableMap.of("SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY);
 
     public static String buildMongoURI(String host, int port, boolean withDbName) {
         String uri = "mongodb://" + MONGO_USER + ":" + MONGO_PASSWORD + "@" + host + ":" + port + "/";
