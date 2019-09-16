@@ -2,12 +2,12 @@ package no.regnskap.integration;
 
 import no.regnskap.TestUtils;
 import no.regnskap.controller.RegnskapApiImpl;
-import no.regnskap.generated.model.Regnskap;
 import no.regnskap.repository.RegnskapRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,18 +92,20 @@ class RegnskapApiTest {
 
     @Test
     void getByOrgnr() {
-        ResponseEntity<List<Regnskap>> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
-        ResponseEntity<List<Regnskap>> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
+
+        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<Object> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
         assertEquals(expected, response);
     }
 
     @Test
     void getById() {
-        ResponseEntity<Regnskap> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
-        ResponseEntity<Regnskap> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
+        ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
+        ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
 
-        ResponseEntity<Regnskap> expected2018 = new ResponseEntity<>(REGNSKAP_2018, HttpStatus.OK);
-        ResponseEntity<Regnskap> expected2017 = new ResponseEntity<>(REGNSKAP_2017, HttpStatus.OK);
+        ResponseEntity<Object> expected2018 = new ResponseEntity<>(REGNSKAP_2018, HttpStatus.OK);
+        ResponseEntity<Object> expected2017 = new ResponseEntity<>(REGNSKAP_2017, HttpStatus.OK);
 
         assertEquals(expected2018, response2018);
         assertEquals(expected2017, response2017);

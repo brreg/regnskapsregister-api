@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import no.regnskap.mapper.mapPersistenceToGenerated
 import no.regnskap.repository.RegnskapLogRepository
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
 private const val REGNSKAPSTYPE_SELSKAP = "s"
@@ -17,10 +18,10 @@ class RegnskapService (
     private val logRepository: RegnskapLogRepository
 ) {
 
-    fun getById(id: String): Optional<Regnskap> =
+    fun getById(id: String): Regnskap? =
         regnskapRepository
-            .findById(id)
-            .map { it.mapPersistenceToGenerated() }
+            .findByIdOrNull(id)
+            ?.mapPersistenceToGenerated()
 
     fun getByOrgnr(orgnr: String): List<Regnskap> =
         regnskapRepository

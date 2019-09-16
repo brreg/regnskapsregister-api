@@ -51,10 +51,9 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
                 .thenReturn(emptyDB);
 
-            Optional<Regnskap> actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
-            Optional<Regnskap> emptyResult = Optional.empty();
+            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
 
-            assertEquals(emptyResult, actualResult);
+            assertEquals(null, actualResult);
         }
 
         @Test
@@ -63,10 +62,9 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                 .thenReturn(regnskapDB);
 
-            Optional<Regnskap> actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
 
-            assertTrue(actual.isPresent());
-            assertEquals(TestData.REGNSKAP_2018, actual.get());
+            assertEquals(TestData.REGNSKAP_2018, actual);
         }
     }
 
