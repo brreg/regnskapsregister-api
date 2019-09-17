@@ -41,14 +41,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Regnskap'
+                type: object
             application/xml:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Regnskap'
+                type: object
+            application/ld+json:
+              schema:
+                type: object
+            application/rdf+xml:
+              schema:
+                type: object
+            text/turtle:
+              schema:
+                type: object
   /regnskap/{id}:
     get:
       tags:
@@ -68,10 +73,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Regnskap"
+                type: object
             application/xml:
               schema:
-                $ref: "#/components/schemas/Regnskap"
+                type: object
+            application/ld+json:
+              schema:
+                type: object
+            application/rdf+xml:
+              schema:
+                type: object
+            text/turtle:
+              schema:
+                type: object
 
   /regnskap/log:
     get:

@@ -3,7 +3,6 @@ package no.regnskap.controller;
 import no.regnskap.TestData;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.RegnskapService;
-import no.regnskap.service.UpdateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -62,7 +61,9 @@ class RegnskapApiImplTest {
             Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
                 .thenReturn(emptyList);
 
-            ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
+            Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
+
+            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.EMPTY_REGNSKAP_LIST, response.getBody());
@@ -74,7 +75,9 @@ class RegnskapApiImplTest {
             Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
                 .thenReturn(regnskapList);
 
-            ResponseEntity<List<Regnskap>> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
+            Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
+
+            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.REGNSKAP_LIST, response.getBody());
@@ -96,11 +99,10 @@ class RegnskapApiImplTest {
     class GetRegnskapById {
         @Test
         void notFoundWhenEmpty() {
-            Optional<Regnskap> empty = Optional.empty();
             Mockito.when(regnskapServiceMock.getById("id"))
-                .thenReturn(empty);
+                .thenReturn(null);
 
-            ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
             assertNull(response.getBody());
@@ -108,11 +110,11 @@ class RegnskapApiImplTest {
 
         @Test
         void okWhenNonEmpty() {
-            Optional<Regnskap> regnskap = Optional.of(TestData.REGNSKAP_2018);
+            Regnskap regnskap = TestData.REGNSKAP_2018;
             Mockito.when(regnskapServiceMock.getById("id"))
                 .thenReturn(regnskap);
 
-            ResponseEntity<Regnskap> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.REGNSKAP_2018, response.getBody());
