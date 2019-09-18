@@ -6,6 +6,7 @@ import no.regnskap.model.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,7 @@ public class TestData {
     public static String buildMongoURI(String host, int port, boolean withDbName) {
         String uri = "mongodb://" + MONGO_USER + ":" + MONGO_PASSWORD + "@" + host + ":" + port + "/";
 
-        if(withDbName) {
+        if (withDbName) {
             uri += DATABASE_NAME;
         }
 
@@ -43,7 +44,8 @@ public class TestData {
 
     public static ObjectId GENERATED_ID_0 = ObjectId.get();
     public static ObjectId GENERATED_ID_1 = ObjectId.get();
-    public static ObjectId GENERATED_ID_2 = ObjectId.get();
+    public static ObjectId GENERATED_ID_2 = new ObjectId("5d81fe657091ee0cce6bccdb");
+    public static ObjectId GENERATED_ID_3 = ObjectId.get();
 
     public static Regnskap REGNSKAP_2018 = createRegnskap(GENERATED_ID_2, 2018);
     public static Regnskap REGNSKAP_2017 = createRegnskap(GENERATED_ID_0, 2017);
@@ -70,28 +72,9 @@ public class TestData {
                     .organisasjonsnummer("orgnummer")
                     .organisasjonsform("orgform")
                     .morselskap(true))
-            .egenkapitalGjeld(
-                new EgenkapitalGjeld().egenkapital(
-                    new Egenkapital()
-                        .innskuttEgenkapital(new InnskuttEgenkapital())
-                        .opptjentEgenkapital(new OpptjentEgenkapital()))
-                    .gjeldOversikt(
-                        new Gjeld()
-                            .kortsiktigGjeld(new KortsiktigGjeld())
-                            .langsiktigGjeld(new LangsiktigGjeld())))
-            .eiendeler(
-                new Eiendeler()
-                    .anleggsmidler(new Anleggsmidler())
-                    .omloepsmidler(new Omloepsmidler()))
-            .resultatregnskapResultat(
-                new ResultatregnskapResultat().driftsresultat(
-                    new Driftsresultat()
-                        .driftsinntekter(new Driftsinntekter())
-                        .driftskostnad(new Driftskostnad()))
-                    .finansresultat(
-                        new Finansresultat()
-                            .finansinntekt(new Finansinntekt())
-                            .finanskostnad(new Finanskostnad())));
+            .egenkapitalGjeld(egenkapitalGjeldWithValues(year))
+            .eiendeler(eiendelerWithValues(year))
+            .resultatregnskapResultat(resultatregnskapResultatWithValues(year));
     }
 
     public static List<Regnskap> EMPTY_REGNSKAP_LIST = new ArrayList<>();
@@ -103,6 +86,13 @@ public class TestData {
     public static final RegnskapDB DB_REGNSKAP_2017 = createRegnskapDB(GENERATED_ID_0, 2017, "0");
     public static final RegnskapDB DB_REGNSKAP_2018_FIRST = createRegnskapDB(GENERATED_ID_1, 2018, "1");
     public static final RegnskapDB DB_REGNSKAP_2018_SECOND = createRegnskapDB(GENERATED_ID_2, 2018, "2");
+
+    public static RegnskapDB dbRegnskapEmptyFields() {
+        RegnskapDB emptyRegnskapDB = new RegnskapDB();
+        emptyRegnskapDB.setId(GENERATED_ID_3);
+        emptyRegnskapDB.setFields(new RegnskapFieldsDB());
+        return emptyRegnskapDB;
+    }
 
     public static List<RegnskapDB> DB_REGNSKAP_LIST = createDatabaseList();
 
@@ -133,7 +123,11 @@ public class TestData {
         tmpRegnskapDB.setForenkletIfrsSelskap(false);
         tmpRegnskapDB.setIfrsKonsern(false);
         tmpRegnskapDB.setForenkletIfrsKonsern(false);
-        tmpRegnskapDB.setFields(new RegnskapFieldsDB());
+        tmpRegnskapDB.setFields(new RegnskapFieldsDB().copy(
+            eiendelerWithValues(year),
+            egenkapitalGjeldWithValues(year),
+            resultatregnskapResultatWithValues(year)
+        ));
 
         tmpRegnskapDB.setRegnaar(year);
 
@@ -153,7 +147,7 @@ public class TestData {
     public static List<RegnskapLog> DB_LOG = createLog();
     public static Sort DB_SORT = new Sort(Sort.Direction.ASC, "filename");
 
-    private static List<RegnskapLog> createLog(){
+    private static List<RegnskapLog> createLog() {
         List<RegnskapLog> list = new ArrayList<>();
         list.add(createLogEntry("file0.xml"));
         list.add(createLogEntry("file1.xml"));
@@ -162,9 +156,48 @@ public class TestData {
         return list;
     }
 
-    private static RegnskapLog createLogEntry(String filename){
+    private static RegnskapLog createLogEntry(String filename) {
         RegnskapLog entry = new RegnskapLog();
         entry.setFilename(filename);
         return entry;
+    }
+
+    private static Eiendeler eiendelerWithValues(long baseValue) {
+        return new Eiendeler()
+            .sumEiendeler(BigDecimal.valueOf(baseValue))
+            .anleggsmidler(new Anleggsmidler().sumAnleggsmidler(BigDecimal.valueOf(baseValue + 1)))
+            .omloepsmidler(new Omloepsmidler().sumOmloepsmidler(BigDecimal.valueOf(baseValue + 2)));
+    }
+
+    private static EgenkapitalGjeld egenkapitalGjeldWithValues(long baseValue) {
+        return new EgenkapitalGjeld()
+            .sumEgenkapitalGjeld(BigDecimal.valueOf(baseValue + 3))
+            .egenkapital(
+                new Egenkapital()
+                    .sumEgenkapital(BigDecimal.valueOf(baseValue + 4))
+                    .innskuttEgenkapital(new InnskuttEgenkapital().sumInnskuttEgenkaptial(BigDecimal.valueOf(baseValue + 5)))
+                    .opptjentEgenkapital(new OpptjentEgenkapital().sumOpptjentEgenkapital(BigDecimal.valueOf(baseValue + 6))))
+            .gjeldOversikt(
+                new Gjeld()
+                    .sumGjeld(BigDecimal.valueOf(baseValue + 7))
+                    .kortsiktigGjeld(new KortsiktigGjeld().sumKortsiktigGjeld(BigDecimal.valueOf(baseValue + 8)))
+                    .langsiktigGjeld(new LangsiktigGjeld().sumLangsiktigGjeld(BigDecimal.valueOf(baseValue + 9))));
+    }
+
+    private static ResultatregnskapResultat resultatregnskapResultatWithValues(long baseValue) {
+        return new ResultatregnskapResultat()
+            .ordinaertResultatFoerSkattekostnad(BigDecimal.valueOf(baseValue + 10))
+            .aarsresultat(BigDecimal.valueOf(baseValue + 11))
+            .totalresultat(BigDecimal.valueOf(baseValue + 12))
+            .driftsresultat(
+                new Driftsresultat()
+                    .driftsresultat(BigDecimal.valueOf(baseValue + 13))
+                    .driftsinntekter(new Driftsinntekter().sumDriftsinntekter(BigDecimal.valueOf(baseValue + 14)))
+                    .driftskostnad(new Driftskostnad().sumDriftskostnad(BigDecimal.valueOf(baseValue + 15))))
+            .finansresultat(
+                new Finansresultat()
+                    .nettoFinans(BigDecimal.valueOf(baseValue + 16))
+                    .finansinntekt(new Finansinntekt().sumFinansinntekter(BigDecimal.valueOf(baseValue + 17)))
+                    .finanskostnad(new Finanskostnad().sumFinanskostnad(BigDecimal.valueOf(baseValue + 18))));
     }
 }

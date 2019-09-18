@@ -5,6 +5,8 @@ import org.apache.jena.datatypes.xsd.XSDDateTime
 import org.apache.jena.datatypes.xsd.impl.XSDDateType
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.Property
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.ORG
 import org.apache.jena.vocabulary.RDF
@@ -34,7 +36,7 @@ private fun List<Regnskap>.createModel(): Model {
             .addProperty(RDF.type, BR.Regnskap)
             .addProperty(DCTerms.identifier, it.id)
             .addLiteral(BR.avviklingsregnskap, it.avviklingsregnskap)
-            .addLiteral(SCHEMA.currency, it.valuta)
+            .safeAddLiteral(SCHEMA.currency, it.valuta)
             .addLiteral(BR.oppstillingsplan, it.oppstillingsplan.value)
             .addProperty(
                 BR.revisjon,
@@ -45,18 +47,14 @@ private fun List<Regnskap>.createModel(): Model {
                 model.createResource(BR.Regnskapsprinsipper)
                     .addLiteral(BR.smaaForetak, it.regnkapsprinsipper.smaaForetak)
                     .addLiteral(BR.regnskapsregler, it.regnkapsprinsipper.regnskapsregler.value))
-            .addProperty(
-                BR.regnskapsperiode,
-                model.createResource(DCTerms.PeriodOfTime)
-                    .addProperty(SCHEMA.startDate, model.createTypedLiteral(it.regnskapsperiode.fraDato.toXSDDate(), XSDDateType.XSDdate))
-                    .addLiteral(SCHEMA.endDate, model.createTypedLiteral(it.regnskapsperiode.tilDato.toXSDDate(), XSDDateType.XSDdate)))
+            .addRegnskapsperiode(it.regnskapsperiode.fraDato, it.regnskapsperiode.tilDato)
             .addProperty(
                 BR.virksomhet,
                 model.createResource(BR.Virksomhet)
-                    .addLiteral(ORG.organization, "http://orgcat.brreg.no/${it.virksomhet.organisasjonsnummer}")
-                    .addLiteral(BR.organisasjonsnummer, it.virksomhet.organisasjonsnummer)
-                    .addLiteral(BR.organisasjonsform, it.virksomhet.organisasjonsform)
-                    .addLiteral(BR.morselskap, it.virksomhet.morselskap))
+                    .addProperty(ORG.organization, model.createResource("http://orgcat.brreg.no/${it.virksomhet.organisasjonsnummer}"))
+                    .safeAddLiteral(BR.organisasjonsnummer, it.virksomhet.organisasjonsnummer)
+                    .safeAddLiteral(BR.organisasjonsform, it.virksomhet.organisasjonsform)
+                    .safeAddLiteral(BR.morselskap, it.virksomhet.morselskap))
             .addProperty(
                 BR.eiendeler,
                 model.createResource(BR.Eiendeler)
@@ -131,6 +129,28 @@ private fun List<Regnskap>.createModel(): Model {
 
     return model
 }
+
+private fun Resource.safeAddLiteral(property: Property, value: Any?): Resource =
+    if (value == null) this
+    else addLiteral(property, value)
+
+private fun Resource.addRegnskapsperiode(fraDato: LocalDate?, tilDato: LocalDate?): Resource =
+    when {
+        fraDato != null && tilDato != null -> addProperty(
+            BR.regnskapsperiode,
+            model.createResource(DCTerms.PeriodOfTime)
+                .addLiteral(SCHEMA.startDate, model.createTypedLiteral(fraDato.toXSDDate(), XSDDateType.XSDdate))
+                .addLiteral(SCHEMA.endDate, model.createTypedLiteral(tilDato.toXSDDate(), XSDDateType.XSDdate)))
+        fraDato == null && tilDato != null -> addProperty(
+            BR.regnskapsperiode,
+            model.createResource(DCTerms.PeriodOfTime)
+                .addLiteral(SCHEMA.endDate, model.createTypedLiteral(tilDato.toXSDDate(), XSDDateType.XSDdate)))
+        fraDato != null && tilDato == null -> addProperty(
+            BR.regnskapsperiode,
+            model.createResource(DCTerms.PeriodOfTime)
+                .addLiteral(SCHEMA.startDate, model.createTypedLiteral(fraDato.toXSDDate(), XSDDateType.XSDdate)))
+        else -> this
+    }
 
 fun Model.createResponseString(responseType: JenaType):String =
     ByteArrayOutputStream().use{ stream ->

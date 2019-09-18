@@ -1,11 +1,12 @@
 package no.regnskap.integration;
 
+import no.regnskap.JenaResponseReader;
 import no.regnskap.TestUtils;
 import no.regnskap.controller.RegnskapApiImpl;
+import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.RegnskapRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import static no.regnskap.TestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 @SpringBootTest
@@ -40,6 +42,7 @@ class RegnskapApiTest {
     private final static Logger logger = LoggerFactory.getLogger(RegnskapApiTest.class);
     private static Slf4jLogConsumer mongoLog = new Slf4jLogConsumer(logger).withPrefix("mongo-container");
     private static Slf4jLogConsumer sftpLog = new Slf4jLogConsumer(logger).withPrefix("sftp-container");
+    private JenaResponseReader responseReader = new JenaResponseReader();
 
     @Mock
     HttpServletRequest httpServletRequestMock;
@@ -81,6 +84,12 @@ class RegnskapApiTest {
     @BeforeAll
     static void initDb(@Autowired RegnskapRepository repository) {
         repository.saveAll(DB_REGNSKAP_LIST);
+        repository.save(dbRegnskapEmptyFields());
+    }
+
+    @BeforeEach
+    void resetMock() {
+        Mockito.reset(httpServletRequestMock);
     }
 
     @Test
@@ -97,10 +106,20 @@ class RegnskapApiTest {
         ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
         ResponseEntity<Object> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
         assertEquals(expected, response);
+
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
+
+        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer").getBody();
+        Model modelFromResponse = responseReader.parseResponse((String)rdfResponse, "RDFXML");
+        Model expectedResponse = responseReader.getExpectedResponse("OrgnrResponse.ttl", "TURTLE");
+
+        assertTrue(expectedResponse.isIsomorphicWith(modelFromResponse));
     }
 
     @Test
     void getById() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+
         ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
         ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
 
@@ -109,6 +128,30 @@ class RegnskapApiTest {
 
         assertEquals(expected2018, response2018);
         assertEquals(expected2017, response2017);
+    }
+
+    @Test
+    void noNullPointersFromAnyResponseType() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
+        HttpStatus turtleStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
+        HttpStatus rdfXmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/ld+json");
+        HttpStatus jsonLdStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
+        HttpStatus jsonStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        HttpStatus xmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+
+        assertEquals(HttpStatus.OK, turtleStatusCode);
+        assertEquals(HttpStatus.OK, rdfXmlStatusCode);
+        assertEquals(HttpStatus.OK, jsonLdStatusCode);
+        assertEquals(HttpStatus.OK, jsonStatusCode);
+        assertEquals(HttpStatus.OK, xmlStatusCode);
     }
 
     @Test
