@@ -4,7 +4,7 @@
 @prefix org:   <http://www.w3.org/ns/org#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://rreg.brreg.no/regnskap/5d81fe657091ee0cce6bccdb>
+<http://invalid.org/regnskap/5d81fe657091ee0cce6bccdb>
         a                            br:Regnskap ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
@@ -77,7 +77,7 @@
                                        br:morselskap           true ;
                                        br:organisasjonsform    "orgform" ;
                                        br:organisasjonsnummer  "orgnummer" ;
-                                       org:organization        <http://orgcat.brreg.no/orgnummer>
+                                       org:organization        <https://invalid.org/organizations/orgnummer>
                                      ] ;
         dct:identifier               "5d81fe657091ee0cce6bccdb" ;
         schema:currency              "valutakode" .

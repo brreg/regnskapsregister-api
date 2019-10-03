@@ -48,6 +48,9 @@ paths:
             application/ld+json:
               schema:
                 type: object
+            application/rdf+json:
+              schema:
+                type: object
             application/rdf+xml:
               schema:
                 type: object
@@ -78,6 +81,9 @@ paths:
               schema:
                 type: object
             application/ld+json:
+              schema:
+                type: object
+            application/rdf+json:
               schema:
                 type: object
             application/rdf+xml:

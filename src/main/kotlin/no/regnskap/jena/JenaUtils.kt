@@ -15,16 +15,16 @@ import java.io.ByteArrayOutputStream
 import java.math.BigDecimal
 import java.time.LocalDate
 
-fun Regnskap.createJenaResponse(responseType: JenaType) =
+fun Regnskap.createJenaResponse(responseType: JenaType, urls: ExternalUrls) =
     listOf(this)
-        .createModel()
+        .createModel(urls)
         .createResponseString(responseType)
 
-fun List<Regnskap>.createJenaResponse(responseType: JenaType) =
-    createModel()
+fun List<Regnskap>.createJenaResponse(responseType: JenaType, urls: ExternalUrls) =
+    createModel(urls)
         .createResponseString(responseType)
 
-private fun List<Regnskap>.createModel(): Model {
+private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
     val model = ModelFactory.createDefaultModel()
     model.setNsPrefix("dct", DCTerms.getURI())
     model.setNsPrefix("br", BR.uri)
@@ -32,7 +32,7 @@ private fun List<Regnskap>.createModel(): Model {
     model.setNsPrefix("org", ORG.getURI())
     model.setNsPrefix("schema", SCHEMA.uri)
     forEach {
-        model.createResource("http://rreg.brreg.no/regnskap/${it.id}")
+        model.createResource(urls.self + it.id)
             .addProperty(RDF.type, BR.Regnskap)
             .addProperty(DCTerms.identifier, it.id)
             .addLiteral(BR.avviklingsregnskap, it.avviklingsregnskap)
@@ -51,7 +51,7 @@ private fun List<Regnskap>.createModel(): Model {
             .addProperty(
                 BR.virksomhet,
                 model.createResource(BR.Virksomhet)
-                    .addProperty(ORG.organization, model.createResource("http://orgcat.brreg.no/${it.virksomhet.organisasjonsnummer}"))
+                    .safeAddLinkedProperty(ORG.organization, urls.organizationCatalogue, it.virksomhet.organisasjonsnummer)
                     .safeAddLiteral(BR.organisasjonsnummer, it.virksomhet.organisasjonsnummer)
                     .safeAddLiteral(BR.organisasjonsform, it.virksomhet.organisasjonsform)
                     .safeAddLiteral(BR.morselskap, it.virksomhet.morselskap))
@@ -130,6 +130,10 @@ private fun List<Regnskap>.createModel(): Model {
     return model
 }
 
+private fun Resource.safeAddLinkedProperty(property: Property, baseUrl: String, value: String?): Resource =
+    if(value == null) this
+    else addProperty(property, model.createResource(baseUrl + value))
+
 private fun Resource.safeAddLiteral(property: Property, value: Any?): Resource =
     if (value == null) this
     else addLiteral(property, value)
@@ -163,6 +167,7 @@ fun acceptHeaderToJenaType(accept: String?): JenaType =
     when (accept) {
         "text/turtle" -> JenaType.TURTLE
         "application/rdf+xml" -> JenaType.RDF_XML
+        "application/rdf+json" -> JenaType.RDF_JSON
         "application/ld+json" -> JenaType.JSON_LD
         else -> JenaType.NOT_JENA
     }
@@ -170,6 +175,7 @@ fun acceptHeaderToJenaType(accept: String?): JenaType =
 enum class JenaType(val value: String){
     TURTLE("TURTLE"),
     RDF_XML("RDF/XML"),
+    RDF_JSON("RDF/JSON"),
     JSON_LD("JSON-LD"),
     NOT_JENA("")
 }
@@ -178,3 +184,8 @@ private fun LocalDate.toXSDDate(): XSDDateTime {
     val o = intArrayOf(year, monthValue, dayOfMonth, 0, 0, 0, 0, 0, 0)
     return XSDDateTime(o, XSDDateTime.YEAR_MASK.toInt() or XSDDateTime.MONTH_MASK.toInt() or XSDDateTime.DAY_MASK.toInt())
 }
+
+data class ExternalUrls(
+    val self: String,
+    val organizationCatalogue: String
+)

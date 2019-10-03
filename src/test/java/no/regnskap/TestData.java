@@ -42,6 +42,9 @@ public class TestData {
         return uri + MONGO_AUTH;
     }
 
+    public static String rregUrl = "http://invalid.org/regnskap/";
+    public static String orgcatUrl = "https://invalid.org/organizations/";
+
     public static ObjectId GENERATED_ID_0 = ObjectId.get();
     public static ObjectId GENERATED_ID_1 = ObjectId.get();
     public static ObjectId GENERATED_ID_2 = new ObjectId("5d81fe657091ee0cce6bccdb");

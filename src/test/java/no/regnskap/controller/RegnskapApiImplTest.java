@@ -1,6 +1,7 @@
 package no.regnskap.controller;
 
 import no.regnskap.TestData;
+import no.regnskap.configuration.ProfileConditionalValues;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.RegnskapService;
 import org.apache.jena.riot.RIOT;
@@ -33,6 +34,9 @@ class RegnskapApiImplTest {
     @Mock
     RegnskapService regnskapServiceMock;
 
+    @Mock
+    ProfileConditionalValues valuesMock;
+
     @InjectMocks
     RegnskapApiImpl regnskapApi;
 
@@ -45,7 +49,8 @@ class RegnskapApiImplTest {
     void resetMocks() {
         Mockito.reset(
             httpServletRequestMock,
-            regnskapServiceMock
+            regnskapServiceMock,
+            valuesMock
         );
     }
 
@@ -63,6 +68,9 @@ class RegnskapApiImplTest {
             Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
                 .thenReturn(emptyList);
 
+            Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
+            Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
+
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
             ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer");
@@ -76,6 +84,9 @@ class RegnskapApiImplTest {
             List<Regnskap> regnskapList = TestData.REGNSKAP_LIST;
             Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer"))
                 .thenReturn(regnskapList);
+
+            Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
+            Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
@@ -104,6 +115,9 @@ class RegnskapApiImplTest {
             Mockito.when(regnskapServiceMock.getById("id"))
                 .thenReturn(null);
 
+            Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
+            Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
+
             ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -115,6 +129,9 @@ class RegnskapApiImplTest {
             Regnskap regnskap = TestData.REGNSKAP_2018;
             Mockito.when(regnskapServiceMock.getById("id"))
                 .thenReturn(regnskap);
+
+            Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
+            Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
             ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
