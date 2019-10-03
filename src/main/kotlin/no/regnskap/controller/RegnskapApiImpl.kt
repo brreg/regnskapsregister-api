@@ -1,5 +1,7 @@
 package no.regnskap.controller
 
+import no.regnskap.configuration.ProfileConditionalValues
+import no.regnskap.jena.ExternalUrls
 import no.regnskap.jena.JenaType
 import no.regnskap.jena.acceptHeaderToJenaType
 import no.regnskap.jena.createJenaResponse
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod.GET
 private val LOGGER = LoggerFactory.getLogger(RegnskapApiImpl::class.java)
 
 @Controller
-open class RegnskapApiImpl(val regnskapService: RegnskapService): no.regnskap.generated.api.RegnskapApi {
+open class RegnskapApiImpl(
+    private val regnskapService: RegnskapService,
+    private val profileConditionalValues: ProfileConditionalValues
+): no.regnskap.generated.api.RegnskapApi {
 
     val ping: ResponseEntity<String>
         @RequestMapping(value = ["/ping"], method = [GET], produces = ["text/plain"])
@@ -36,10 +41,15 @@ open class RegnskapApiImpl(val regnskapService: RegnskapService): no.regnskap.ge
             val regnskap = regnskapService.getByOrgnr(orgNummer)
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
+            val urls = ExternalUrls(
+                self = profileConditionalValues.regnskapsregisteretUrl(),
+                organizationCatalogue = profileConditionalValues.organizationCatalogueUrl()
+            )
+
             if (jenaType == JenaType.NOT_JENA) {
                 ResponseEntity(regnskap, HttpStatus.OK)
             } else {
-                ResponseEntity(regnskap.createJenaResponse(jenaType), HttpStatus.OK)
+                ResponseEntity(regnskap.createJenaResponse(jenaType, urls), HttpStatus.OK)
             }
 
         } catch (e: Exception) {
@@ -52,12 +62,17 @@ open class RegnskapApiImpl(val regnskapService: RegnskapService): no.regnskap.ge
             val regnskap = regnskapService.getById(id)
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
+            val urls = ExternalUrls(
+                self = profileConditionalValues.regnskapsregisteretUrl(),
+                organizationCatalogue = profileConditionalValues.organizationCatalogueUrl()
+            )
+
             if (regnskap == null) {
                 ResponseEntity(HttpStatus.NOT_FOUND)
             } else if (jenaType == JenaType.NOT_JENA) {
                 ResponseEntity<Any>(regnskap, HttpStatus.OK)
             } else {
-                ResponseEntity<Any>(regnskap.createJenaResponse(jenaType), HttpStatus.OK)
+                ResponseEntity<Any>(regnskap.createJenaResponse(jenaType, urls), HttpStatus.OK)
             }
 
         } catch (e: Exception) {
