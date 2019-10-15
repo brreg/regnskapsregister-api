@@ -4,7 +4,7 @@ import org.apache.jena.rdf.model.ModelFactory
 
 object BR {
 
-    val uri = "http://brreg.no/regnskap#"
+    val uri = "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#"
 
     private val model = ModelFactory.createDefaultModel()
 
@@ -34,7 +34,6 @@ object BR {
     val Finanskostnad = model.createResource(uri + "Finanskostnad")
 
     val avviklingsregnskap = model.createProperty(uri, "avviklingsregnskap")
-    val valuta = model.createProperty(uri, "valuta")
     val oppstillingsplan = model.createProperty(uri, "oppstillingsplan")
 
     val revisjon = model.createProperty(uri, "revisjon")
