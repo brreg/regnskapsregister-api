@@ -1,4 +1,4 @@
-@prefix br:    <http://brreg.no/regnskap#> .
+@prefix br:    <https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#> .
 @prefix schema: <http://schema.org/> .
 @prefix dct:   <http://purl.org/dc/terms/> .
 @prefix org:   <http://www.w3.org/ns/org#> .
@@ -6,6 +6,8 @@
 
 <http://invalid.org/regnskap/5d81fe657091ee0cce6bccdb>
         a                            br:Regnskap ;
+        dct:identifier               "5d81fe657091ee0cce6bccdb" ;
+        schema:currency              "valutakode" ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
                                        br:egenkapital          [ a                       br:Egenkapital ;
@@ -74,10 +76,8 @@
                                        br:ikkeRevidertAarsregnskap  true
                                      ] ;
         br:virksomhet                [ a                       br:Virksomhet ;
+                                       org:organization        <https://invalid.org/organizations/orgnummer> ;
                                        br:morselskap           true ;
                                        br:organisasjonsform    "orgform" ;
-                                       br:organisasjonsnummer  "orgnummer" ;
-                                       org:organization        <https://invalid.org/organizations/orgnummer>
-                                     ] ;
-        dct:identifier               "5d81fe657091ee0cce6bccdb" ;
-        schema:currency              "valutakode" .
+                                       br:organisasjonsnummer  "orgnummer"
+                                     ] .
