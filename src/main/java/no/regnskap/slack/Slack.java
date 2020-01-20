@@ -12,7 +12,7 @@ public class Slack {
 
 
     public static ChatPostMessageResponse postMessage(final String token, final String channel, final String message) {
-        if (token==null || token.isEmpty() || "disabled".equalsIgnoreCase(token)) {
+        if (token==null || token.isEmpty()) {
             return null;
         }
 
