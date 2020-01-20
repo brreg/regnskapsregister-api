@@ -183,6 +183,18 @@
             <version>0.1.55</version>
         </dependency>
 
+        <!-- Slack client -->
+        <dependency>
+            <groupId>com.hubspot.slack</groupId>
+            <artifactId>slack-base</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hubspot.slack</groupId>
+            <artifactId>slack-java-client</artifactId>
+            <version>1.4</version>
+        </dependency>
+
         <!-- JSON-LD dependencies -->
         <dependency>
             <groupId>org.apache.jena</groupId>

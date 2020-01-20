@@ -15,8 +15,10 @@ import com.jcraft.jsch.Session
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import no.regnskap.SftpProperties
+import no.regnskap.SlackProperties
 import no.regnskap.mapper.essentialFieldsIncluded
 import no.regnskap.model.RegnskapLog
+import no.regnskap.slack.Slack
 import org.springframework.scheduling.annotation.Scheduled
 import java.io.InputStream
 import javax.annotation.PostConstruct
@@ -30,7 +32,8 @@ enum class Task { UPDATE_ACCOUNTING_DATA, NO_TASKS }
 class UpdateService(
     private val regnskapRepository: RegnskapRepository,
     private val regnskapLogRepository: RegnskapLogRepository,
-    private val sftpProperties: SftpProperties
+    private val sftpProperties: SftpProperties,
+    private val slackProperties: SlackProperties
 ) {
 
     @PostConstruct
@@ -101,6 +104,7 @@ class UpdateService(
 
         } catch (ex: Exception) {
             LOGGER.error("Exception when downloading accounting files", ex)
+            Slack.postMessage(slackProperties.token, Slack.PRODFEIL_CHANNEL, "Exception when downloading accounting files: " + ex.message)
         } finally {
             channelSftp?.disconnect()
             channel?.disconnect()

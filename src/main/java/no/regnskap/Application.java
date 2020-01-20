@@ -14,7 +14,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties(SftpProperties.class)
+@EnableConfigurationProperties({SftpProperties.class, SlackProperties.class})
 public class Application {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Application.class);
