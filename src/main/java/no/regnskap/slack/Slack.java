@@ -15,7 +15,7 @@ public class Slack {
 
 
     public static ChatPostMessageResponse postMessage(final String token, final String channel, final String message) {
-        LOGGER.info("token = (" + token.length() + "), " + token.substring(0, 3));
+        LOGGER.info("token = (" + token.length() + "), *" + token + "*");
         if (token==null || token.isEmpty() || "disabled".equalsIgnoreCase(token)) {
             return null;
         }
