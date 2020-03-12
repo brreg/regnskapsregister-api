@@ -1,0 +1,471 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Nøkkeltall fra årsregnskapet",
+    "description": "_Dette er et midlertidig API som er utviklet for FoU (Forsknings- og utviklingsarbeid), og særskilt for EUbusinessgraph. APIèt vil ikke bli videreutviklet eller vedlikeholdt, og kan bli lagt ned uten varsel.\nAPI'et kan brukes av alle, men har dere behov for kontinuerlig oppdatering fra Regnskapsregisteret, anbefaler vi at dere avventer til en fullverdig versjon av API regnskapsregisteret blir publisert i løpet av de nærmeste årene._\n\n_APIèt inneholder nøkkeltall fra sist innsendte årsregnskap som er godkjent av Regnskapsregisteret, fra og med regnskapsåret 2018.  Dette gjelder for de virksomhetene som følger ordinær oppstillingsplan etter regnskapsloven. Regnskapstall fra f.eks. banker og forsikringsselskap er ikke tilgjengelig. Konserntall er heller ikke tilgjengelig. Dette Api'et inneholder heller ikke opplysninger om hvorvidt virksomheten er slettet, gått konkurs eller annen tilsvarende opplysninger. Disse opplysningene finner dere her: <https://data.brreg.no/enhetsregisteret/oppslag/enheter>_\n",
+    "version": "1.0.2",
+    "contact": {
+      "name": "Forenkling og Brukerdialog hos Brønnøysundregistrene",
+      "url": "https://www.brreg.no/",
+      "email": "opendata@brreg.no"
+    },
+    "license": {
+      "name": "License of API",
+      "url": "http://data.norge.no/nlod/no/2.0"
+    }
+  },
+  "tags": [
+    {
+      "name": "regnskapsregisteret",
+      "description": "Regnskapsregister API"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://rreg.ut1.rreg-dev.brreg.no",
+      "description": "Server i utviklingsmiljø"
+    }
+  ],
+  "paths": {
+    "/regnskap": {
+      "get": {
+        "tags": [
+          "regnskap"
+        ],
+        "summary": "Query for regnskap.",
+        "description": "Returnerer en samling årsregnskap",
+        "operationId": "getRegnskap",
+        "parameters": [
+          {
+            "name": "orgNummer",
+            "in": "query",
+            "description": "Virksomhetens organisasjonsnummer",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/ld+json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/rdf+json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/rdf+xml": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "text/turtle": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/regnskap/{id}": {
+      "get": {
+        "tags": [
+          "regnskap"
+        ],
+        "description": "Hent et spesifikt årsregnskap for en virksomhet",
+        "operationId": "getRegnskapById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/ld+json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/rdf+json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "application/rdf+xml": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "text/turtle": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/regnskap/log": {
+      "get": {
+        "tags": [
+          "regnskap"
+        ],
+        "summary": "Query for log.",
+        "description": "Returnerer en logg over filer som har blitt lastet inn i systemet",
+        "operationId": "getLog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Regnskap": {
+        "type": "object",
+        "description": "Et regnskap for et gitt år",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "system-generert id (GUID)"
+          },
+          "virksomhet": {
+            "$ref": "#/components/schemas/Virksomhet"
+          },
+          "regnskapsperiode": {
+            "$ref": "#/components/schemas/Tidsperiode"
+          },
+          "valuta": {
+            "$ref": "#/components/schemas/Valutakode"
+          },
+          "avviklingsregnskap": {
+            "type": "boolean"
+          },
+          "oppstillingsplan": {
+            "type": "string",
+            "enum": [
+              "smaa",
+              "store",
+              "oevrige"
+            ]
+          },
+          "revisjon": {
+            "$ref": "#/components/schemas/Revisjon"
+          },
+          "regnkapsprinsipper": {
+            "$ref": "#/components/schemas/Regnskapsprinsipper"
+          },
+          "egenkapitalGjeld": {
+            "$ref": "#/components/schemas/EgenkapitalGjeld"
+          },
+          "eiendeler": {
+            "$ref": "#/components/schemas/Eiendeler"
+          },
+          "resultatregnskapResultat": {
+            "$ref": "#/components/schemas/ResultatregnskapResultat"
+          }
+        }
+      },
+      "ResultatregnskapResultat": {
+        "type": "object",
+        "externalDocs": {
+          "description": "Begrepsreferanse",
+          "url": "https://jira.brreg.no/browse/BEGREP-821"
+        },
+        "properties": {
+          "ordinaertResultatFoerSkattekostnad": {
+            "type": "number"
+          },
+          "aarsresultat": {
+            "type": "number"
+          },
+          "totalresultat": {
+            "type": "number"
+          },
+          "finansresultat": {
+            "$ref": "#/components/schemas/Finansresultat"
+          },
+          "driftsresultat": {
+            "$ref": "#/components/schemas/Driftsresultat"
+          }
+        }
+      },
+      "EgenkapitalGjeld": {
+        "type": "object",
+        "properties": {
+          "sumEgenkapitalGjeld": {
+            "type": "number"
+          },
+          "egenkapital": {
+            "$ref": "#/components/schemas/Egenkapital"
+          },
+          "gjeldOversikt": {
+            "$ref": "#/components/schemas/Gjeld"
+          }
+        }
+      },
+      "Eiendeler": {
+        "type": "object",
+        "properties": {
+          "sumEiendeler": {
+            "type": "number"
+          },
+          "omloepsmidler": {
+            "$ref": "#/components/schemas/Omloepsmidler"
+          },
+          "anleggsmidler": {
+            "$ref": "#/components/schemas/Anleggsmidler"
+          }
+        }
+      },
+      "Anleggsmidler": {
+        "type": "object",
+        "properties": {
+          "sumAnleggsmidler": {
+            "type": "number"
+          }
+        }
+      },
+      "Omloepsmidler": {
+        "type": "object",
+        "properties": {
+          "sumOmloepsmidler": {
+            "type": "number"
+          }
+        }
+      },
+      "Finansresultat": {
+        "type": "object",
+        "properties": {
+          "nettoFinans": {
+            "type": "number"
+          },
+          "finansinntekt": {
+            "$ref": "#/components/schemas/Finansinntekt"
+          },
+          "finanskostnad": {
+            "$ref": "#/components/schemas/Finanskostnad"
+          }
+        }
+      },
+      "Driftsresultat": {
+        "type": "object",
+        "properties": {
+          "driftsresultat": {
+            "type": "number"
+          },
+          "driftsinntekter": {
+            "$ref": "#/components/schemas/Driftsinntekter"
+          },
+          "driftskostnad": {
+            "$ref": "#/components/schemas/Driftskostnad"
+          }
+        }
+      },
+      "Driftsinntekter": {
+        "type": "object",
+        "properties": {
+          "sumDriftsinntekter": {
+            "type": "number"
+          }
+        }
+      },
+      "Driftskostnad": {
+        "type": "object",
+        "properties": {
+          "sumDriftskostnad": {
+            "type": "number"
+          }
+        }
+      },
+      "Finansinntekt": {
+        "type": "object",
+        "properties": {
+          "sumFinansinntekter": {
+            "type": "number"
+          }
+        }
+      },
+      "Finanskostnad": {
+        "type": "object",
+        "properties": {
+          "sumFinanskostnad": {
+            "type": "number"
+          }
+        }
+      },
+      "Virksomhet": {
+        "type": "object",
+        "description": "Virksomheten som regnskapet tilhører",
+        "properties": {
+          "organisasjonsnummer": {
+            "type": "string"
+          },
+          "organisasjonsform": {
+            "type": "string"
+          },
+          "morselskap": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Tidsperiode": {
+        "type": "object",
+        "properties": {
+          "fraDato": {
+            "type": "string",
+            "format": "date"
+          },
+          "tilDato": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Valutakode": {
+        "type": "string"
+      },
+      "Revisjon": {
+        "type": "object",
+        "properties": {
+          "ikkeRevidertAarsregnskap": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Regnskapsprinsipper": {
+        "type": "object",
+        "properties": {
+          "smaaForetak": {
+            "type": "boolean"
+          },
+          "regnskapsregler": {
+            "type": "string",
+            "enum": [
+              "IFRS",
+              "forenkletAnvendelseIFRS",
+              "regnskapslovenAlminneligRegler"
+            ]
+          }
+        }
+      },
+      "Egenkapital": {
+        "type": "object",
+        "properties": {
+          "sumEgenkapital": {
+            "type": "number"
+          },
+          "opptjentEgenkapital": {
+            "$ref": "#/components/schemas/OpptjentEgenkapital"
+          },
+          "innskuttEgenkapital": {
+            "$ref": "#/components/schemas/InnskuttEgenkapital"
+          }
+        }
+      },
+      "OpptjentEgenkapital": {
+        "type": "object",
+        "properties": {
+          "sumOpptjentEgenkapital": {
+            "type": "number"
+          }
+        }
+      },
+      "InnskuttEgenkapital": {
+        "type": "object",
+        "properties": {
+          "sumInnskuttEgenkaptial": {
+            "type": "number"
+          }
+        }
+      },
+      "Gjeld": {
+        "type": "object",
+        "properties": {
+          "sumGjeld": {
+            "type": "number"
+          },
+          "kortsiktigGjeld": {
+            "$ref": "#/components/schemas/KortsiktigGjeld"
+          },
+          "langsiktigGjeld": {
+            "$ref": "#/components/schemas/LangsiktigGjeld"
+          }
+        }
+      },
+      "KortsiktigGjeld": {
+        "type": "object",
+        "properties": {
+          "sumKortsiktigGjeld": {
+            "type": "number"
+          }
+        }
+      },
+      "LangsiktigGjeld": {
+        "type": "object",
+        "properties": {
+          "sumLangsiktigGjeld": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
