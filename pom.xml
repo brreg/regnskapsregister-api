@@ -35,7 +35,7 @@
         <jupiter.version>5.6.1</jupiter.version>
         <mockito.version>3.3.3</mockito.version>
         <testcontainers.version>1.13.0</testcontainers.version>
-        <jena.version>3.9.0</jena.version>
+        <jena.version>3.14.0</jena.version>
 
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
