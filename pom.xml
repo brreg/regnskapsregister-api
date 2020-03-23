@@ -187,12 +187,12 @@
         <dependency>
             <groupId>com.hubspot.slack</groupId>
             <artifactId>slack-base</artifactId>
-            <version>1.4</version>
+            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>com.hubspot.slack</groupId>
             <artifactId>slack-java-client</artifactId>
-            <version>1.4</version>
+            <version>1.6</version>
         </dependency>
 
         <!-- JSON-LD dependencies -->
