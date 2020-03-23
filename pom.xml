@@ -276,7 +276,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>4.0.0-beta3</version>
+                <version>4.2.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -284,7 +284,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/specification/regnskapsregister.yaml</inputSpec>
-                            <validateSpec>true</validateSpec>
+                            <skipValidateSpec>false</skipValidateSpec>
                             <generatorName>spring</generatorName>
                             <templateDirectory>${project.basedir}/src/main/resources/openAPI/openapi-generator-maven-plugin/templates/JavaSpring</templateDirectory>
                             <output>${project.build.directory}/generated-sources/openapi</output>
