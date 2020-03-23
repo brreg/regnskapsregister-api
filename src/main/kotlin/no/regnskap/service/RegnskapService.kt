@@ -38,6 +38,6 @@ class RegnskapService (
 
     fun getLog(): List<String> =
         logRepository
-            .findAll(Sort(Sort.Direction.ASC, "filename"))
+            .findAll(Sort.by(Sort.Direction.ASC, "filename"))
             .map { entry -> entry.filename }
 }
