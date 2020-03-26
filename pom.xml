@@ -371,7 +371,7 @@
                 <!-- Unit test runner -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <groups>unit</groups>
@@ -382,7 +382,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <groups>service</groups>
                     <excludedGroups>unit</excludedGroups>
