@@ -384,6 +384,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M4</version>
                 <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                     <groups>service</groups>
                     <excludedGroups>unit</excludedGroups>
                     <includes>
