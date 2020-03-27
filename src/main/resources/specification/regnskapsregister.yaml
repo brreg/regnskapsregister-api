@@ -114,6 +114,54 @@ paths:
                 type: array
                 items:
                   type: string
+  /statistikk/by-ip:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by IP
+      description: Returnerer en liste over de mest aktive IP-ene
+      operationId: getStatisticsByIp
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /statistikk/by-orgnr:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by organization number
+      description: Returnerer en liste over de mest søkte organisasjonsnummerene
+      operationId: getStatisticsByOrgnr
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /statistikk/by-method:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by REST method
+      description: Returnerer en liste over kall til de ulike REST-metodene
+      operationId: getStatisticsByMethod
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
 components:
   schemas:
     Regnskap:
