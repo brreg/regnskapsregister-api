@@ -35,6 +35,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: year
+          in: query
+          description: Hent årsregnskap for spesifikt år
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
@@ -70,6 +76,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: year
+          in: query
+          description: Hent årsregnskap for spesifikt år
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK

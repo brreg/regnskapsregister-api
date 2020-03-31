@@ -51,7 +51,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
                 .thenReturn(emptyDB);
 
-            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
+            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString(), null);
 
             assertEquals(null, actualResult);
         }
@@ -62,7 +62,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                 .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), null);
 
             assertEquals(TestData.REGNSKAP_2018, actual);
         }
@@ -76,7 +76,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(emptyDatabaseList);
 
-            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null);
 
             assertTrue(result.isEmpty());
         }
@@ -87,7 +87,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(dbList);
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
 
             assertFalse(actual.isEmpty());
             assertEquals(TestData.REGNSKAP_LIST, actual);
@@ -106,7 +106,7 @@ class RegnskapServiceTest {
 
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(list);
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
 
             assertTrue(actual.isEmpty());
         }

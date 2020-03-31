@@ -103,13 +103,13 @@ class RegnskapApiTest {
     void getByOrgnr() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
-        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", null);
         ResponseEntity<Object> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
         assertEquals(expected, response);
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
 
-        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer").getBody();
+        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", null).getBody();
         Model modelFromResponse = responseReader.parseResponse((String)rdfResponse, "RDFXML");
         Model expectedResponse = responseReader.getExpectedResponse("OrgnrResponse.ttl", "TURTLE");
 
@@ -120,8 +120,8 @@ class RegnskapApiTest {
     void getById() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
 
-        ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
-        ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
+        ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString(), null);
+        ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString(), null);
 
         ResponseEntity<Object> expected2018 = new ResponseEntity<>(REGNSKAP_2018, HttpStatus.OK);
         ResponseEntity<Object> expected2017 = new ResponseEntity<>(REGNSKAP_2017, HttpStatus.OK);
@@ -133,19 +133,19 @@ class RegnskapApiTest {
     @Test
     void noNullPointersFromAnyResponseType() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
-        HttpStatus turtleStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+        HttpStatus turtleStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
-        HttpStatus rdfXmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+        HttpStatus rdfXmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/ld+json");
-        HttpStatus jsonLdStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+        HttpStatus jsonLdStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
-        HttpStatus jsonStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+        HttpStatus jsonStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        HttpStatus xmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
+        HttpStatus xmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null).getStatusCode();
 
         assertEquals(HttpStatus.OK, turtleStatusCode);
         assertEquals(HttpStatus.OK, rdfXmlStatusCode);

@@ -18,12 +18,12 @@ class RegnskapService (
     private val logRepository: RegnskapLogRepository
 ) {
 
-    fun getById(id: String): Regnskap? =
+    fun getById(id: String, year: Int?): Regnskap? =
         regnskapRepository
             .findByIdOrNull(id)
             ?.mapPersistenceToGenerated()
 
-    fun getByOrgnr(orgnr: String): List<Regnskap> =
+    fun getByOrgnr(orgnr: String, year: Int?): List<Regnskap> =
         regnskapRepository
             .findByOrgnrOrderByJournalnrDesc(orgnr) // Sort by journalnr, highest value is the most recent data
             .filter { it.aarsregnskapstype.toLowerCase() == Regnskap.OppstillingsplanEnum.STORE.value } // "Husk også at det er ikke alle regnskapene som ligger i masse-filene som skal være tilgjengelig, kun de som følger "store" oppstillingsplaner"
