@@ -203,4 +203,42 @@ public class TestData {
                     .finansinntekt(new Finansinntekt().sumFinansinntekter(BigDecimal.valueOf(baseValue + 17)))
                     .finanskostnad(new Finanskostnad().sumFinanskostnad(BigDecimal.valueOf(baseValue + 18))));
     }
+
+    public static List<RegnskapDB> generateTestRegnskapList() {
+        List<RegnskapDB> list = new ArrayList<>();
+        int journalnr = 0;
+
+        RegnskapDB db = TestData.createRegnskapDB(TestData.GENERATED_ID_0, 2017, Integer.toString(journalnr++));
+        db.setAarsregnskapstype("STORE");
+        db.setRegnskapstype("S");
+        list.add(db);
+
+        db = TestData.createRegnskapDB(TestData.GENERATED_ID_1, 2018,Integer.toString(journalnr++));
+        db.setAarsregnskapstype("STORE");
+        db.setRegnskapstype("S");
+        list.add(db);
+
+        db = TestData.createRegnskapDB(TestData.GENERATED_ID_2, 2019,Integer.toString(journalnr++));
+        db.setAarsregnskapstype("STORE");
+        db.setRegnskapstype("S");
+        list.add(db);
+
+        db = TestData.createRegnskapDB(ObjectId.get(), 2019,Integer.toString(journalnr++));
+        db.setAarsregnskapstype("SMAA");
+        db.setRegnskapstype("S");
+        list.add(db);
+
+        db = TestData.createRegnskapDB(ObjectId.get(), 2019,Integer.toString(journalnr++));
+        db.setAarsregnskapstype("STORE");
+        db.setRegnskapstype("K");
+        list.add(db);
+
+        db = TestData.createRegnskapDB(TestData.GENERATED_ID_3, 2019,Integer.toString(journalnr++));
+        db.setOrgnr("AnotherOrgnr");
+        db.setAarsregnskapstype("STORE");
+        db.setRegnskapstype("S");
+        list.add(db);
+
+        return list;
+    }
 }

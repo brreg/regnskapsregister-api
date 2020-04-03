@@ -1,5 +1,6 @@
 package no.regnskap.service
 
+import no.regnskap.RegnskapUtil
 import no.regnskap.generated.model.Regnskap
 import no.regnskap.repository.RegnskapRepository
 import org.springframework.stereotype.Service
@@ -23,8 +24,7 @@ class RegnskapService (
             .findByIdOrNull(id)
             ?.mapPersistenceToGenerated()
             ?.let {regnskap ->
-                if (year == null ||
-                    (regnskap.regnskapsperiode.fraDato.year<=year && regnskap.regnskapsperiode.tilDato.year>=year)) regnskap
+                if (year == null || RegnskapUtil.forYear(regnskap.regnskapsperiode, year)) regnskap
                 else null
             }
 
