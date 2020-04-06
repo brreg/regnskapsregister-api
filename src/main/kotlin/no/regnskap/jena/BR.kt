@@ -58,6 +58,7 @@ object BR {
     val sumOmloepsmidler = model.createProperty(uri, "sumOmloepsmidler")
 
     val egenkapitalGjeld = model.createProperty(uri, "egenkapitalGjeld")
+    val goodwill = model.createProperty(uri, "goodwill")
     val sumEgenkapitalGjeld = model.createProperty(uri, "sumEgenkapitalGjeld")
     val egenkapital = model.createProperty(uri, "egenkapital")
     val sumEgenkapital = model.createProperty(uri, "sumEgenkapital")
@@ -79,14 +80,18 @@ object BR {
     val driftsresultat = model.createProperty(uri, "driftsresultat")
     val sumDriftsresultat = model.createProperty(uri, "sumDriftsresultat")
     val driftsinntekter = model.createProperty(uri, "driftsinntekter")
+    val salgsinntekter = model.createProperty(uri, "salgsinntekter")
     val sumDriftsinntekter = model.createProperty(uri, "sumDriftsinntekter")
     val driftskostnad = model.createProperty(uri, "driftskostnad")
+    val loennskostnad = model.createProperty(uri, "loennskostnad")
     val sumDriftskostnad = model.createProperty(uri, "sumDriftskostnad")
     val finansresultat = model.createProperty(uri, "finansresultat")
     val nettoFinans = model.createProperty(uri, "nettoFinans")
     val finansinntekt = model.createProperty(uri, "finansinntekt")
     val sumFinansinntekter = model.createProperty(uri, "sumFinansinntekter")
     val finanskostnad = model.createProperty(uri, "finanskostnad")
+    val rentekostnadSammeKonsern = model.createProperty(uri, "rentekostnadSammeKonsern")
+    val annenRentekostnad = model.createProperty(uri, "annenRentekostnad")
     val sumFinanskostnad = model.createProperty(uri, "sumFinanskostnad")
 
 }

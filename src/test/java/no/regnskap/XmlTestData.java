@@ -5,6 +5,7 @@ public class XmlTestData {
     public final static int ALPHA_FIELD_219 = 4655600;
     public final static int ALPHA_FIELD_217 = 3314585;
     public final static int ALPHA_FIELD_194 = 1341015;
+    public final static int ALPHA_FIELD_206 = 4655601;
     public final static int ALPHA_FIELD_251 = 4655600;
     public final static int ALPHA_FIELD_250 = 750287;
     public final static int ALPHA_FIELD_3730 = 50000;
@@ -16,15 +17,20 @@ public class XmlTestData {
     public final static int ALPHA_FIELD_36633 = 427946;
     public final static int ALPHA_FIELD_167 = 567732;
     public final static int ALPHA_FIELD_146 = 604176;
+    public final static int ALPHA_FIELD_1340 = 1978516;
     public final static int ALPHA_FIELD_72 = 10900358;
+    public final static int ALPHA_FIELD_81 = 8787821;
     public final static int ALPHA_FIELD_17126 = 10296182;
     public final static int ALPHA_FIELD_158 = -36445;
     public final static int ALPHA_FIELD_153 = 3939;
+    public final static int ALPHA_FIELD_7037 = 31445;
+    public final static int ALPHA_FIELD_2216 = 31444;
     public final static int ALPHA_FIELD_17130 = 40384;
 
     public final static int BRAVO_FIELD_219 = 1123609;
     public final static int BRAVO_FIELD_217 = 0;
     public final static int BRAVO_FIELD_194 = 1123609;
+    public final static int BRAVO_FIELD_206 = 1123610;
     public final static int BRAVO_FIELD_251 = 1123609;
     public final static int BRAVO_FIELD_250 = 106310;
     public final static int BRAVO_FIELD_3730 = 100000;
@@ -35,10 +41,14 @@ public class XmlTestData {
     public final static int BRAVO_FIELD_172 = 783775;
     public final static int BRAVO_FIELD_167 = 1017890;
     public final static int BRAVO_FIELD_146 = 1316195;
+    public final static int BRAVO_FIELD_1340 = 6600001;
     public final static int BRAVO_FIELD_72 = 6600000;
+    public final static int BRAVO_FIELD_81 = 8787822;
     public final static int BRAVO_FIELD_17126 = 5283805;
     public final static int BRAVO_FIELD_158 = -298306;
     public final static int BRAVO_FIELD_153 = 18;
+    public final static int BRAVO_FIELD_7037 = 298325;
+    public final static int BRAVO_FIELD_2216 = 298324;
     public final static int BRAVO_FIELD_17130 = 298324;
 
     public static String xmlTestString = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
@@ -86,7 +96,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>8787821.00</tall>\n" +
         "        <notehenvisning>2</notehenvisning>\n" +
-        "        <fritekst>L�nnskostnad</fritekst>\n" +
+        "        <fritekst>Lønnskostnad</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -163,7 +173,14 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>155600.00</tall>\n" +
         "        <notehenvisning>3</notehenvisning>\n" +
-        "        <fritekst>Avskrivning p� varige driftsmidler og immaterielle eiendeler</fritekst>\n" +
+        "        <fritekst>Avskrivning på varige driftsmidler og immaterielle eiendeler</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>7037</feltkode>\n" +
+        "      <sum>31445.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>31445.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -192,7 +209,7 @@ public class XmlTestData {
         "      <sum>8647017.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>8647017.00</tall>\n" +
-        "        <fritekst>L�nnskostnad</fritekst>\n" +
+        "        <fritekst>Lønnskostnad</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -258,7 +275,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>427946.00</tall>\n" +
         "        <notehenvisning>8</notehenvisning>\n" +
-        "        <fritekst>Overf�ringer til/fra annen egenkapital</fritekst>\n" +
+        "        <fritekst>Overføringer til/fra annen egenkapital</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -266,7 +283,7 @@ public class XmlTestData {
         "      <sum>270351.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>270351.00</tall>\n" +
-        "        <fritekst>Overf�ringer til/fra annen egenkapital</fritekst>\n" +
+        "        <fritekst>Overføringer til/fra annen egenkapital</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -327,7 +344,7 @@ public class XmlTestData {
         "      <sum>138300.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>138300.00</tall>\n" +
-        "        <fritekst>Avskrivning p� varige driftsmidler og immaterielle eiendeler</fritekst>\n" +
+        "        <fritekst>Avskrivning på varige driftsmidler og immaterielle eiendeler</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -336,7 +353,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>139786.00</tall>\n" +
         "        <notehenvisning>5</notehenvisning>\n" +
-        "        <fritekst>Skattekostnad p� ordin�rt resultat</fritekst>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -344,7 +361,7 @@ public class XmlTestData {
         "      <sum>43735.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>43735.00</tall>\n" +
-        "        <fritekst>Skattekostnad p� ordin�rt resultat</fritekst>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -534,6 +551,13 @@ public class XmlTestData {
         "      <sum>750287.00</sum>\n" +
         "      <post posttype=\"standard\" nr=\"1\">\n" +
         "        <tall>750287.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>206</feltkode>\n" +
+        "      <sum>4655601.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>4655601.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -761,7 +785,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>140182.00</tall>\n" +
         "        <notehenvisning>3</notehenvisning>\n" +
-        "        <fritekst>Driftsl�s�re, inventar, verkt�y, kontormaskiner og lignende</fritekst>\n" +
+        "        <fritekst>Driftsløsøre, inventar, verktøy, kontormaskiner og lignende</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -784,7 +808,7 @@ public class XmlTestData {
         "      <sum>66158.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>66158.00</tall>\n" +
-        "        <fritekst>Driftsl�s�re, inventar, verkt�y, kontormaskiner og lignende</fritekst>\n" +
+        "        <fritekst>Driftsløsøre, inventar, verktøy, kontormaskiner og lignende</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -919,6 +943,15 @@ public class XmlTestData {
         "        <tall>6600000.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
+            "    <info>\n" +
+            "      <feltkode>81</feltkode>\n" +
+            "      <sum>8787822.00</sum>\n" +
+            "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
+            "        <tall>8787822.00</tall>\n" +
+            "        <notehenvisning>2</notehenvisning>\n" +
+            "        <fritekst>Lønnskostnad</fritekst>\n" +
+            "      </post>\n" +
+            "    </info>\n" +
         "    <info>\n" +
         "      <feltkode>82</feltkode>\n" +
         "      <sum>196761.00</sum>\n" +
@@ -987,10 +1020,17 @@ public class XmlTestData {
         "    </info>\n" +
         "    <info>\n" +
         "      <feltkode>1340</feltkode>\n" +
-        "      <sum>6600000.00</sum>\n" +
+        "      <sum>6600001.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
-        "        <tall>6600000.00</tall>\n" +
+        "        <tall>6600001.00</tall>\n" +
         "        <fritekst>Salgsinntekt</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>7037</feltkode>\n" +
+        "      <sum>298325.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>298325.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1078,7 +1118,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>6075.00</tall>\n" +
         "        <notehenvisning>4</notehenvisning>\n" +
-        "        <fritekst>Overf�ringer annen egenkapital</fritekst>\n" +
+        "        <fritekst>Overføringer annen egenkapital</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1086,7 +1126,7 @@ public class XmlTestData {
         "      <sum>235.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>235.00</tall>\n" +
-        "        <fritekst>Overf�ringer annen egenkapital</fritekst>\n" +
+        "        <fritekst>Overføringer annen egenkapital</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1138,7 +1178,7 @@ public class XmlTestData {
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>234115.00</tall>\n" +
         "        <notehenvisning>2</notehenvisning>\n" +
-        "        <fritekst>Skattekostnad p� ordin�rt resultat</fritekst>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1146,7 +1186,7 @@ public class XmlTestData {
         "      <sum>330263.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
         "        <tall>330263.00</tall>\n" +
-        "        <fritekst>Skattekostnad p� ordin�rt resultat</fritekst>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1289,6 +1329,13 @@ public class XmlTestData {
         "      <sum>106310.00</sum>\n" +
         "      <post posttype=\"standard\" nr=\"1\">\n" +
         "        <tall>106310.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>206</feltkode>\n" +
+        "      <sum>1123610.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>1123610.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +

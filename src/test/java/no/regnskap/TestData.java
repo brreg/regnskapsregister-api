@@ -174,34 +174,39 @@ public class TestData {
 
     private static EgenkapitalGjeld egenkapitalGjeldWithValues(long baseValue) {
         return new EgenkapitalGjeld()
-            .sumEgenkapitalGjeld(BigDecimal.valueOf(baseValue + 3))
+            .goodwill(BigDecimal.valueOf(baseValue + 3))
+            .sumEgenkapitalGjeld(BigDecimal.valueOf(baseValue + 4))
             .egenkapital(
                 new Egenkapital()
-                    .sumEgenkapital(BigDecimal.valueOf(baseValue + 4))
-                    .innskuttEgenkapital(new InnskuttEgenkapital().sumInnskuttEgenkaptial(BigDecimal.valueOf(baseValue + 5)))
-                    .opptjentEgenkapital(new OpptjentEgenkapital().sumOpptjentEgenkapital(BigDecimal.valueOf(baseValue + 6))))
+                    .sumEgenkapital(BigDecimal.valueOf(baseValue + 5))
+                    .innskuttEgenkapital(new InnskuttEgenkapital().sumInnskuttEgenkaptial(BigDecimal.valueOf(baseValue + 6)))
+                    .opptjentEgenkapital(new OpptjentEgenkapital().sumOpptjentEgenkapital(BigDecimal.valueOf(baseValue + 7))))
             .gjeldOversikt(
                 new Gjeld()
-                    .sumGjeld(BigDecimal.valueOf(baseValue + 7))
-                    .kortsiktigGjeld(new KortsiktigGjeld().sumKortsiktigGjeld(BigDecimal.valueOf(baseValue + 8)))
-                    .langsiktigGjeld(new LangsiktigGjeld().sumLangsiktigGjeld(BigDecimal.valueOf(baseValue + 9))));
+                    .sumGjeld(BigDecimal.valueOf(baseValue + 8))
+                    .kortsiktigGjeld(new KortsiktigGjeld().sumKortsiktigGjeld(BigDecimal.valueOf(baseValue + 9)))
+                    .langsiktigGjeld(new LangsiktigGjeld().sumLangsiktigGjeld(BigDecimal.valueOf(baseValue + 10))));
     }
 
     private static ResultatregnskapResultat resultatregnskapResultatWithValues(long baseValue) {
         return new ResultatregnskapResultat()
-            .ordinaertResultatFoerSkattekostnad(BigDecimal.valueOf(baseValue + 10))
-            .aarsresultat(BigDecimal.valueOf(baseValue + 11))
-            .totalresultat(BigDecimal.valueOf(baseValue + 12))
+            .ordinaertResultatFoerSkattekostnad(BigDecimal.valueOf(baseValue + 11))
+            .aarsresultat(BigDecimal.valueOf(baseValue + 12))
+            .totalresultat(BigDecimal.valueOf(baseValue + 13))
             .driftsresultat(
                 new Driftsresultat()
-                    .driftsresultat(BigDecimal.valueOf(baseValue + 13))
-                    .driftsinntekter(new Driftsinntekter().sumDriftsinntekter(BigDecimal.valueOf(baseValue + 14)))
-                    .driftskostnad(new Driftskostnad().sumDriftskostnad(BigDecimal.valueOf(baseValue + 15))))
+                    .driftsresultat(BigDecimal.valueOf(baseValue + 14))
+                    .driftsinntekter(new Driftsinntekter().salgsinntekter(BigDecimal.valueOf(baseValue + 15))
+                                                          .sumDriftsinntekter(BigDecimal.valueOf(baseValue + 16)))
+                    .driftskostnad(new Driftskostnad().loennskostnad(BigDecimal.valueOf(baseValue + 17))
+                                                      .sumDriftskostnad(BigDecimal.valueOf(baseValue + 18))))
             .finansresultat(
                 new Finansresultat()
-                    .nettoFinans(BigDecimal.valueOf(baseValue + 16))
-                    .finansinntekt(new Finansinntekt().sumFinansinntekter(BigDecimal.valueOf(baseValue + 17)))
-                    .finanskostnad(new Finanskostnad().sumFinanskostnad(BigDecimal.valueOf(baseValue + 18))));
+                    .nettoFinans(BigDecimal.valueOf(baseValue + 19))
+                    .finansinntekt(new Finansinntekt().sumFinansinntekter(BigDecimal.valueOf(baseValue + 20)))
+                    .finanskostnad(new Finanskostnad().rentekostnadSammeKonsern(BigDecimal.valueOf(baseValue + 21))
+                                                      .annenRentekostnad(BigDecimal.valueOf(baseValue + 22))
+                                                      .sumFinanskostnad(BigDecimal.valueOf(baseValue + 23))));
     }
 
     public static List<RegnskapDB> generateTestRegnskapList() {

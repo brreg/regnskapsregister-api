@@ -70,6 +70,7 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
             .addProperty(
                 BR.egenkapitalGjeld,
                 model.createResource(BR.EgenkapitalGjeld)
+                    .addLiteral(BR.goodwill, it.egenkapitalGjeld.goodwill ?: BigDecimal.ZERO)
                     .addLiteral(BR.sumEgenkapitalGjeld, it.egenkapitalGjeld.sumEgenkapitalGjeld ?: BigDecimal.ZERO)
                     .addProperty(
                         BR.egenkapital,
@@ -108,10 +109,12 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
                             .addProperty(
                                 BR.driftsinntekter,
                                 model.createResource(BR.Driftsinntekter)
+                                    .addLiteral(BR.salgsinntekter, it.resultatregnskapResultat.driftsresultat.driftsinntekter.salgsinntekter ?: BigDecimal.ZERO)
                                     .addLiteral(BR.sumDriftsinntekter, it.resultatregnskapResultat.driftsresultat.driftsinntekter.sumDriftsinntekter ?: BigDecimal.ZERO))
                             .addProperty(
                                 BR.driftskostnad,
                                 model.createResource(BR.Driftskostnad)
+                                    .addLiteral(BR.loennskostnad, it.resultatregnskapResultat.driftsresultat.driftskostnad.loennskostnad ?: BigDecimal.ZERO)
                                     .addLiteral(BR.sumDriftskostnad, it.resultatregnskapResultat.driftsresultat.driftskostnad.sumDriftskostnad ?: BigDecimal.ZERO)))
                     .addProperty(
                         BR.finansresultat,
@@ -124,6 +127,8 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
                             .addProperty(
                                 BR.finanskostnad,
                                 model.createResource(BR.Finanskostnad)
+                                    .addLiteral(BR.rentekostnadSammeKonsern, it.resultatregnskapResultat.finansresultat.finanskostnad.rentekostnadSammeKonsern ?: BigDecimal.ZERO)
+                                    .addLiteral(BR.annenRentekostnad, it.resultatregnskapResultat.finansresultat.finanskostnad.annenRentekostnad ?: BigDecimal.ZERO)
                                     .addLiteral(BR.sumFinanskostnad, it.resultatregnskapResultat.finansresultat.finanskostnad.sumFinanskostnad ?: BigDecimal.ZERO))))
     }
 

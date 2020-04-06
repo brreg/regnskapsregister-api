@@ -6,6 +6,7 @@ import no.regnskap.model.RegnskapXmlInfo
 private const val FELTKODE_EIENDELER = "219"
 private const val FELTKODE_ANLEGGSMIDLER = "217"
 private const val FELTKODE_OMLOEPSMIDLER = "194"
+private const val FELTKODE_GOODWILL = "206"
 private const val FELTKODE_EGENKAPITAL_GJELD = "251"
 private const val FELTKODE_EGENKAPITAL = "250"
 private const val FELTKODE_INNSKUTT_EGENKAPITAL = "3730"
@@ -17,10 +18,14 @@ private const val FELTKODE_RESULTAT_AAR = "172"
 private const val FELTKODE_RESULTAT_TOTAL = "36633"
 private const val FELTKODE_RESULTAT_ORDINAERT = "167"
 private const val FELTKODE_DRIFTSRESULTAT = "146"
+private const val FELTKODE_SALGSINNTEKTER = "1340"
 private const val FELTKODE_DRIFTSINNTEKTER = "72"
+private const val FELTKODE_LOENNSKOSTNAD = "81"
 private const val FELTKODE_DRIFTSKOSTNAD = "17126"
 private const val FELTKODE_FINANSRESULTAT = "158"
 private const val FELTKODE_FINANSINNTEKT = "153"
+private const val FELTKODE_RENTEKOSTNAD_SAMME_KONSERN = "7037"
+private const val FELTKODE_ANNEN_RENTEKOSTNAD = "2216"
 private const val FELTKODE_FINANSKOSTNAD = "17130"
 
 fun mapFieldsFromXmlData(fields: RegnskapFieldsDB, xmlData: List<RegnskapXmlInfo>): RegnskapFieldsDB {
@@ -29,6 +34,7 @@ fun mapFieldsFromXmlData(fields: RegnskapFieldsDB, xmlData: List<RegnskapXmlInfo
             FELTKODE_EIENDELER -> fields.eiendeler.sumEiendeler = it.sum
             FELTKODE_ANLEGGSMIDLER -> fields.eiendeler.anleggsmidler.sumAnleggsmidler = it.sum
             FELTKODE_OMLOEPSMIDLER -> fields.eiendeler.omloepsmidler.sumOmloepsmidler = it.sum
+            FELTKODE_GOODWILL -> fields.egenkapitalGjeld.goodwill = it.sum
             FELTKODE_EGENKAPITAL_GJELD -> fields.egenkapitalGjeld.sumEgenkapitalGjeld = it.sum
             FELTKODE_EGENKAPITAL -> fields.egenkapitalGjeld.egenkapital.sumEgenkapital = it.sum
             FELTKODE_INNSKUTT_EGENKAPITAL -> fields.egenkapitalGjeld.egenkapital.innskuttEgenkapital.sumInnskuttEgenkaptial = it.sum
@@ -40,10 +46,14 @@ fun mapFieldsFromXmlData(fields: RegnskapFieldsDB, xmlData: List<RegnskapXmlInfo
             FELTKODE_RESULTAT_TOTAL -> fields.resultatregnskapResultat.totalresultat = it.sum
             FELTKODE_RESULTAT_ORDINAERT -> fields.resultatregnskapResultat.ordinaertResultatFoerSkattekostnad = it.sum
             FELTKODE_DRIFTSRESULTAT -> fields.resultatregnskapResultat.driftsresultat.driftsresultat = it.sum
+            FELTKODE_SALGSINNTEKTER -> fields.resultatregnskapResultat.driftsresultat.driftsinntekter.salgsinntekter = it.sum
             FELTKODE_DRIFTSINNTEKTER -> fields.resultatregnskapResultat.driftsresultat.driftsinntekter.sumDriftsinntekter = it.sum
+            FELTKODE_LOENNSKOSTNAD -> fields.resultatregnskapResultat.driftsresultat.driftskostnad.loennskostnad = it.sum
             FELTKODE_DRIFTSKOSTNAD -> fields.resultatregnskapResultat.driftsresultat.driftskostnad.sumDriftskostnad = it.sum
             FELTKODE_FINANSRESULTAT -> fields.resultatregnskapResultat.finansresultat.nettoFinans = it.sum
             FELTKODE_FINANSINNTEKT -> fields.resultatregnskapResultat.finansresultat.finansinntekt.sumFinansinntekter = it.sum
+            FELTKODE_RENTEKOSTNAD_SAMME_KONSERN -> fields.resultatregnskapResultat.finansresultat.finanskostnad.rentekostnadSammeKonsern = it.sum
+            FELTKODE_ANNEN_RENTEKOSTNAD -> fields.resultatregnskapResultat.finansresultat.finanskostnad.annenRentekostnad = it.sum
             FELTKODE_FINANSKOSTNAD -> fields.resultatregnskapResultat.finansresultat.finanskostnad.sumFinanskostnad = it.sum
         }
     }
