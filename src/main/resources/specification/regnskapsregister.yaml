@@ -41,6 +41,15 @@ paths:
           required: false
           schema:
             type: integer
+        - name: regnskapstype
+          in: query
+          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
+          required: false
+          schema:
+            type: string
+            enum:
+              - selskap
+              - konsern
       responses:
         '200':
           description: OK
@@ -82,6 +91,15 @@ paths:
           required: false
           schema:
             type: integer
+        - name: regnskapstype
+          in: query
+          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
+          required: false
+          schema:
+            type: string
+            enum:
+              - selskap
+              - konsern
       responses:
         '200':
           description: OK

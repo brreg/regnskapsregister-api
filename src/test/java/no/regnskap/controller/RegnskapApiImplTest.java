@@ -65,7 +65,7 @@ class RegnskapApiImplTest {
         @Test
         void okWhenEmpty() {
             List<Regnskap> emptyList = TestData.EMPTY_REGNSKAP_LIST;
-            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null))
+            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null, null))
                 .thenReturn(emptyList);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
@@ -73,7 +73,7 @@ class RegnskapApiImplTest {
 
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null, null);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.EMPTY_REGNSKAP_LIST, response.getBody());
@@ -82,7 +82,7 @@ class RegnskapApiImplTest {
         @Test
         void okWhenNonEmpty() {
             List<Regnskap> regnskapList = TestData.REGNSKAP_LIST;
-            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null))
+            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null, null))
                 .thenReturn(regnskapList);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
@@ -90,7 +90,7 @@ class RegnskapApiImplTest {
 
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null, null);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.REGNSKAP_LIST, response.getBody());
@@ -98,12 +98,12 @@ class RegnskapApiImplTest {
 
         @Test
         void unknownError() {
-            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null))
+            Mockito.when(regnskapServiceMock.getByOrgnr("orgnummer", null, null))
                 .thenAnswer(invocation -> {
                     throw new Exception("Test error message");
                 });
 
-            HttpStatus responseStatus = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null).getStatusCode();
+            HttpStatus responseStatus = regnskapApi.getRegnskap(httpServletRequestMock, "orgnummer", null, null).getStatusCode();
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseStatus);
         }
     }
@@ -112,13 +112,13 @@ class RegnskapApiImplTest {
     class GetRegnskapById {
         @Test
         void notFoundWhenEmpty() {
-            Mockito.when(regnskapServiceMock.getById("id", null))
+            Mockito.when(regnskapServiceMock.getById("id", null, null))
                 .thenReturn(null);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
             Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null);
 
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
             assertNull(response.getBody());
@@ -127,13 +127,13 @@ class RegnskapApiImplTest {
         @Test
         void okWhenNonEmpty() {
             Regnskap regnskap = TestData.REGNSKAP_2018;
-            Mockito.when(regnskapServiceMock.getById("id", null))
+            Mockito.when(regnskapServiceMock.getById("id", null, null))
                 .thenReturn(regnskap);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
             Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.REGNSKAP_2018, response.getBody());
@@ -141,12 +141,12 @@ class RegnskapApiImplTest {
 
         @Test
         void unknownError() {
-            Mockito.when(regnskapServiceMock.getById("id", null))
+            Mockito.when(regnskapServiceMock.getById("id", null, null))
                 .thenAnswer(invocation -> {
                     throw new Exception("Test error message");
                 });
 
-            HttpStatus responseStatus = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null).getStatusCode();
+            HttpStatus responseStatus = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null).getStatusCode();
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseStatus);
         }
     }

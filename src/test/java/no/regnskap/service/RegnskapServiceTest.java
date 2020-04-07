@@ -53,7 +53,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
                 .thenReturn(emptyDB);
 
-            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString(), null);
+            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString(), null, null);
 
             assertEquals(null, actualResult);
         }
@@ -64,7 +64,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                 .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018, null);
 
             assertEquals(TestData.REGNSKAP_2018, actual);
         }
@@ -75,7 +75,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                     .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2017);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2017, null);
 
             assertEquals(TestData.REGNSKAP_2017, actual);
         }
@@ -86,7 +86,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                     .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018, null);
 
             assertEquals(TestData.REGNSKAP_2018, actual);
         }
@@ -97,7 +97,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                     .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2019);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2019, null);
 
             assertEquals(null, actual);
         }
@@ -111,7 +111,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(emptyDatabaseList);
 
-            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null);
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null, null);
 
             assertTrue(result.isEmpty());
         }
@@ -122,7 +122,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(dbList);
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
             assertFalse(actual.isEmpty());
             assertEquals(TestData.REGNSKAP_LIST, actual);
@@ -137,7 +137,7 @@ class RegnskapServiceTest {
                             || "K".equalsIgnoreCase(regnskap.getRegnskapstype()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
             assertTrue(actual.isEmpty());
         }
@@ -151,7 +151,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2017));
@@ -166,7 +166,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2018));
@@ -181,7 +181,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2019));
@@ -196,7 +196,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
             assertTrue(actual.size() == 1);
         }
@@ -211,7 +211,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2017));
@@ -227,7 +227,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2018));
@@ -243,7 +243,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, null);
 
             assertTrue(actual.size() == 1);
             assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2019));
@@ -258,7 +258,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
             assertTrue(actual.isEmpty());
         }
@@ -273,7 +273,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, null);
 
             assertTrue(actual.isEmpty());
         }
@@ -288,7 +288,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, null);
 
             assertTrue(actual.isEmpty());
         }
@@ -303,7 +303,7 @@ class RegnskapServiceTest {
                                                                  "orgnummer".equals(regnskap.getOrgnr()))
                             .collect(Collectors.toList()));
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019);
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, null);
 
             assertTrue(actual.isEmpty());
         }

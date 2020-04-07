@@ -12,6 +12,7 @@ import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
 private const val REGNSKAPSTYPE_SELSKAP = "s"
+private const val REGNSKAPSTYPE_KONSERN = "k"
 
 @Service
 class RegnskapService (
@@ -19,7 +20,7 @@ class RegnskapService (
     private val logRepository: RegnskapLogRepository
 ) {
 
-    fun getById(id: String, år: Int?): Regnskap? =
+    fun getById(id: String, år: Int?, regnskapstypeKode: String?): Regnskap? =
         regnskapRepository
             .findByIdOrNull(id)
             ?.mapPersistenceToGenerated()
@@ -28,7 +29,7 @@ class RegnskapService (
                 else null
             }
 
-    fun getByOrgnr(orgnr: String, år: Int?): List<Regnskap> =
+    fun getByOrgnr(orgnr: String, år: Int?, regnskapstypeKode: String?): List<Regnskap> =
         regnskapRepository
             .findByOrgnrOrderByJournalnrDesc(orgnr) // Sort by journalnr, highest value is the most recent data
             .filter { it.aarsregnskapstype.toLowerCase() == Regnskap.OppstillingsplanEnum.STORE.value } // "Husk også at det er ikke alle regnskapene som ligger i masse-filene som skal være tilgjengelig, kun de som følger "store" oppstillingsplaner"
@@ -49,4 +50,13 @@ class RegnskapService (
         logRepository
             .findAll(Sort.by(Sort.Direction.ASC, "filename"))
             .map { entry -> entry.filename }
+
+    companion object {
+        fun regnskapstypeToKode(regnskapstype: String?): String? =
+                when (regnskapstype) {
+                    "selskap" -> REGNSKAPSTYPE_SELSKAP
+                    "konsern" -> REGNSKAPSTYPE_KONSERN
+                    else -> null
+                }
+    }
 }
