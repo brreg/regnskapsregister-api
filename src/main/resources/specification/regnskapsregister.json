@@ -28,7 +28,7 @@
     {
       "url": "http://rreg.ut1.rreg-dev.brreg.no",
       "description": "Server i utviklingsmiljø"
-    },
+    }
   ],
   "paths": {
     "/regnskap": {
