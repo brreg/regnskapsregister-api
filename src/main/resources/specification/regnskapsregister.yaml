@@ -35,7 +35,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: year
+        - name: år
           in: query
           description: Hent årsregnskap for spesifikt år
           required: false
@@ -76,7 +76,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: year
+        - name: år
           in: query
           description: Hent årsregnskap for spesifikt år
           required: false
