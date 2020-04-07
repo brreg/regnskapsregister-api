@@ -53,20 +53,9 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_0.toHexString()))
                 .thenReturn(emptyDB);
 
-            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString(), null, null);
+            Regnskap actualResult = regnskapService.getById(TestData.GENERATED_ID_0.toHexString());
 
             assertEquals(null, actualResult);
-        }
-
-        @Test
-        void mappingIsCorrect() {
-            Optional<RegnskapDB> regnskapDB = Optional.of(TestData.DB_REGNSKAP_2018_SECOND);
-            Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
-                .thenReturn(regnskapDB);
-
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018, null);
-
-            assertEquals(TestData.REGNSKAP_2018, actual);
         }
 
         @Test
@@ -75,7 +64,7 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                     .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2017, null);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
 
             assertEquals(TestData.REGNSKAP_2017, actual);
         }
@@ -86,20 +75,9 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
                     .thenReturn(regnskapDB);
 
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2018, null);
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
 
             assertEquals(TestData.REGNSKAP_2018, actual);
-        }
-
-        @Test
-        void mappingIsCorrect2019() {
-            Optional<RegnskapDB> regnskapDB = Optional.of(TestData.DB_REGNSKAP_2018_SECOND);
-            Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
-                    .thenReturn(regnskapDB);
-
-            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString(), 2019, null);
-
-            assertEquals(null, actual);
         }
     }
 

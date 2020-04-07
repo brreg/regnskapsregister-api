@@ -133,8 +133,8 @@ class RegnskapApiTest {
     void getById() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
 
-        ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString(), null, null);
-        ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString(), null, null);
+        ResponseEntity<Object> response2018 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_2.toHexString());
+        ResponseEntity<Object> response2017 = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_0.toHexString());
 
         ResponseEntity<Object> expected2018 = new ResponseEntity<>(REGNSKAP_2018, HttpStatus.OK);
         ResponseEntity<Object> expected2017 = new ResponseEntity<>(REGNSKAP_2017, HttpStatus.OK);
@@ -146,19 +146,19 @@ class RegnskapApiTest {
     @Test
     void noNullPointersFromAnyResponseType() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
-        HttpStatus turtleStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null, null).getStatusCode();
+        HttpStatus turtleStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
-        HttpStatus rdfXmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null, null).getStatusCode();
+        HttpStatus rdfXmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/ld+json");
-        HttpStatus jsonLdStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null, null).getStatusCode();
+        HttpStatus jsonLdStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
-        HttpStatus jsonStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null, null).getStatusCode();
+        HttpStatus jsonStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        HttpStatus xmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString(), null, null).getStatusCode();
+        HttpStatus xmlStatusCode = RegnskapApiImpl.getRegnskapById(httpServletRequestMock, GENERATED_ID_3.toHexString()).getStatusCode();
 
         assertEquals(HttpStatus.OK, turtleStatusCode);
         assertEquals(HttpStatus.OK, rdfXmlStatusCode);

@@ -20,14 +20,10 @@ class RegnskapService (
     private val logRepository: RegnskapLogRepository
 ) {
 
-    fun getById(id: String, år: Int?, regnskapstypeKode: String?): Regnskap? =
+    fun getById(id: String): Regnskap? =
         regnskapRepository
             .findByIdOrNull(id)
             ?.mapPersistenceToGenerated()
-            ?.let {regnskap ->
-                if (år == null || RegnskapUtil.forYear(regnskap.regnskapsperiode, år)) regnskap
-                else null
-            }
 
     fun getByOrgnr(orgnr: String, år: Int?, regnskapstypeKode: String?): List<Regnskap> =
         regnskapRepository
@@ -37,6 +33,10 @@ class RegnskapService (
             ?.filter {regnskap ->
                 if (år == null) true
                 else regnskap.regnaar == år
+            }
+            ?.filter {regnskap ->
+                if (regnskapstypeKode == null) true
+                else regnskap.regnskapstype == regnskapstypeKode
             }
             .distinctBy { it.regnaar } // Filters the list by the first objects with a distinct year, since it's already sorted the list will be the most recent data for each year
             .maxBy { it.regnaar } // Only return data from the last registered year

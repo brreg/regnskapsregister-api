@@ -57,9 +57,9 @@ open class RegnskapApiImpl(
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
-    override fun getRegnskapById(httpServletRequest: HttpServletRequest, id: String, år: Int?, regnskapstype: String?): ResponseEntity<Any> =
+    override fun getRegnskapById(httpServletRequest: HttpServletRequest, id: String): ResponseEntity<Any> =
         try {
-            val regnskap = regnskapService.getById(id, år, RegnskapService.regnskapstypeToKode(regnskapstype))
+            val regnskap = regnskapService.getById(id)
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
             val urls = ExternalUrls(

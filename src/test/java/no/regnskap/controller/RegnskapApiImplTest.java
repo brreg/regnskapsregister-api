@@ -112,13 +112,13 @@ class RegnskapApiImplTest {
     class GetRegnskapById {
         @Test
         void notFoundWhenEmpty() {
-            Mockito.when(regnskapServiceMock.getById("id", null, null))
+            Mockito.when(regnskapServiceMock.getById("id"))
                 .thenReturn(null);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
             Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
             assertNull(response.getBody());
@@ -127,13 +127,13 @@ class RegnskapApiImplTest {
         @Test
         void okWhenNonEmpty() {
             Regnskap regnskap = TestData.REGNSKAP_2018;
-            Mockito.when(regnskapServiceMock.getById("id", null, null))
+            Mockito.when(regnskapServiceMock.getById("id"))
                 .thenReturn(regnskap);
 
             Mockito.when(valuesMock.regnskapsregisteretUrl()).thenReturn(TestData.rregUrl);
             Mockito.when(valuesMock.organizationCatalogueUrl()).thenReturn(TestData.orgcatUrl);
 
-            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null);
+            ResponseEntity<Object> response = regnskapApi.getRegnskapById(httpServletRequestMock, "id");
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(TestData.REGNSKAP_2018, response.getBody());
@@ -141,12 +141,12 @@ class RegnskapApiImplTest {
 
         @Test
         void unknownError() {
-            Mockito.when(regnskapServiceMock.getById("id", null, null))
+            Mockito.when(regnskapServiceMock.getById("id"))
                 .thenAnswer(invocation -> {
                     throw new Exception("Test error message");
                 });
 
-            HttpStatus responseStatus = regnskapApi.getRegnskapById(httpServletRequestMock, "id", null, null).getStatusCode();
+            HttpStatus responseStatus = regnskapApi.getRegnskapById(httpServletRequestMock, "id").getStatusCode();
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseStatus);
         }
     }
