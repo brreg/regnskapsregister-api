@@ -117,7 +117,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -238,7 +238,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -283,7 +283,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, null);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
     }
 
@@ -308,7 +308,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -336,7 +336,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -350,7 +350,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -364,7 +364,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -378,7 +378,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -393,7 +393,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -408,7 +408,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -423,7 +423,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -521,7 +521,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -563,7 +563,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -636,7 +636,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
 
         @Test
@@ -681,7 +681,7 @@ class RegnskapServiceTest {
 
             List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
 
-            assertEquals(0, actual.size());
+            assertEquals(1, actual.size());
         }
     }
 
