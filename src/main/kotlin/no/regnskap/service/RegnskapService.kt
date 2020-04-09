@@ -11,8 +11,8 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
-private const val REGNSKAPSTYPE_SELSKAP = "s"
-private const val REGNSKAPSTYPE_KONSERN = "k"
+const val REGNSKAPSTYPE_SELSKAP = "s"
+const val REGNSKAPSTYPE_KONSERN = "k"
 
 @Service
 class RegnskapService (
