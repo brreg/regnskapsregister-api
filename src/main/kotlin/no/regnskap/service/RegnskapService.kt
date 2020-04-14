@@ -37,10 +37,9 @@ class RegnskapService (
                 if (regnskapstypeKode == null) true
                 else regnskap.regnskapstype.equals(regnskapstypeKode, true)
             }
-            .distinctBy { it.regnaar } // Filters the list by the first objects with a distinct year, since it's already sorted the list will be the most recent data for each year
-            .maxBy { it.regnaar } // Only return data from the last registered year
+            .distinctBy { it.regnskapstype to it.regnaar } // Only return one Selskap and one Konsern per year
             .let {
-                if(it != null) Collections.singletonList(it)
+                if(it != null) it
                 else emptyList()
             } // Return as list
             .map { it.mapPersistenceToGenerated() }

@@ -108,13 +108,13 @@ class RegnskapApiTest {
     void getByOrgnr() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
-        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", null, null);
+        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", 2018, null);
         ResponseEntity<Object> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
         assertEquals(expected, response);
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
 
-        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", null, null).getBody();
+        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", 2018, null).getBody();
         Model modelFromResponse = responseReader.parseResponse((String)rdfResponse, "RDFXML");
         Model expectedResponse = responseReader.getExpectedResponse("OrgnrResponse.ttl", "TURTLE");
 
