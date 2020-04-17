@@ -24,10 +24,6 @@
     {
       "url": "http://34.98.91.231",
       "description": "Server i produksjonsmiljø"
-    },
-    {
-      "url": "http://rreg.ut1.rreg-dev.brreg.no",
-      "description": "Server i utviklingsmiljø"
     }
   ],
   "paths": {
