@@ -364,6 +364,37 @@
     </owl:DatatypeProperty>
 
     <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#goodwill
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#goodwill">
+        <rdfs:comment xml:lang="no">Goodwill</rdfs:comment>
+        <rdfs:label xml:lang="no">Goodwill</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumVarer
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumVarer">
+        <rdfs:label xml:lang="no">sumVarer</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumFordringer
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumFordringer">
+        <rdfs:label xml:lang="no">sumFordringer</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumInvesteringer
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumInvesteringer">
+        <rdfs:label xml:lang="no">sumInvesteringer</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumBankinnskuddOgKontanter
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumBankinnskuddOgKontanter">
+        <rdfs:label xml:lang="no">sumBankinnskuddOgKontanter</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
      https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEiendeler
     -->
     <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEiendeler">
@@ -384,13 +415,6 @@
         <rdfs:label xml:lang="no">sumOmloepsmidler</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!--
-     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#goodwill
-    -->
-    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#goodwill">
-        <rdfs:comment xml:lang="no">Goodwill</rdfs:comment>
-        <rdfs:label xml:lang="no">Goodwill</rdfs:label>
-    </owl:DatatypeProperty>
     <!--
      https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEgenkapitalGjeld
     -->
@@ -440,6 +464,25 @@
         <rdfs:label xml:lang="no">sumKortsiktigGjeld</rdfs:label>
     </owl:DatatypeProperty>
 
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ordinaertResultatSkattekostnad
+
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ordinaertResultatSkattekostnad">
+        <rdfs:label xml:lang="no">ordinaertResultatSkattekostnad</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ekstraordinaerePoster
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ekstraordinaerePoster">
+        <rdfs:label xml:lang="no">ekstraordinaerePoster</rdfs:label>
+    </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#skattekostnadEkstraordinaertResultat
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#skattekostnadEkstraordinaertResultat">
+        <rdfs:label xml:lang="no">skattekostnadEkstraordinaertResultat</rdfs:label>
+    </owl:DatatypeProperty>
     <!--
      https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#aarsresultat
     -->
