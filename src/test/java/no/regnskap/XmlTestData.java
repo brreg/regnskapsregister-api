@@ -6,6 +6,10 @@ public class XmlTestData {
     public final static int ALPHA_FIELD_217 = 3314585;
     public final static int ALPHA_FIELD_194 = 1341015;
     public final static int ALPHA_FIELD_206 = 4655601;
+    public final static int ALPHA_FIELD_25012 = 4655602;
+    public final static int ALPHA_FIELD_80 = 531235;
+    public final static int ALPHA_FIELD_6601 = 4655604;
+    public final static int ALPHA_FIELD_29042 = 809780;
     public final static int ALPHA_FIELD_251 = 4655600;
     public final static int ALPHA_FIELD_250 = 750287;
     public final static int ALPHA_FIELD_3730 = 50000;
@@ -16,6 +20,9 @@ public class XmlTestData {
     public final static int ALPHA_FIELD_172 = 427946;
     public final static int ALPHA_FIELD_36633 = 427946;
     public final static int ALPHA_FIELD_167 = 567732;
+    public final static int ALPHA_FIELD_11835 = 139786;
+    public final static int ALPHA_FIELD_29048 = 139787;
+    public final static int ALPHA_FIELD_2821 = 139788;
     public final static int ALPHA_FIELD_146 = 604176;
     public final static int ALPHA_FIELD_1340 = 1978516;
     public final static int ALPHA_FIELD_72 = 10900358;
@@ -31,6 +38,10 @@ public class XmlTestData {
     public final static int BRAVO_FIELD_217 = 0;
     public final static int BRAVO_FIELD_194 = 1123609;
     public final static int BRAVO_FIELD_206 = 1123610;
+    public final static int BRAVO_FIELD_25012 = 1123611;
+    public final static int BRAVO_FIELD_80 = 1113666;
+    public final static int BRAVO_FIELD_6601 = 1123613;
+    public final static int BRAVO_FIELD_29042 = 9943;
     public final static int BRAVO_FIELD_251 = 1123609;
     public final static int BRAVO_FIELD_250 = 106310;
     public final static int BRAVO_FIELD_3730 = 100000;
@@ -40,6 +51,9 @@ public class XmlTestData {
     public final static int BRAVO_FIELD_85 = 1017299;
     public final static int BRAVO_FIELD_172 = 783775;
     public final static int BRAVO_FIELD_167 = 1017890;
+    public final static int BRAVO_FIELD_11835 = 234115;
+    public final static int BRAVO_FIELD_29048 = 234116;
+    public final static int BRAVO_FIELD_2821 = 234117;
     public final static int BRAVO_FIELD_146 = 1316195;
     public final static int BRAVO_FIELD_1340 = 6600001;
     public final static int BRAVO_FIELD_72 = 6600000;
@@ -357,6 +371,24 @@ public class XmlTestData {
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
+        "      <feltkode>29048</feltkode>\n" +
+        "      <sum>139787.00</sum>\n" +
+        "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
+        "        <tall>139787.00</tall>\n" +
+        "        <notehenvisning>5</notehenvisning>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>2821</feltkode>\n" +
+        "      <sum>139788.00</sum>\n" +
+        "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
+        "        <tall>139788.00</tall>\n" +
+        "        <notehenvisning>5</notehenvisning>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
         "      <feltkode>11836</feltkode>\n" +
         "      <sum>43735.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
@@ -558,6 +590,20 @@ public class XmlTestData {
         "      <sum>4655601.00</sum>\n" +
         "      <post posttype=\"standard\" nr=\"1\">\n" +
         "        <tall>4655601.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>25012</feltkode>\n" +
+        "      <sum>4655602.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>4655602.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>6601</feltkode>\n" +
+        "      <sum>4655604.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>4655604.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
@@ -1182,6 +1228,24 @@ public class XmlTestData {
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +
+        "      <feltkode>29048</feltkode>\n" +
+        "      <sum>234116.00</sum>\n" +
+        "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
+        "        <tall>234116.00</tall>\n" +
+        "        <notehenvisning>2</notehenvisning>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>2821</feltkode>\n" +
+        "      <sum>234117.00</sum>\n" +
+        "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
+        "        <tall>234117.00</tall>\n" +
+        "        <notehenvisning>2</notehenvisning>\n" +
+        "        <fritekst>Skattekostnad på ordinært resultat</fritekst>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
         "      <feltkode>11836</feltkode>\n" +
         "      <sum>330263.00</sum>\n" +
         "      <post posttype=\"fleksibel\" nr=\"1\">\n" +
@@ -1336,6 +1400,20 @@ public class XmlTestData {
         "      <sum>1123610.00</sum>\n" +
         "      <post posttype=\"standard\" nr=\"1\">\n" +
         "        <tall>1123610.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>25012</feltkode>\n" +
+        "      <sum>1123611.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>1123611.00</tall>\n" +
+        "      </post>\n" +
+        "    </info>\n" +
+        "    <info>\n" +
+        "      <feltkode>6601</feltkode>\n" +
+        "      <sum>1123613.00</sum>\n" +
+        "      <post posttype=\"standard\" nr=\"1\">\n" +
+        "        <tall>1123613.00</tall>\n" +
         "      </post>\n" +
         "    </info>\n" +
         "    <info>\n" +

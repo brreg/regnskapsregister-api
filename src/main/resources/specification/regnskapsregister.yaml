@@ -167,6 +167,12 @@ components:
       properties:
         ordinaertResultatFoerSkattekostnad:
           type: number
+        ordinaertResultatSkattekostnad:
+          type: number
+        ekstraordinaerePoster:
+          type: number
+        skattekostnadEkstraordinaertResultat:
+          type: number
         aarsresultat:
           type: number
         totalresultat:
@@ -178,8 +184,6 @@ components:
     EgenkapitalGjeld:
       type: object
       properties:
-        goodwill:
-          type: number
         sumEgenkapitalGjeld:
             type: number
         egenkapital:
@@ -189,6 +193,16 @@ components:
     Eiendeler:
       type: object
       properties:
+        goodwill:
+          type: number
+        sumVarer:
+          type: number
+        sumFordringer:
+          type: number
+        sumInvesteringer:
+          type: number
+        sumBankinnskuddOgKontanter:
+          type: number
         sumEiendeler:
             type: number
         omloepsmidler:

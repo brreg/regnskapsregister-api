@@ -58,6 +58,11 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
             .addProperty(
                 BR.eiendeler,
                 model.createResource(BR.Eiendeler)
+                    .addLiteral(BR.goodwill, it.eiendeler.goodwill ?: BigDecimal.ZERO)
+                    .addLiteral(BR.sumVarer, it.eiendeler.sumVarer ?: BigDecimal.ZERO)
+                    .addLiteral(BR.sumFordringer, it.eiendeler.sumFordringer ?: BigDecimal.ZERO)
+                    .addLiteral(BR.sumInvesteringer, it.eiendeler.sumInvesteringer ?: BigDecimal.ZERO)
+                    .addLiteral(BR.sumBankinnskuddOgKontanter, it.eiendeler.sumBankinnskuddOgKontanter ?: BigDecimal.ZERO)
                     .addLiteral(BR.sumEiendeler, it.eiendeler.sumEiendeler ?: BigDecimal.ZERO)
                     .addProperty(
                         BR.anleggsmidler,
@@ -70,7 +75,6 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
             .addProperty(
                 BR.egenkapitalGjeld,
                 model.createResource(BR.EgenkapitalGjeld)
-                    .addLiteral(BR.goodwill, it.egenkapitalGjeld.goodwill ?: BigDecimal.ZERO)
                     .addLiteral(BR.sumEgenkapitalGjeld, it.egenkapitalGjeld.sumEgenkapitalGjeld ?: BigDecimal.ZERO)
                     .addProperty(
                         BR.egenkapital,
@@ -102,6 +106,9 @@ private fun List<Regnskap>.createModel(urls: ExternalUrls): Model {
                     .addLiteral(BR.aarsresultat, it.resultatregnskapResultat.aarsresultat ?: BigDecimal.ZERO)
                     .addLiteral(BR.totalresultat, it.resultatregnskapResultat.totalresultat ?: BigDecimal.ZERO)
                     .addLiteral(BR.ordinaertResultatFoerSkattekostnad, it.resultatregnskapResultat.ordinaertResultatFoerSkattekostnad ?: BigDecimal.ZERO)
+                    .addLiteral(BR.ordinaertResultatSkattekostnad, it.resultatregnskapResultat.ordinaertResultatSkattekostnad ?: BigDecimal.ZERO)
+                    .addLiteral(BR.ekstraordinaerePoster, it.resultatregnskapResultat.ekstraordinaerePoster ?: BigDecimal.ZERO)
+                    .addLiteral(BR.skattekostnadEkstraordinaertResultat, it.resultatregnskapResultat.skattekostnadEkstraordinaertResultat ?: BigDecimal.ZERO)
                     .addProperty(
                         BR.driftsresultat,
                         model.createResource(BR.Driftsresultat)
