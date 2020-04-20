@@ -1,5 +1,6 @@
 package no.regnskap.service;
 
+import no.regnskap.RegnskapUtil;
 import no.regnskap.TestData;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.model.RegnskapDB;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,10 +59,21 @@ class RegnskapServiceTest {
         }
 
         @Test
-        void mappingIsCorrect() {
+        void mappingIsCorrect2017() {
+            Optional<RegnskapDB> regnskapDB = Optional.of(TestData.DB_REGNSKAP_2017);
+            Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
+                    .thenReturn(regnskapDB);
+
+            Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
+
+            assertEquals(TestData.REGNSKAP_2017, actual);
+        }
+
+        @Test
+        void mappingIsCorrect2018() {
             Optional<RegnskapDB> regnskapDB = Optional.of(TestData.DB_REGNSKAP_2018_SECOND);
             Mockito.when(repositoryMock.findById(TestData.GENERATED_ID_2.toHexString()))
-                .thenReturn(regnskapDB);
+                    .thenReturn(regnskapDB);
 
             Regnskap actual = regnskapService.getById(TestData.GENERATED_ID_2.toHexString());
 
@@ -76,9 +89,9 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(emptyDatabaseList);
 
-            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null, null);
 
-            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
         }
 
         @Test
@@ -87,28 +100,269 @@ class RegnskapServiceTest {
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
                 .thenReturn(dbList);
 
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, null);
 
-            assertFalse(actual.isEmpty());
-            assertEquals(TestData.REGNSKAP_LIST, actual);
+            assertEquals(2, actual.size());
+            assertEquals(TestData.REGNSKAP_2017, actual.get(0));
+            assertEquals(TestData.REGNSKAP_2018, actual.get(1));
         }
 
         @Test
         void filtersWork() {
-            List<RegnskapDB> list = new ArrayList<>();
-
-            RegnskapDB db0 = TestData.createRegnskapDB(TestData.GENERATED_ID_0, 2019,"0");
-            db0.setAarsregnskapstype("SMAA");
-            list.add(db0);
-            RegnskapDB db1 = TestData.createRegnskapDB(TestData.GENERATED_ID_1, 2019,"1");
-            db1.setRegnskapstype("K");
-            list.add(db1);
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
 
             Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
-                .thenReturn(list);
-            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer");
+                    .thenReturn(list.stream().filter(regnskap -> "SMAA".equalsIgnoreCase(regnskap.getAarsregnskapstype())
+                            || "K".equalsIgnoreCase(regnskap.getRegnskapstype()))
+                            .collect(Collectors.toList()));
 
-            assertTrue(actual.isEmpty());
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(1, actual.size());
+        }
+
+        @Test
+        void filter2017() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2017 &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, null);
+
+            assertEquals(1, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2017));
+        }
+
+        @Test
+        void filter2018() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2018 &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, null);
+
+            assertEquals(1, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2018));
+        }
+
+        @Test
+        void filter2019() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2019 &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, null);
+
+            assertEquals(2, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2019));
+        }
+
+        @Test
+        void filterSelskap() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> "S".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(3, actual.size());
+        }
+
+        @Test
+        void filter2017Selskap() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2017 &&
+                                                                 "S".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(1, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2017));
+        }
+
+        @Test
+        void filter2018Selskap() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2018 &&
+                                                                 "S".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(1, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2018));
+        }
+
+        @Test
+        void filter2019Selskap() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2019 &&
+                                                                 "S".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(1, actual.size());
+            assertTrue(RegnskapUtil.forYear(actual.get(0).getRegnskapsperiode(), 2019));
+        }
+
+        @Test
+        void filterKonsern() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> "K".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(1, actual.size());
+        }
+
+        @Test
+        void filter2017Konsern() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2017 &&
+                                                                 "K".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2017, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(0, actual.size());
+        }
+
+        @Test
+        void filter2018Konsern() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2018 &&
+                                                                 "K".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2018, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(0, actual.size());
+        }
+
+        @Test
+        void filter2019Konsern() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> regnskap.getRegnaar() == 2019 &&
+                                                                 "K".equals(regnskap.getRegnskapstype()) &&
+                                                                 "orgnummer".equals(regnskap.getOrgnr()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", 2019, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(1, actual.size());
+        }
+    }
+
+    @Nested
+    class FindByOrgnrSelskap {
+        @Test
+        void emptyListWhenNotFoundInDBSelskap() {
+            List<RegnskapDB> emptyDatabaseList = TestData.EMPTY_DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(emptyDatabaseList);
+
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(0, result.size());
+        }
+
+        @Test
+        void mappingIsCorrectSelskap() {
+            List<RegnskapDB> dbList = TestData.DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(dbList);
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(2, actual.size());
+        }
+
+        @Test
+        void filtersWorkSelskap() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> "SMAA".equalsIgnoreCase(regnskap.getAarsregnskapstype())
+                            || "K".equalsIgnoreCase(regnskap.getRegnskapstype()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_SELSKAP);
+
+            assertEquals(0, actual.size()); //Filtering by Selskap from a lost of only Konsern should return no items
+        }
+    }
+
+    @Nested
+    class FindByOrgnrKonsern {
+        @Test
+        void emptyListWhenNotFoundInDBKonsern() {
+            List<RegnskapDB> emptyDatabaseList = TestData.EMPTY_DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(emptyDatabaseList);
+
+            List<Regnskap> result = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(0, result.size());
+        }
+
+        @Test
+        void mappingIsCorrectKonsern() {
+            List<RegnskapDB> dbList = TestData.DB_REGNSKAP_LIST;
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(dbList);
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(0, actual.size());
+        }
+
+        @Test
+        void filtersWorkKonsern() {
+            List<RegnskapDB> list = TestData.generateTestRegnskapList();
+
+            Mockito.when(repositoryMock.findByOrgnrOrderByJournalnrDesc("orgnummer"))
+                    .thenReturn(list.stream().filter(regnskap -> "SMAA".equalsIgnoreCase(regnskap.getAarsregnskapstype())
+                            || "K".equalsIgnoreCase(regnskap.getRegnskapstype()))
+                            .collect(Collectors.toList()));
+
+            List<Regnskap> actual = regnskapService.getByOrgnr("orgnummer", null, RegnskapServiceKt.REGNSKAPSTYPE_KONSERN);
+
+            assertEquals(1, actual.size());
         }
     }
 
@@ -122,7 +376,7 @@ class RegnskapServiceTest {
 
             List<String> result = regnskapService.getLog();
 
-            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
         }
 
         @Test
@@ -133,7 +387,7 @@ class RegnskapServiceTest {
 
             List<String> result = regnskapService.getLog();
 
-            assertEquals(result.size(), 4);
+            assertEquals(4, result.size());
             assertTrue(result.contains("file0.xml"));
             assertTrue(result.contains("file1.xml"));
             assertTrue(result.contains("file2.xml"));

@@ -6,6 +6,8 @@ import no.regnskap.controller.RegnskapApiImpl;
 import no.regnskap.model.RegnskapDB;
 import no.regnskap.repository.RegnskapRepository;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,6 +29,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,15 +108,23 @@ class RegnskapApiTest {
     void getByOrgnr() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/json");
 
-        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer");
+        ResponseEntity<Object> response = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", 2018, null);
         ResponseEntity<Object> expected = new ResponseEntity<>(REGNSKAP_LIST, HttpStatus.OK);
         assertEquals(expected, response);
 
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/rdf+xml");
 
-        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer").getBody();
+        Object rdfResponse = RegnskapApiImpl.getRegnskap(httpServletRequestMock, "orgnummer", 2018, null).getBody();
         Model modelFromResponse = responseReader.parseResponse((String)rdfResponse, "RDFXML");
         Model expectedResponse = responseReader.getExpectedResponse("OrgnrResponse.ttl", "TURTLE");
+
+/*        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            modelFromResponse.write(baos, new RDFFormat(Lang.TURTLE).toString());
+            String s = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+            int d = 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         assertTrue(expectedResponse.isIsomorphicWith(modelFromResponse));
     }

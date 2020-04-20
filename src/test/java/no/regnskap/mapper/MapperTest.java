@@ -46,10 +46,10 @@ class MapperTest {
 
     @Test
     void allFieldsAreMapped() {
-        assertEquals(44, xmlWrap.getList().get(0).getPosts().size());
-        assertEquals(60, xmlWrap.getList().get(1).getPosts().size());
-        assertEquals(40, xmlWrap.getList().get(2).getPosts().size());
-        assertEquals(45, xmlWrap.getList().get(3).getPosts().size());
+        assertEquals(47, xmlWrap.getList().get(0).getPosts().size());
+        assertEquals(63, xmlWrap.getList().get(1).getPosts().size());
+        assertEquals(44, xmlWrap.getList().get(2).getPosts().size());
+        assertEquals(48, xmlWrap.getList().get(3).getPosts().size());
     }
 
     @Test
@@ -69,6 +69,11 @@ class MapperTest {
         RegnskapFieldsDB fieldsAlpha = listRegnskapDB.get(0).getFields();
         RegnskapFieldsDB fieldsBravo = listRegnskapDB.get(1).getFields();
 
+        assertEquals(XmlTestData.ALPHA_FIELD_206, fieldsAlpha.getEiendeler().getGoodwill().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_25012, fieldsAlpha.getEiendeler().getSumVarer().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_80, fieldsAlpha.getEiendeler().getSumFordringer().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_6601, fieldsAlpha.getEiendeler().getSumInvesteringer().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_29042, fieldsAlpha.getEiendeler().getSumBankinnskuddOgKontanter().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_219, fieldsAlpha.getEiendeler().getSumEiendeler().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_217, fieldsAlpha.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_194, fieldsAlpha.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
@@ -82,13 +87,25 @@ class MapperTest {
         assertEquals(XmlTestData.ALPHA_FIELD_172, fieldsAlpha.getResultatregnskapResultat().getAarsresultat().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_36633, fieldsAlpha.getResultatregnskapResultat().getTotalresultat().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_167, fieldsAlpha.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_11835, fieldsAlpha.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_29048, fieldsAlpha.getResultatregnskapResultat().getEkstraordinaerePoster().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_2821, fieldsAlpha.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_146, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_1340, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSalgsinntekter().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_72, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_81, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_17126, fieldsAlpha.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_158, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_153, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_7037, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getRentekostnadSammeKonsern().intValue());
+        assertEquals(XmlTestData.ALPHA_FIELD_2216, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getAnnenRentekostnad().intValue());
         assertEquals(XmlTestData.ALPHA_FIELD_17130, fieldsAlpha.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
 
+        assertEquals(XmlTestData.BRAVO_FIELD_206, fieldsBravo.getEiendeler().getGoodwill().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_25012, fieldsBravo.getEiendeler().getSumVarer().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_80, fieldsBravo.getEiendeler().getSumFordringer().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_6601, fieldsBravo.getEiendeler().getSumInvesteringer().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_29042, fieldsBravo.getEiendeler().getSumBankinnskuddOgKontanter().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_219, fieldsBravo.getEiendeler().getSumEiendeler().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_217, fieldsBravo.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_194, fieldsBravo.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
@@ -102,11 +119,18 @@ class MapperTest {
         assertEquals(XmlTestData.BRAVO_FIELD_172, fieldsBravo.getResultatregnskapResultat().getAarsresultat().intValue());
         assertNull(fieldsBravo.getResultatregnskapResultat().getTotalresultat());
         assertEquals(XmlTestData.BRAVO_FIELD_167, fieldsBravo.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_11835, fieldsBravo.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_29048, fieldsBravo.getResultatregnskapResultat().getEkstraordinaerePoster().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_2821, fieldsBravo.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_146, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_1340, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSalgsinntekter().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_72, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_81, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_17126, fieldsBravo.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_158, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_153, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_7037, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getRentekostnadSammeKonsern().intValue());
+        assertEquals(XmlTestData.BRAVO_FIELD_2216, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getAnnenRentekostnad().intValue());
         assertEquals(XmlTestData.BRAVO_FIELD_17130, fieldsBravo.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
     }
 

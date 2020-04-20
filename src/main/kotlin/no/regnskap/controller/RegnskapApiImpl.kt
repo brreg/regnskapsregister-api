@@ -36,9 +36,9 @@ open class RegnskapApiImpl(
         return ResponseEntity(regnskapService.getLog(), HttpStatus.OK)
     }
 
-    override fun getRegnskap(httpServletRequest: HttpServletRequest, orgNummer: String): ResponseEntity<Any> =
+    override fun getRegnskap(httpServletRequest: HttpServletRequest, orgNummer: String, år: Int?, regnskapstype: String?): ResponseEntity<Any> =
         try {
-            val regnskap = regnskapService.getByOrgnr(orgNummer)
+            val regnskap = regnskapService.getByOrgnr(orgNummer, år, RegnskapService.regnskapstypeToKode(regnskapstype))
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
             val urls = ExternalUrls(

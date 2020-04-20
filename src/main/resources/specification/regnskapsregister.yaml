@@ -35,6 +35,21 @@ paths:
           required: true
           schema:
             type: string
+        - name: år
+          in: query
+          description: Hent årsregnskap for spesifikt år
+          required: false
+          schema:
+            type: integer
+        - name: regnskapstype
+          in: query
+          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
+          required: false
+          schema:
+            type: string
+            enum:
+              - selskap
+              - konsern
       responses:
         '200':
           description: OK
@@ -203,6 +218,12 @@ components:
       properties:
         ordinaertResultatFoerSkattekostnad:
           type: number
+        ordinaertResultatSkattekostnad:
+          type: number
+        ekstraordinaerePoster:
+          type: number
+        skattekostnadEkstraordinaertResultat:
+          type: number
         aarsresultat:
           type: number
         totalresultat:
@@ -223,6 +244,16 @@ components:
     Eiendeler:
       type: object
       properties:
+        goodwill:
+          type: number
+        sumVarer:
+          type: number
+        sumFordringer:
+          type: number
+        sumInvesteringer:
+          type: number
+        sumBankinnskuddOgKontanter:
+          type: number
         sumEiendeler:
             type: number
         omloepsmidler:
@@ -260,11 +291,15 @@ components:
     Driftsinntekter:
       type: object
       properties:
+        salgsinntekter:
+          type: number
         sumDriftsinntekter:
           type: number
     Driftskostnad:
       type: object
       properties:
+        loennskostnad:
+          type: number
         sumDriftskostnad:
           type: number
     Finansinntekt:
@@ -275,6 +310,10 @@ components:
     Finanskostnad:
       type: object
       properties:
+        rentekostnadSammeKonsern:
+          type: number
+        annenRentekostnad:
+          type: number
         sumFinanskostnad:
           type: number
     Virksomhet:

@@ -250,6 +250,9 @@
       "EgenkapitalGjeld": {
         "type": "object",
         "properties": {
+          "goodwill": {
+            "type": "number"
+          },
           "sumEgenkapitalGjeld": {
             "type": "number"
           },
@@ -322,6 +325,9 @@
       "Driftsinntekter": {
         "type": "object",
         "properties": {
+          "salgsinntekter": {
+            "type": "number"
+          },
           "sumDriftsinntekter": {
             "type": "number"
           }
@@ -330,6 +336,9 @@
       "Driftskostnad": {
         "type": "object",
         "properties": {
+          "loennskostnad": {
+            "type": "number"
+          },
           "sumDriftskostnad": {
             "type": "number"
           }
@@ -346,6 +355,12 @@
       "Finanskostnad": {
         "type": "object",
         "properties": {
+          "rentekostnadSammeKonsern": {
+            "type": "number"
+          },
+          "annenRentekostnad": {
+            "type": "number"
+          },
           "sumFinanskostnad": {
             "type": "number"
           }
