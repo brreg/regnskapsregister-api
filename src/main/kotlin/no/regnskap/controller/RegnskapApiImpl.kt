@@ -6,6 +6,7 @@ import no.regnskap.jena.JenaType
 import no.regnskap.jena.acceptHeaderToJenaType
 import no.regnskap.jena.createJenaResponse
 import no.regnskap.service.RegnskapService
+import no.regnskap.service.RestcallLogService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,7 +22,8 @@ private val LOGGER = LoggerFactory.getLogger(RegnskapApiImpl::class.java)
 @Controller
 open class RegnskapApiImpl(
     private val regnskapService: RegnskapService,
-    private val profileConditionalValues: ProfileConditionalValues
+    private val profileConditionalValues: ProfileConditionalValues,
+    private val restcallLogService: RestcallLogService
 ): no.regnskap.generated.api.RegnskapApi {
 
     val ping: ResponseEntity<String>
@@ -33,11 +35,13 @@ open class RegnskapApiImpl(
         get() = ResponseEntity.ok().build<Any>()
 
     override fun getLog(httpServletRequest: HttpServletRequest): ResponseEntity<List<String>> {
+        restcallLogService.logCall(httpServletRequest, "getLog", null);
         return ResponseEntity(regnskapService.getLog(), HttpStatus.OK)
     }
 
     override fun getRegnskap(httpServletRequest: HttpServletRequest, orgNummer: String, år: Int?, regnskapstype: String?): ResponseEntity<Any> =
         try {
+            restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
             val regnskap = regnskapService.getByOrgnr(orgNummer, år, RegnskapService.regnskapstypeToKode(regnskapstype))
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
@@ -59,6 +63,7 @@ open class RegnskapApiImpl(
 
     override fun getRegnskapById(httpServletRequest: HttpServletRequest, id: String): ResponseEntity<Any> =
         try {
+            restcallLogService.logCall(httpServletRequest, "getRegnskapNyId", null);
             val regnskap = regnskapService.getById(id)
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 

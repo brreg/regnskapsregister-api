@@ -4,6 +4,7 @@ import no.regnskap.TestData;
 import no.regnskap.configuration.ProfileConditionalValues;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.service.RegnskapService;
+import no.regnskap.service.RestcallLogService;
 import org.apache.jena.riot.RIOT;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,9 @@ class RegnskapApiImplTest {
 
     @Mock
     RegnskapService regnskapServiceMock;
+
+    @Mock
+    RestcallLogService restcallLogServiceMock;
 
     @Mock
     ProfileConditionalValues valuesMock;

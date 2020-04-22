@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+
 @Document("restcall_log")
 public class RestcallLog {
     @Id
@@ -18,6 +21,21 @@ public class RestcallLog {
 
     @Indexed
     private String requestedMethod;
+
+    @Indexed
+    private LocalDateTime requestTime;
+
+    public RestcallLog(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) {
+        this(httpServletRequest.getRemoteAddr(), requestedMethod, requestedOrgnr);
+    }
+
+    public RestcallLog(final String callerIp, final String requestedMethod, final String requestedOrgnr) {
+        this.callerIp = callerIp;
+        this.requestedOrgnr = requestedOrgnr;
+        this.requestedMethod = requestedMethod;
+        this.requestTime = LocalDateTime.now();
+        this.id = new ObjectId(Integer.toHexString(hashCode()));
+    }
 
     public ObjectId getId() {
         return id;
@@ -51,4 +69,28 @@ public class RestcallLog {
         this.requestedMethod = requestedMethod;
     }
 
+    public LocalDateTime getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(LocalDateTime requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = (this.callerIp==null ? 0 : this.callerIp.hashCode());
+        hash = 31*hash + (this.requestedOrgnr==null ? 0 : this.requestedOrgnr.hashCode());
+        hash = 31*hash + (this.requestedMethod==null ? 0 : this.requestedMethod.hashCode());
+        hash = 31*hash + (this.requestTime==null ? 0 : this.requestTime.hashCode());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RestcallLog)) {
+            return false;
+        }
+        return this.hashCode() == ((RestcallLog)o).hashCode();
+    }
 }
