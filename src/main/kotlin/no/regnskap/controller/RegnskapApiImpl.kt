@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.web.bind.annotation.RequestMethod.GET
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
 private val LOGGER = LoggerFactory.getLogger(RegnskapApiImpl::class.java)
 
 @Controller
+@RestControllerAdvice
 open class RegnskapApiImpl(
     private val regnskapService: RegnskapService,
     private val profileConditionalValues: ProfileConditionalValues,

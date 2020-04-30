@@ -1,5 +1,7 @@
 package no.regnskap;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import no.regnskap.spring.CachableDispatcherServlet;
 import org.apache.jena.riot.RIOT;
 import org.slf4j.Logger;
@@ -13,6 +15,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.DispatcherServlet;
 
 @SpringBootApplication
+@OpenAPIDefinition(
+        info = @Info(
+                title = "RegnskapsRegister-API",
+                version = no.regnskap.generated.spring.ApplicationInfo.VERSION
+        )
+)
 @EnableScheduling
 @EnableConfigurationProperties({SftpProperties.class, SlackProperties.class})
 public class Application {
