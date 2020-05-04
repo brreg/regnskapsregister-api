@@ -43,6 +43,7 @@
         <docker.image.tag>latest</docker.image.tag>
     </properties>
 
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
