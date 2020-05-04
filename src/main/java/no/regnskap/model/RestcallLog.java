@@ -6,7 +6,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Document("restcall_log")
 public class RestcallLog {
@@ -30,7 +34,7 @@ public class RestcallLog {
     }
 
     public RestcallLog(final String callerIp, final String requestedMethod, final String requestedOrgnr) {
-        this.callerIp = callerIp;
+        anonymizeAndSetCallerIp(callerIp);
         this.requestedOrgnr = requestedOrgnr;
         this.requestedMethod = requestedMethod;
         this.requestTime = LocalDateTime.now();
@@ -51,6 +55,18 @@ public class RestcallLog {
 
     public void setCallerIp(String callerIp) {
         this.callerIp = callerIp;
+    }
+
+    public void anonymizeAndSetCallerIp(String callerIp) {
+        if (callerIp!=null && callerIp.startsWith("b:")) {
+            this.callerIp = callerIp;
+        } else {
+            try {
+                this.callerIp = "b:" + Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest(callerIp.getBytes(StandardCharsets.UTF_8)));
+            } catch (NoSuchAlgorithmException e) {
+                this.callerIp = callerIp;
+            }
+        }
     }
 
     public String getRequestedOrgnr() {
