@@ -38,7 +38,6 @@ public class RestcallLog {
         this.requestedOrgnr = requestedOrgnr;
         this.requestedMethod = requestedMethod;
         this.requestTime = LocalDateTime.now();
-        this.id = new ObjectId(Integer.toHexString(hashCode()));
     }
 
     public ObjectId getId() {
@@ -91,22 +90,5 @@ public class RestcallLog {
 
     public void setRequestTime(LocalDateTime requestTime) {
         this.requestTime = requestTime;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = (this.callerIp==null ? 0 : this.callerIp.hashCode());
-        hash = 31*hash + (this.requestedOrgnr==null ? 0 : this.requestedOrgnr.hashCode());
-        hash = 31*hash + (this.requestedMethod==null ? 0 : this.requestedMethod.hashCode());
-        hash = 31*hash + (this.requestTime==null ? 0 : this.requestTime.hashCode());
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof RestcallLog)) {
-            return false;
-        }
-        return this.hashCode() == ((RestcallLog)o).hashCode();
     }
 }
