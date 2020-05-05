@@ -16,11 +16,13 @@ class RestcallLogService(
 
     fun logCall(httpServletRequest: HttpServletRequest, requestedMethod: String, requestedOrgnr: String?) {
         try {
-            LOGGER.info("IP:".plus(httpServletRequest.remoteAddr)
-                        .plus(" Method:").plus(requestedMethod)
-                        .plus(if (requestedOrgnr==null) "" else " OrgNr:$requestedOrgnr"))
+            val logEntry = RestcallLog(httpServletRequest, requestedMethod, requestedOrgnr)
 
-            restcallLogRepository.save(RestcallLog(httpServletRequest, requestedMethod, requestedOrgnr))
+            LOGGER.info("IP-hash:".plus(logEntry.callerIp)
+                    .plus(" Method:").plus(requestedMethod)
+                    .plus(if (requestedOrgnr==null) "" else " OrgNr:$requestedOrgnr"))
+
+            restcallLogRepository.save(logEntry)
         } catch (ex: Exception) {
             LOGGER.error("Restcall log persistence failed")
         }
