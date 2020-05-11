@@ -63,7 +63,7 @@ open class RegnskapApiImpl(
 
     override fun getRegnskapById(httpServletRequest: HttpServletRequest, id: String): ResponseEntity<Any> =
         try {
-            restcallLogService.logCall(httpServletRequest, "getRegnskapNyId", null);
+            restcallLogService.logCall(httpServletRequest, "getRegnskapById", null);
             val regnskap = regnskapService.getById(id)
             val jenaType = acceptHeaderToJenaType(httpServletRequest.getHeader("Accept"))
 
