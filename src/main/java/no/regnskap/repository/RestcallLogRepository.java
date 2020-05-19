@@ -1,11 +1,16 @@
 package no.regnskap.repository;
 
-import no.regnskap.model.RegnskapLog;
-import no.regnskap.model.RestcallLog;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Repository
-public interface RestcallLogRepository extends MongoRepository<RestcallLog, String> {
-    //RegnskapLog findOneByFilename(String filename);
+
+@Component
+public class RestcallLogRepository {
+
+    @Autowired
+    private ConnectionManager connectionManager;
+
+    //List<RestcallLog> findByRequestTimeGt(LocalDateTime datoFra);
+    //List<RestcallLog> findByRequestTimeLt(LocalDateTime datoTil);
+    //List<RestcallLog> findByRequestTimeBetween(LocalDateTime datoFra, LocalDateTime datoTil);
 }

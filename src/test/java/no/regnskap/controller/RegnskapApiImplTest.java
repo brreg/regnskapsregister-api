@@ -3,6 +3,7 @@ package no.regnskap.controller;
 import no.regnskap.TestData;
 import no.regnskap.configuration.ProfileConditionalValues;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.repository.RestcallLogRepository;
 import no.regnskap.service.RegnskapService;
 import no.regnskap.service.RestcallLogService;
 import org.apache.jena.riot.RIOT;
@@ -34,6 +35,9 @@ class RegnskapApiImplTest {
 
     @Mock
     RegnskapService regnskapServiceMock;
+
+    @Mock
+    RestcallLogRepository restcallLogRepository;
 
     @Mock
     RestcallLogService restcallLogServiceMock;

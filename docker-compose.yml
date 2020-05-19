@@ -5,10 +5,16 @@ services:
     image: brreg/regnskapsregister-api:latest
     depends_on:
       - mongodb
+      - postgres
     restart: always
     environment:
       - RRAPI_MONGO_USERNAME
       - RRAPI_MONGO_PASSWORD
+      - RRAPI_POSTGRES_DB_URL
+      - RRAPI_POSTGRES_DBO_USER
+      - RRAPI_POSTGRES_DBO_PASSWORD
+      - RRAPI_POSTGRES_USER
+      - RRAPI_POSTGRES_PASSWORD
       - RRAPI_SFTP_SERVER
       - RRAPI_SFTP_USER
       - RRAPI_SFTP_PASSWORD
@@ -25,3 +31,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$RRAPI_MONGO_PASSWORD
     ports:
       - 27017:27017
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=$RRAPI_POSTGRES_DBO_USER
+      - POSTGRES_PASSWORD=$RRAPI_POSTGRES_DBO_PASSWORD
+    volumes:
+      - /var/lib/postgresql/data

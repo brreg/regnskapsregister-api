@@ -22,7 +22,7 @@ class RestcallLogService(
                     .plus(" Method:").plus(requestedMethod)
                     .plus(if (requestedOrgnr==null) "" else " OrgNr:$requestedOrgnr"))
 
-            restcallLogRepository.save(logEntry)
+            //restcallLogRepository.save(logEntry)
         } catch (ex: Exception) {
             LOGGER.error("Restcall log persistence failed")
         }

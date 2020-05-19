@@ -19,10 +19,13 @@ public class TestData {
     private static final String MONGO_AUTH = "?authSource=admin&authMechanism=SCRAM-SHA-1";
     public static final int MONGO_PORT = 27017;
     public static final String DATABASE_NAME = "regnskapAPI";
-
     public static final Map<String, String> MONGO_ENV_VALUES = ImmutableMap.of(
         "MONGO_INITDB_ROOT_USERNAME", MONGO_USER,
         "MONGO_INITDB_ROOT_PASSWORD", MONGO_PASSWORD);
+
+    public static final String POSTGRES_DB_NAME = "integration-tests-db";
+    public static final String POSTGRES_USER = "testuser";
+    public static final String POSTGRES_PASSWORD = "testpassword";
 
     public static final String SFTP_USER = "sftpuser";
     public static final String SFTP_PWD = "sftppwd";
