@@ -35,7 +35,7 @@ public class TestContainersBase {
             .withEnv(TestData.MONGO_ENV_VALUES)
             .withLogConsumer(mongoLog)
             .withExposedPorts(TestData.MONGO_PORT)
-            .waitingFor(Wait.forListeningPort());
+            .waitingFor(Wait.forLogMessage(".*waiting for connections on port.*\\n", 2));
 
     @Container
     public static final PostgreSQLContainer postgreContainer = (PostgreSQLContainer)
