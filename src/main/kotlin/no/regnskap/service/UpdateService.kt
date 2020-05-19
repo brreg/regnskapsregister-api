@@ -103,7 +103,7 @@ class UpdateService(
             }
 
         } catch (ex: Exception) {
-            LOGGER.error("Exception when downloading accounting files", ex)
+            LOGGER.error("Exception when downloading accounting files: " + ex.message)
             Slack.postMessage(slackProperties.token, Slack.PRODFEIL_CHANNEL, "Exception when downloading accounting files: " + ex.message)
         } finally {
             channelSftp?.disconnect()
