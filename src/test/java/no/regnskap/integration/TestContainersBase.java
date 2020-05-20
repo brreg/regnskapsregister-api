@@ -11,9 +11,15 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.time.Duration;
+
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
 
 @Testcontainers
@@ -34,7 +40,10 @@ public class TestContainersBase {
     @Container
     private static final MongoDBContainer mongoContainer = new MongoDBContainer()
                 .withLogConsumer(mongoLog)
-                .waitingFor(Wait.defaultWaitStrategy());
+                .waitingFor(new HttpWaitStrategy()
+                    .forPort(TestData.MONGO_PORT)
+                    .forStatusCodeMatching(response -> response == HTTP_OK || response == HTTP_UNAUTHORIZED)
+                    .withStartupTimeout(Duration.ofMinutes(2)));
 
     @Container
     public static final PostgreSQLContainer postgreSQLContainer = (PostgreSQLContainer)
