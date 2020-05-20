@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class TestData {
     public static final String MONGO_DB_NAME = "regnskapAPI";
-    public static final int MONGO_PORT = 27017;
 
     public static final String POSTGRES_DB_NAME = "integration-tests-db";
     public static final String POSTGRES_USER = "testuser";

@@ -40,10 +40,7 @@ public class TestContainersBase {
     @Container
     private static final MongoDBContainer mongoContainer = new MongoDBContainer()
                 .withLogConsumer(mongoLog)
-                .waitingFor(new HttpWaitStrategy()
-                    .forPort(TestData.MONGO_PORT)
-                    .forStatusCodeMatching(response -> response == HTTP_OK || response == HTTP_UNAUTHORIZED)
-                    .withStartupTimeout(Duration.ofMinutes(2)));
+                .waitingFor(Wait.defaultWaitStrategy());
 
     @Container
     public static final PostgreSQLContainer postgreSQLContainer = (PostgreSQLContainer)
