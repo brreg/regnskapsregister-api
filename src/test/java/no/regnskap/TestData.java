@@ -14,14 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TestData {
-    private static final String MONGO_USER = "testuser";
-    private static final String MONGO_PASSWORD = "testpassword";
-    private static final String MONGO_AUTH = "?authSource=admin&authMechanism=SCRAM-SHA-1";
-    public static final int MONGO_PORT = 27017;
-    public static final String DATABASE_NAME = "regnskapAPI";
-    public static final Map<String, String> MONGO_ENV_VALUES = ImmutableMap.of(
-        "MONGO_INITDB_ROOT_USERNAME", MONGO_USER,
-        "MONGO_INITDB_ROOT_PASSWORD", MONGO_PASSWORD);
+    public static final String MONGO_DB_NAME = "regnskapAPI";
 
     public static final String POSTGRES_DB_NAME = "integration-tests-db";
     public static final String POSTGRES_USER = "testuser";
@@ -34,16 +27,6 @@ public class TestData {
     public static final String SFTP_DIR = "/" + SFTP_DIRECTORY;
     public static final Map<String, String> SFTP_ENV_VALUES =
         ImmutableMap.of("SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY);
-
-    public static String buildMongoURI(String host, int port, boolean withDbName) {
-        String uri = "mongodb://" + MONGO_USER + ":" + MONGO_PASSWORD + "@" + host + ":" + port + "/";
-
-        if (withDbName) {
-            uri += DATABASE_NAME;
-        }
-
-        return uri + MONGO_AUTH;
-    }
 
     public static String rregUrl = "http://invalid.org/regnskap/";
     public static String orgcatUrl = "https://invalid.org/organizations/";

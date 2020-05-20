@@ -8,6 +8,7 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -31,40 +32,38 @@ public class TestContainersBase {
             .waitingFor(Wait.defaultWaitStrategy());
 
     @Container
-    private static final GenericContainer mongoContainer = new GenericContainer("mongo:latest")
-            .withEnv(TestData.MONGO_ENV_VALUES)
-            .withLogConsumer(mongoLog)
-            .withExposedPorts(TestData.MONGO_PORT)
-            .waitingFor(Wait.forLogMessage(".*waiting for connections on port.*\\n", 2));
+    private static final MongoDBContainer mongoContainer = new MongoDBContainer()
+                .withLogConsumer(mongoLog)
+                .waitingFor(Wait.defaultWaitStrategy());
 
     @Container
-    public static final PostgreSQLContainer postgreContainer = (PostgreSQLContainer)
-            (new PostgreSQLContainer("postgres:latest")
-                    .withDatabaseName(TestData.POSTGRES_DB_NAME)
-                    .withUsername(TestData.POSTGRES_USER)
-                    .withPassword(TestData.POSTGRES_PASSWORD)
-                    .withLogConsumer(postgresLog)
-                    .waitingFor(Wait.forListeningPort()));
+    public static final PostgreSQLContainer postgreSQLContainer = (PostgreSQLContainer)
+            (new PostgreSQLContainer()
+                .withDatabaseName(TestData.POSTGRES_DB_NAME)
+                .withUsername(TestData.POSTGRES_USER)
+                .withPassword(TestData.POSTGRES_PASSWORD)
+                .withLogConsumer(postgresLog)
+                .waitingFor(Wait.defaultWaitStrategy()));
 
     static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
             TestPropertyValues.of(
-                    "spring.data.mongodb.database=" + TestData.DATABASE_NAME,
-                    "spring.data.mongodb.uri=" + TestData.buildMongoURI(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(TestData.MONGO_PORT), false),
+                    "spring.data.mongodb.database=" + TestData.MONGO_DB_NAME,
+                    "spring.data.mongodb.uri=" + mongoContainer.getReplicaSetUrl(), // TestData.buildMongoURI(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(TestData.MONGO_PORT), false),
                     "regnskap.sftp.host=" + sftpContainer.getContainerIpAddress(),
                     "regnskap.sftp.port=" + sftpContainer.getMappedPort(TestData.SFTP_PORT),
                     "regnskap.sftp.user=" + TestData.SFTP_USER,
                     "regnskap.sftp.password=" + TestData.SFTP_PWD,
                     "regnskap.sftp.directory=" + TestData.SFTP_DIR,
-                    "spring.datasource.url=" + postgreContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreContainer.getUsername(),
-                    "spring.datasource.password=" + postgreContainer.getPassword(),
-                    "postgres.rreg.db_url=" + postgreContainer.getJdbcUrl(),
-                    "postgres.rreg.dbo_user=" + postgreContainer.getUsername(),
-                    "postgres.rreg.dbo_password=" + postgreContainer.getPassword(),
-                    "postgres.rreg.user=" + postgreContainer.getUsername(),
-                    "postgres.rreg.password=" + postgreContainer.getPassword()
+                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
+                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
+                    "spring.datasource.password=" + postgreSQLContainer.getPassword(),
+                    "postgres.rreg.db_url=" + postgreSQLContainer.getJdbcUrl(),
+                    "postgres.rreg.dbo_user=" + postgreSQLContainer.getUsername(),
+                    "postgres.rreg.dbo_password=" + postgreSQLContainer.getPassword(),
+                    "postgres.rreg.user=" + postgreSQLContainer.getUsername(),
+                    "postgres.rreg.password=" + postgreSQLContainer.getPassword()
             ).applyTo(configurableApplicationContext.getEnvironment());
 
             TestUtils.sftpUploadFile(sftpContainer.getContainerIpAddress(), sftpContainer.getMappedPort(TestData.SFTP_PORT), "log-test.xml");
