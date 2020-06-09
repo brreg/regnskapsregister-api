@@ -31,9 +31,9 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <testcontainers.version>1.14.2</testcontainers.version>
-        <jena.version>3.14.0</jena.version>
-        <slack.version>1.6</slack.version>
+        <testcontainers.version>1.14.3</testcontainers.version>
+        <jena.version>3.15.0</jena.version>
+        <slack.version>1.10</slack.version>
         <swagger.version>2.9.2</swagger.version>
 
         <start-class>no.regnskap.Application</start-class>
@@ -51,12 +51,12 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
+            <version>42.2.13</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.8.9</version>
+            <version>3.9.0</version>
         </dependency>
 
         <!-- TEST -->
@@ -96,13 +96,11 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-runner</artifactId>
-            <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -218,7 +216,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>4.2.3</version>
+                <version>4.3.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -319,7 +317,7 @@
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.11</version>
+                <version>1.4.13</version>
                 <executions>
                     <execution>
                         <id>default</id>

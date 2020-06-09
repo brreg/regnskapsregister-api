@@ -68,8 +68,8 @@ class RestcallLogApiTest extends TestContainersBase {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<String> body = response.getBody();
         assertEquals(2, body.size());
-        assertEquals("2;Pe15I1unI4k/CJktaiPXtAWmacM=", body.get(0)); //Should have two calls from most active IP
-        assertEquals("1;yj+N7JC2fKPy4Ydklj561IGalHU=", body.get(1)); //Should have one call from least active IP
+        assertEquals("2;7RZlwZAUbE3Ljrhx8dJJnWG7KTs=", body.get(0)); //Should have two calls from most active IP
+        assertEquals("1;WrGH47xjdblaAlDy2MZnI96X3Lk=", body.get(1)); //Should have one call from least active IP
     }
 
     @Test

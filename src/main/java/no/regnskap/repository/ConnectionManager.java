@@ -31,6 +31,10 @@ public class ConnectionManager {
 	PostgresProperties postgresProperties;
 
 
+	public void updateDbUrl(final String dbUrl) {
+		postgresProperties.setDbUrl(dbUrl);
+	}
+
 	public Connection getConnection() throws SQLException {
 		return getConnection(false);
 	}
