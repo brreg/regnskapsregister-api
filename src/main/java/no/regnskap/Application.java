@@ -53,6 +53,7 @@ public class Application {
                 LOGGER.info("Liquibase synced OK.");
                 connectionManager.createRegularUser(connection);
                 connection.commit();
+                connectionManager.setDatabaseIsReady();
             } catch (LiquibaseException | SQLException e) {
                 try {
                     LOGGER.error("Initializing DB failed: "+e.getMessage());

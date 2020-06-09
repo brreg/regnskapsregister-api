@@ -2,69 +2,6 @@ package no.regnskap;
 
 public class XmlTestData {
 
-    public final static int ALPHA_FIELD_219 = 4655600;
-    public final static int ALPHA_FIELD_217 = 3314585;
-    public final static int ALPHA_FIELD_194 = 1341015;
-    public final static int ALPHA_FIELD_206 = 4655601;
-    public final static int ALPHA_FIELD_25012 = 4655602;
-    public final static int ALPHA_FIELD_80 = 531235;
-    public final static int ALPHA_FIELD_6601 = 4655604;
-    public final static int ALPHA_FIELD_29042 = 809780;
-    public final static int ALPHA_FIELD_251 = 4655600;
-    public final static int ALPHA_FIELD_250 = 750287;
-    public final static int ALPHA_FIELD_3730 = 50000;
-    public final static int ALPHA_FIELD_9702 = 700287;
-    public final static int ALPHA_FIELD_1119 = 3905312;
-    public final static int ALPHA_FIELD_86 = 1530406;
-    public final static int ALPHA_FIELD_85 = 2374906;
-    public final static int ALPHA_FIELD_172 = 427946;
-    public final static int ALPHA_FIELD_36633 = 427946;
-    public final static int ALPHA_FIELD_167 = 567732;
-    public final static int ALPHA_FIELD_11835 = 139786;
-    public final static int ALPHA_FIELD_29048 = 139787;
-    public final static int ALPHA_FIELD_2821 = 139788;
-    public final static int ALPHA_FIELD_146 = 604176;
-    public final static int ALPHA_FIELD_1340 = 1978516;
-    public final static int ALPHA_FIELD_72 = 10900358;
-    public final static int ALPHA_FIELD_81 = 8787821;
-    public final static int ALPHA_FIELD_17126 = 10296182;
-    public final static int ALPHA_FIELD_158 = -36445;
-    public final static int ALPHA_FIELD_153 = 3939;
-    public final static int ALPHA_FIELD_7037 = 31445;
-    public final static int ALPHA_FIELD_2216 = 31444;
-    public final static int ALPHA_FIELD_17130 = 40384;
-
-    public final static int BRAVO_FIELD_219 = 1123609;
-    public final static int BRAVO_FIELD_217 = 0;
-    public final static int BRAVO_FIELD_194 = 1123609;
-    public final static int BRAVO_FIELD_206 = 1123610;
-    public final static int BRAVO_FIELD_25012 = 1123611;
-    public final static int BRAVO_FIELD_80 = 1113666;
-    public final static int BRAVO_FIELD_6601 = 1123613;
-    public final static int BRAVO_FIELD_29042 = 9943;
-    public final static int BRAVO_FIELD_251 = 1123609;
-    public final static int BRAVO_FIELD_250 = 106310;
-    public final static int BRAVO_FIELD_3730 = 100000;
-    public final static int BRAVO_FIELD_9702 = 6310;
-    public final static int BRAVO_FIELD_1119 = 1017299;
-    public final static int BRAVO_FIELD_86 = 0;
-    public final static int BRAVO_FIELD_85 = 1017299;
-    public final static int BRAVO_FIELD_172 = 783775;
-    public final static int BRAVO_FIELD_167 = 1017890;
-    public final static int BRAVO_FIELD_11835 = 234115;
-    public final static int BRAVO_FIELD_29048 = 234116;
-    public final static int BRAVO_FIELD_2821 = 234117;
-    public final static int BRAVO_FIELD_146 = 1316195;
-    public final static int BRAVO_FIELD_1340 = 6600001;
-    public final static int BRAVO_FIELD_72 = 6600000;
-    public final static int BRAVO_FIELD_81 = 8787822;
-    public final static int BRAVO_FIELD_17126 = 5283805;
-    public final static int BRAVO_FIELD_158 = -298306;
-    public final static int BRAVO_FIELD_153 = 18;
-    public final static int BRAVO_FIELD_7037 = 298325;
-    public final static int BRAVO_FIELD_2216 = 298324;
-    public final static int BRAVO_FIELD_17130 = 298324;
-
     public static String xmlTestString = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
         "\n" +
         "<deler>\n" +

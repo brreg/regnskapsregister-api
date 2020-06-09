@@ -8,6 +8,9 @@ import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 
 @Component
@@ -17,6 +20,12 @@ public class ConnectionManager {
 
 	public static final String DB        = "postgres";
 	public static final String DB_SCHEMA = "rreg";
+
+	private static final HashMap<String,DateTimeFormatter> dateTimeFormatters = new HashMap();
+
+	private boolean databaseIsReady = false;
+	private final Object databaseIsReadyLock = new Object();
+
 
 	@Inject
 	PostgresProperties postgresProperties;
@@ -28,6 +37,15 @@ public class ConnectionManager {
 
 	public Connection getConnection(final boolean requireDboPermissions) throws SQLException {
 		try {
+			synchronized (this.databaseIsReadyLock) {
+				while (!this.databaseIsReady && !requireDboPermissions) {
+					try {
+						this.databaseIsReadyLock.wait();
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+
 			String username = null;
 			String password = null;
 			if (requireDboPermissions) {
@@ -101,6 +119,34 @@ public class ConnectionManager {
 		} catch (Exception e) {
 			throw new SQLException(e);
 		}
+	}
+
+	public void setDatabaseIsReady() {
+		synchronized (this.databaseIsReadyLock) {
+			this.databaseIsReady = true;
+			this.databaseIsReadyLock.notifyAll();
+		}
+	}
+
+	public boolean getDatabaseIsReady() {
+		synchronized (this.databaseIsReadyLock) {
+			return this.databaseIsReady;
+		}
+	}
+
+	public static Date toSqlDate(final String format, final String date) {
+		if (date == null) {
+			return null;
+		}
+
+		DateTimeFormatter formatter;
+		synchronized (dateTimeFormatters) {
+			if (!dateTimeFormatters.containsKey(format)) {
+				dateTimeFormatters.put(format, DateTimeFormatter.ofPattern(format));
+			}
+			formatter = dateTimeFormatters.get(format);
+		}
+		return Date.valueOf(LocalDate.parse(date, formatter));
 	}
 
 }

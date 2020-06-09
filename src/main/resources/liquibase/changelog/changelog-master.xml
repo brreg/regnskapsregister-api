@@ -6,5 +6,6 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="liquibase/changelog/changelog-1.0.xml"/>
+    <include file="liquibase/changelog/changelog-1.1.xml"/>
 
 </databaseChangeLog>

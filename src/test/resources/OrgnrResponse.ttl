@@ -5,9 +5,9 @@
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://invalid.org/regnskap/5d81fe657091ee0cce6bccdb>
+<http://invalid.org/regnskap/<identifier>>
         a                            br:Regnskap ;
-        dct:identifier               "5d81fe657091ee0cce6bccdb" ;
+        dct:identifier               "<identifier>" ;
         schema:currency              "valutakode" ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
