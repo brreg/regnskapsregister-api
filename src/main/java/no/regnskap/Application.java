@@ -44,33 +44,7 @@ public class Application {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initializeDatabase() {
-        try (Connection connection = connectionManager.getConnection(true)) {
-            try {
-                Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-                database.setLiquibaseSchemaName(ConnectionManager.DB_SCHEMA);
-                Liquibase liquibase = new Liquibase("liquibase/changelog/changelog-master.xml", new ClassLoaderResourceAccessor(), database);
-                liquibase.update(new Contexts(), new LabelExpression());
-                LOGGER.info("Liquibase synced OK.");
-                connectionManager.createRegularUser(connection);
-                connection.commit();
-                connectionManager.setDatabaseIsReady();
-            } catch (LiquibaseException | SQLException e) {
-                try {
-                    LOGGER.error("Initializing DB failed: "+e.getMessage());
-                    connection.rollback();
-                    throw new SQLException(e);
-                } catch (SQLException e2) {
-                    LOGGER.error("Rollback after fail failed: "+e2.getMessage());
-                    throw new SQLException(e2);
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.error("Getting connection for Liquibase update failed: "+e.getMessage(), e);
-            System.exit(-1);
-        } catch (Exception e) {
-            LOGGER.error("Generic error when getting connection for Liquibase failed: "+e.getMessage(), e);
-            System.exit(-2);
-        }
+        connectionManager.initializeDatabase();
     }
 
     public static void main(String[] args) {

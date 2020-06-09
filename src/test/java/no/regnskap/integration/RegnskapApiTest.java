@@ -52,7 +52,7 @@ public class RegnskapApiTest extends TestContainersBase {
     @Autowired
     private RegnskapLogRepository regnskapLogRepository;
     private static boolean hasImportedTestdata = false;
-    private Integer regnskap2018Id;
+    private static Integer regnskap2018Id;
 
     @Autowired
     private RegnskapRepository regnskapRepository;

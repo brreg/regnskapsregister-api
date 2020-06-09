@@ -69,7 +69,7 @@ public class RegnskapLogRepository {
 
                 //Persist filename log entry
                 final String sql = "INSERT INTO rreg.regnskaplog (filename,logtime) " +
-                                   "VALUES (?)";
+                                   "VALUES (?,?)";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, filename);
                     stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));

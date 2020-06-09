@@ -1,5 +1,13 @@
 package no.regnskap.repository;
 
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import no.regnskap.PostgresProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +40,41 @@ public class ConnectionManager {
 
 
 	public void updateDbUrl(final String dbUrl) {
-		postgresProperties.setDbUrl(dbUrl);
+		if ((postgresProperties.getDbUrl()==null && dbUrl!=null) ||
+			!postgresProperties.getDbUrl().equals(dbUrl)) {
+			postgresProperties.setDbUrl(dbUrl);
+			initializeDatabase();
+		}
+	}
+
+	public void initializeDatabase() {
+		try (Connection connection = getConnection(true)) {
+			try {
+				Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+				database.setLiquibaseSchemaName(ConnectionManager.DB_SCHEMA);
+				Liquibase liquibase = new Liquibase("liquibase/changelog/changelog-master.xml", new ClassLoaderResourceAccessor(), database);
+				liquibase.update(new Contexts(), new LabelExpression());
+				LOGGER.info("Liquibase synced OK.");
+				createRegularUser(connection);
+				connection.commit();
+				setDatabaseIsReady();
+			} catch (LiquibaseException | SQLException e) {
+				try {
+					LOGGER.error("Initializing DB failed: "+e.getMessage());
+					connection.rollback();
+					throw new SQLException(e);
+				} catch (SQLException e2) {
+					LOGGER.error("Rollback after fail failed: "+e2.getMessage());
+					throw new SQLException(e2);
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.error("Getting connection for Liquibase update failed: "+e.getMessage(), e);
+			System.exit(-1);
+		} catch (Exception e) {
+			LOGGER.error("Generic error when getting connection for Liquibase failed: "+e.getMessage(), e);
+			System.exit(-2);
+		}
 	}
 
 	public Connection getConnection() throws SQLException {
