@@ -31,7 +31,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.12.5</testcontainers.version>
         <jena.version>3.15.0</jena.version>
         <slack.version>1.10</slack.version>
         <swagger.version>2.9.2</swagger.version>
@@ -288,7 +288,7 @@
                 <!-- Unit test runner -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M4</version>
+                <version>3.0.0-M3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <groups>unit</groups>
@@ -299,7 +299,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M4</version>
+                <version>3.0.0-M3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <groups>service</groups>
