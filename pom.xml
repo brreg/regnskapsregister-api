@@ -34,7 +34,7 @@
         <testcontainers.version>1.14.3</testcontainers.version>
         <jena.version>3.16.0</jena.version>
         <slack.version>1.11</slack.version>
-        <swagger.version>2.10.5</swagger.version>
+        <swagger.version>3.0.0</swagger.version>
 
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
@@ -113,12 +113,7 @@
         <!-- Generated code dependencies -->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
+            <artifactId>springfox-boot-starter</artifactId>
             <version>${swagger.version}</version>
         </dependency>
 
