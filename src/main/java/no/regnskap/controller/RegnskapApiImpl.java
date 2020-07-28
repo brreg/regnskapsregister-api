@@ -3,6 +3,8 @@ package no.regnskap.controller;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.jena.ExternalUrls;
 import no.regnskap.jena.JenaUtils;
+import no.regnskap.model.Partner;
+import no.regnskap.repository.ConnectionManager;
 import no.regnskap.service.RegnskapService;
 import no.regnskap.service.RestcallLogService;
 import no.regnskap.spring.config.ProfileConditionalValues;
@@ -34,10 +36,18 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
     @Autowired
     private RestcallLogService restcallLogService;
 
+    @Autowired
+    private ConnectionManager connectionManager;
+
 
     @Override
     public ResponseEntity<List<String>> getLog(HttpServletRequest httpServletRequest) {
         try {
+            Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
+            if (partner != null) {
+                LOGGER.info("Partner " + partner.getName() + " is " + (partner.isAuthorized() ? "" : "NOT ") + "authorized");
+            }
+
             restcallLogService.logCall(httpServletRequest, "getLog");
 
             List<String> logList = regnskapService.getLog();
