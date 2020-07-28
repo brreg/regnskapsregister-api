@@ -31,7 +31,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.15.0-rc1</testcontainers.version>
         <jena.version>3.16.0</jena.version>
         <slack.version>1.11</slack.version>
         <swagger.version>3.0.0</swagger.version>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.10.1</version>
+            <version>4.0.0</version>
         </dependency>
 
         <!-- TEST -->
