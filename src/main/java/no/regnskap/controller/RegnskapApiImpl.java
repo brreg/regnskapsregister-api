@@ -64,10 +64,10 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
 
-            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.NON_AUTHORIZED;
+            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
             Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
             if (partner!=null && partner.isAuthorized()) {
-                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.AUTHORIZED;
+                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
             }
 
             List<Regnskap> regnskapList = regnskapService.getByOrgnr(orgNummer, år, regnskapstype, regnskapFieldIncludeMode);
@@ -96,10 +96,10 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");
 
-            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.NON_AUTHORIZED;
+            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
             Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
             if (partner!=null && partner.isAuthorized()) {
-                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.AUTHORIZED;
+                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
             }
 
             Regnskap regnskap = regnskapService.getById(id, regnskapFieldIncludeMode);

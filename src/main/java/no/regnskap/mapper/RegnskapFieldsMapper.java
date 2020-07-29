@@ -13,8 +13,8 @@ import java.util.Map;
 public class RegnskapFieldsMapper {
 
     public enum RegnskapFieldIncludeMode {
-        NON_AUTHORIZED,
-        AUTHORIZED
+        DEFAULT,
+        PARTNER
     }
 
     private static final String /*R020*/ FELTKODE_SALGSINNTEKTER        = "1340";
@@ -53,12 +53,12 @@ public class RegnskapFieldsMapper {
 
     public static void mapFieldsFromXmlData(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields, final RegnskapFieldIncludeMode mode) {
         switch(mode) {
-            case NON_AUTHORIZED: mapFieldsFromXmlDataNonAuthorized(xmlData, fields); break;
-            case AUTHORIZED: mapFieldsFromXmlDataAuthorized(xmlData, fields); break;
+            case DEFAULT: mapFieldsFromXmlDataDefault(xmlData, fields); break;
+            case PARTNER: mapFieldsFromXmlDataPartner(xmlData, fields); break;
         }
     }
 
-    private static void mapFieldsFromXmlDataNonAuthorized(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+    private static void mapFieldsFromXmlDataDefault(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
         for (RegnskapXmlInfo xmlInfo : xmlData) {
             switch(xmlInfo.getFeltkode()) {
                 case FELTKODE_GOODWILL:                   fields.getEiendeler().setGoodwill(xmlInfo.getSum()); break;
@@ -97,7 +97,7 @@ public class RegnskapFieldsMapper {
         }
     }
 
-    private static void mapFieldsFromXmlDataAuthorized(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+    private static void mapFieldsFromXmlDataPartner(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
         for (RegnskapXmlInfo xmlInfo : xmlData) {
             switch(xmlInfo.getFeltkode()) {
                 case FELTKODE_GOODWILL:                   fields.getEiendeler().setGoodwill(xmlInfo.getSum()); break;
