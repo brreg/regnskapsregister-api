@@ -1,6 +1,7 @@
 package no.regnskap.service;
 
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.mapper.RegnskapFieldsMapper;
 import no.regnskap.repository.RegnskapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,12 @@ public class RegnskapService {
     private RegnskapRepository regnskapRepository;
 
 
-    public Regnskap getById(final String id) throws SQLException {
-        return regnskapRepository.getById(id);
+    public Regnskap getById(final String id, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
+        return regnskapRepository.getById(id, regnskapFieldIncludeMode);
     }
 
-    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
-        return regnskapRepository.getByOrgnr(orgnr, år, regnskapstypeKode);
+    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
+        return regnskapRepository.getByOrgnr(orgnr, år, regnskapstypeKode, regnskapFieldIncludeMode);
     }
 
     public List<String> getLog() throws SQLException {

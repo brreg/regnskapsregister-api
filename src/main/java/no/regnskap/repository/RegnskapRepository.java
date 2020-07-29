@@ -26,7 +26,7 @@ public class RegnskapRepository {
     private ConnectionManager connectionManager;
 
 
-    public Regnskap getById(final String idString) throws SQLException {
+    public Regnskap getById(final String idString, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         int id;
         try {
             id = Integer.valueOf(idString);
@@ -68,7 +68,7 @@ public class RegnskapRepository {
                     }
                 }
 
-                populateRegnskapWithFields(connection, regnskap);
+                populateRegnskapWithFields(connection, regnskap, regnskapFieldIncludeMode);
 
                 connection.commit();
             } catch (Exception e) {
@@ -83,7 +83,7 @@ public class RegnskapRepository {
         return regnskap;
     }
 
-    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
+    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         List<Regnskap> regnskapList = new ArrayList<>();
         if (orgnr != null) {
             try (Connection connection = connectionManager.getConnection()) {
@@ -137,7 +137,7 @@ public class RegnskapRepository {
                         }
                     }
 
-                    populateRegnskapWithFields(connection, regnskapList);
+                    populateRegnskapWithFields(connection, regnskapList, regnskapFieldIncludeMode);
 
                     connection.commit();
                 } catch (Exception e) {
@@ -344,13 +344,13 @@ public class RegnskapRepository {
         return regnskap;
     }
 
-    private void populateRegnskapWithFields(final Connection connection, final Regnskap regnskap) throws SQLException {
+    private void populateRegnskapWithFields(final Connection connection, final Regnskap regnskap, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         if (regnskap != null) {
-            populateRegnskapWithFields(connection, Collections.singletonList(regnskap));
+            populateRegnskapWithFields(connection, Collections.singletonList(regnskap), regnskapFieldIncludeMode);
         }
     }
 
-    private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList) throws SQLException {
+    private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Regnskap regnskap : regnskapList) {
@@ -366,7 +366,7 @@ public class RegnskapRepository {
                 }
 
                 RegnskapFields fields = new RegnskapFields();
-                RegnskapFieldsMapper.mapFieldsFromXmlData(feltList, fields);
+                RegnskapFieldsMapper.mapFieldsFromXmlData(feltList, fields, regnskapFieldIncludeMode);
                 regnskap.egenkapitalGjeld(fields.getEgenkapitalGjeld());
                 regnskap.eiendeler(fields.getEiendeler());
                 regnskap.resultatregnskapResultat(fields.getResultatregnskapResultat());

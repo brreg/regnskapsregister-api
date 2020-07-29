@@ -12,6 +12,11 @@ import java.util.Map;
 
 public class RegnskapFieldsMapper {
 
+    public enum RegnskapFieldIncludeMode {
+        NON_AUTHORIZED,
+        AUTHORIZED
+    }
+
     private static final String /*R020*/ FELTKODE_SALGSINNTEKTER        = "1340";
     private static final String /*R040*/ FELTKODE_DRIFTSINNTEKTER       = "72";
     private static final String /*R090*/ FELTKODE_LOENNSKOSTNAD         = "81";
@@ -46,7 +51,53 @@ public class RegnskapFieldsMapper {
     private static final String /*B760*/ FELTKODE_EGENKAPITAL_GJELD     = "251";
 
 
-    public static void mapFieldsFromXmlData(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+    public static void mapFieldsFromXmlData(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields, final RegnskapFieldIncludeMode mode) {
+        switch(mode) {
+            case NON_AUTHORIZED: mapFieldsFromXmlDataNonAuthorized(xmlData, fields); break;
+            case AUTHORIZED: mapFieldsFromXmlDataAuthorized(xmlData, fields); break;
+        }
+    }
+
+    private static void mapFieldsFromXmlDataNonAuthorized(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+        for (RegnskapXmlInfo xmlInfo : xmlData) {
+            switch(xmlInfo.getFeltkode()) {
+                case FELTKODE_GOODWILL:                   fields.getEiendeler().setGoodwill(xmlInfo.getSum()); break;
+                case FELTKODE_ANLEGGSMIDLER:              fields.getEiendeler().getAnleggsmidler().setSumAnleggsmidler(xmlInfo.getSum()); break;
+                case FELTKODE_SUM_VARER:                  fields.getEiendeler().setSumVarer(xmlInfo.getSum()); break;
+                case FELTKODE_SUM_FORDRINGER:             fields.getEiendeler().setSumFordringer(xmlInfo.getSum()); break;
+                case FELTKODE_SUM_INVESTERINGER:          fields.getEiendeler().setSumInvesteringer(xmlInfo.getSum()); break;
+                case FELTKODE_SUM_BANKINNSKUDD_KONTANTER: fields.getEiendeler().setSumBankinnskuddOgKontanter(xmlInfo.getSum()); break;
+                case FELTKODE_OMLOEPSMIDLER:              fields.getEiendeler().getOmloepsmidler().setSumOmloepsmidler(xmlInfo.getSum()); break;
+                case FELTKODE_EIENDELER:                  fields.getEiendeler().setSumEiendeler(xmlInfo.getSum()); break;
+                case FELTKODE_INNSKUTT_EGENKAPITAL:       fields.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().setSumInnskuttEgenkaptial(xmlInfo.getSum()); break;
+                case FELTKODE_OPPTJENT_EGENKAPITAL:       fields.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().setSumOpptjentEgenkapital(xmlInfo.getSum()); break;
+                case FELTKODE_EGENKAPITAL:                fields.getEgenkapitalGjeld().getEgenkapital().setSumEgenkapital(xmlInfo.getSum()); break;
+                case FELTKODE_LANGSIKTIG_GJELD:           fields.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().setSumLangsiktigGjeld(xmlInfo.getSum()); break;
+                case FELTKODE_KORTSIKTIG_GJELD:           fields.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().setSumKortsiktigGjeld(xmlInfo.getSum()); break;
+                case FELTKODE_GJELD:                      fields.getEgenkapitalGjeld().getGjeldOversikt().setSumGjeld(xmlInfo.getSum()); break;
+                case FELTKODE_EGENKAPITAL_GJELD:          fields.getEgenkapitalGjeld().setSumEgenkapitalGjeld(xmlInfo.getSum()); break;
+
+                case FELTKODE_SALGSINNTEKTER:             fields.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().setSalgsinntekter(xmlInfo.getSum()); break;
+                case FELTKODE_DRIFTSINNTEKTER:            fields.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().setSumDriftsinntekter(xmlInfo.getSum()); break;
+                case FELTKODE_LOENNSKOSTNAD:              fields.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().setLoennskostnad(xmlInfo.getSum()); break;
+                case FELTKODE_DRIFTSKOSTNAD:              fields.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().setSumDriftskostnad(xmlInfo.getSum()); break;
+                case FELTKODE_DRIFTSRESULTAT:             fields.getResultatregnskapResultat().getDriftsresultat().setDriftsresultat(xmlInfo.getSum()); break;
+                case FELTKODE_FINANSINNTEKT:              fields.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().setSumFinansinntekter(xmlInfo.getSum()); break;
+                case FELTKODE_RENTEKOSTNAD_SAMME_KONSERN: fields.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().setRentekostnadSammeKonsern(xmlInfo.getSum()); break;
+                case FELTKODE_ANNEN_RENTEKOSTNAD:         fields.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().setAnnenRentekostnad(xmlInfo.getSum()); break;
+                case FELTKODE_FINANSKOSTNAD:              fields.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().setSumFinanskostnad(xmlInfo.getSum()); break;
+                case FELTKODE_FINANSRESULTAT:             fields.getResultatregnskapResultat().getFinansresultat().setNettoFinans(xmlInfo.getSum()); break;
+                case FELTKODE_RESULTAT_ORDINAERT:         fields.getResultatregnskapResultat().setOrdinaertResultatFoerSkattekostnad(xmlInfo.getSum()); break;
+                case FELTKODE_SKATTEKOSTNAD_ORDINÆRT_RESULTAT: fields.getResultatregnskapResultat().setOrdinaertResultatSkattekostnad(xmlInfo.getSum()); break;
+                case FELTKODE_EKSTRAORDINÆRE_POSTER:      fields.getResultatregnskapResultat().setEkstraordinaerePoster(xmlInfo.getSum()); break;
+                case FELTKODE_SKATTEKOSTNAD_EKSTRAORDINÆRT_RESULTAT: fields.getResultatregnskapResultat().setSkattekostnadEkstraordinaertResultat(xmlInfo.getSum()); break;
+                case FELTKODE_RESULTAT_AAR:               fields.getResultatregnskapResultat().setAarsresultat(xmlInfo.getSum()); break;
+                case FELTKODE_RESULTAT_TOTAL:             fields.getResultatregnskapResultat().setTotalresultat(xmlInfo.getSum()); break;
+            }
+        }
+    }
+
+    private static void mapFieldsFromXmlDataAuthorized(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
         for (RegnskapXmlInfo xmlInfo : xmlData) {
             switch(xmlInfo.getFeltkode()) {
                 case FELTKODE_GOODWILL:                   fields.getEiendeler().setGoodwill(xmlInfo.getSum()); break;
