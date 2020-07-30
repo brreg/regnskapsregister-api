@@ -6,6 +6,7 @@ import no.regnskap.TestUtils;
 import no.regnskap.XmlTestData;
 import no.regnskap.controller.RegnskapApiImpl;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
 import no.regnskap.utils.TestContainersBase;
@@ -30,6 +31,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +60,9 @@ public class RegnskapApiTest extends TestContainersBase {
     @Autowired
     private RegnskapRepository regnskapRepository;
 
+    @Autowired
+    private ConnectionManager connectionManager;
+
     @Mock
     HttpServletRequest httpServletRequestMock;
 
@@ -72,6 +78,13 @@ public class RegnskapApiTest extends TestContainersBase {
             regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
 
             regnskap2018Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018);
+
+            //Add partner
+            Connection connection = connectionManager.getConnection();
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rreg.partners (name,key) VALUES ('test','test')")) {
+                stmt.executeUpdate();
+            }
+            connection.commit();
 
             hasImportedTestdata = true;
         }
@@ -114,7 +127,17 @@ public class RegnskapApiTest extends TestContainersBase {
     }
 
     @Test
-    public void getRegnskapByIdTurtleTest() throws IOException, SQLException {
+    public void getRegnskapByIdPartnerTest() {
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
+        final String id = "1";
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, id);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Regnskap body = (Regnskap) response.getBody();
+        assertEquals(id, body.getId());
+    }
+
+    @Test
+    public void getRegnskapByIdDefaultTurtleTest() throws IOException, SQLException {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -122,7 +145,7 @@ public class RegnskapApiTest extends TestContainersBase {
         Model modelFromResponse = JenaResponseReader.parseResponse((String)response.getBody(), "TURTLE");
         Map<String,String> patches = new HashMap<>();
         patches.put("<identifier>", regnskap2018Id.toString());
-        Model expectedResponse = JenaResponseReader.getExpectedResponse("OrgnrResponse.ttl", patches, "TURTLE");
+        Model expectedResponse = JenaResponseReader.getExpectedResponse("OrgnrResponseDefault.ttl", patches, "TURTLE");
 
         boolean isIsomorphicWith = expectedResponse.isIsomorphicWith(modelFromResponse);
         if (!isIsomorphicWith) {
@@ -137,8 +160,73 @@ public class RegnskapApiTest extends TestContainersBase {
     }
 
     @Test
-    void correctSumsInPersistenceFields() {
+    public void getRegnskapByIdPartnerTurtleTest() throws IOException, SQLException {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        Model modelFromResponse = JenaResponseReader.parseResponse((String)response.getBody(), "TURTLE");
+        Map<String,String> patches = new HashMap<>();
+        patches.put("<identifier>", regnskap2018Id.toString());
+        Model expectedResponse = JenaResponseReader.getExpectedResponse("OrgnrResponsePartner.ttl", patches, "TURTLE");
+
+        boolean isIsomorphicWith = expectedResponse.isIsomorphicWith(modelFromResponse);
+        if (!isIsomorphicWith) {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                modelFromResponse.write(baos, "TURTLE");
+                String s = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+                LOGGER.info("Response differ. Got:\n" + s);
+            }
+        }
+
+        assertTrue(isIsomorphicWith);
+    }
+
+    @Test
+    void correctSumsInPersistenceFieldsDefault() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        Regnskap regnskap = (Regnskap) response.getBody();
+
+        long baseValue = 2018L;
+        assertNull(regnskap.getEiendeler().getGoodwill());
+        assertNull(regnskap.getEiendeler().getSumVarer());
+        assertNull(regnskap.getEiendeler().getSumFordringer());
+        assertNull(regnskap.getEiendeler().getSumInvesteringer());
+        assertNull(regnskap.getEiendeler().getSumBankinnskuddOgKontanter());
+        assertEquals(baseValue + 5, regnskap.getEiendeler().getSumEiendeler().intValue());
+        assertEquals(baseValue + 6, regnskap.getEiendeler().getAnleggsmidler().getSumAnleggsmidler().intValue());
+        assertEquals(baseValue + 7, regnskap.getEiendeler().getOmloepsmidler().getSumOmloepsmidler().intValue());
+        assertEquals(baseValue + 8, regnskap.getEgenkapitalGjeld().getSumEgenkapitalGjeld().intValue());
+        assertEquals(baseValue + 9, regnskap.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital().intValue());
+        assertEquals(baseValue + 10, regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial().intValue());
+        assertEquals(baseValue + 11, regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital().intValue());
+        assertEquals(baseValue + 12, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld().intValue());
+        assertEquals(baseValue + 13, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld().intValue());
+        assertEquals(baseValue + 14, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld().intValue());
+        assertEquals(baseValue + 15, regnskap.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad().intValue());
+        assertNull(regnskap.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad());
+        assertNull(regnskap.getResultatregnskapResultat().getEkstraordinaerePoster());
+        assertNull(regnskap.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat());
+        assertEquals(baseValue + 19, regnskap.getResultatregnskapResultat().getAarsresultat().intValue());
+        assertEquals(baseValue + 20, regnskap.getResultatregnskapResultat().getTotalresultat().intValue());
+        assertEquals(baseValue + 21, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat().intValue());
+        assertNull(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSalgsinntekter());
+        assertEquals(baseValue + 23, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter().intValue());
+        assertNull(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad());
+        assertEquals(baseValue + 25, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
+        assertEquals(baseValue + 26, regnskap.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
+        assertEquals(baseValue + 27, regnskap.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
+        assertNull(regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getRentekostnadSammeKonsern());
+        assertNull(regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getAnnenRentekostnad());
+        assertEquals(baseValue + 30, regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad().intValue());
+    }
+
+    @Test
+    void correctSumsInPersistenceFieldsPartner() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
         Regnskap regnskap = (Regnskap) response.getBody();
 
@@ -180,7 +268,7 @@ public class RegnskapApiTest extends TestContainersBase {
     public void getLogTest() {
         ResponseEntity<List<String>> response = regnskapApiImpl.getLog(httpServletRequestMock);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<String> body = (List<String>) response.getBody();
+        List<String> body = response.getBody();
         assertTrue(body.contains(TESTDATA_FILENAME));
     }
 

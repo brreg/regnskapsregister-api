@@ -22,8 +22,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class TestContainersBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(TestContainersBase.class);
 
-    private static Slf4jLogConsumer postgresLog = new Slf4jLogConsumer(LOGGER).withPrefix("postgres-container");
-    private static Slf4jLogConsumer sftpLog = new Slf4jLogConsumer(LOGGER).withPrefix("sftp-container");
+    private static final Slf4jLogConsumer postgresLog = new Slf4jLogConsumer(LOGGER).withPrefix("postgres-container");
+    private static final Slf4jLogConsumer sftpLog = new Slf4jLogConsumer(LOGGER).withPrefix("sftp-container");
 
     @Autowired
     private ConnectionManager connectionManager;
