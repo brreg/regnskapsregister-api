@@ -3,24 +3,39 @@ package no.regnskap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class JenaResponseReader {
 
-    private Reader resourceAsReader(final String resourceName) {
-        return new InputStreamReader(getClass().getClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8);
+    private static Reader resourceAsReader(final String resourceName) {
+        return new InputStreamReader(JenaResponseReader.class.getClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8);
     }
 
-    public Model getExpectedResponse(String filename, String lang) {
+    private static String resourceAsString(final String resourceName) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try (BufferedReader bufferedReader = new BufferedReader(JenaResponseReader.resourceAsReader(resourceName))) {
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static Model getExpectedResponse(String filename, Map<String,String> patches, String lang) throws IOException {
         Model expected = ModelFactory.createDefaultModel();
-        expected.read(resourceAsReader(filename), "", lang);
+        String fileContent = JenaResponseReader.resourceAsString(filename);
+        for (Map.Entry<String,String> patch : patches.entrySet()) {
+            fileContent = fileContent.replace(patch.getKey(), patch.getValue());
+        }
+        expected.read(new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8)), "", lang);
         return expected;
     }
 
-    public Model parseResponse(String response, String lang) {
+    public static Model parseResponse(String response, String lang) {
         Model responseModel = ModelFactory.createDefaultModel();
         responseModel.read(new StringReader(response), "", lang);
         return responseModel;

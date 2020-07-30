@@ -138,6 +138,19 @@ paths:
       summary: Query for statisctics, by IP
       description: Returnerer en liste over de mest aktive IP-ene
       operationId: getStatisticsByIp
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         '200':
           description: OK
@@ -154,6 +167,19 @@ paths:
       summary: Query for statisctics, by organization number
       description: Returnerer en liste over de mest søkte organisasjonsnummerene
       operationId: getStatisticsByOrgnr
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         '200':
           description: OK
@@ -170,6 +196,19 @@ paths:
       summary: Query for statisctics, by REST method
       description: Returnerer en liste over kall til de ulike REST-metodene
       operationId: getStatisticsByMethod
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         '200':
           description: OK

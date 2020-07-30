@@ -4,6 +4,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import no.regnskap.generated.model.Tidsperiode;
 
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -40,4 +41,11 @@ public class TestUtils {
             session.disconnect();
         }
     }
+
+    public static boolean forYear(final Tidsperiode tidsperiode, final int year) {
+        return (tidsperiode!=null &&
+                (tidsperiode.getFraDato()==null || tidsperiode.getFraDato().getYear()<=year) &&
+                (tidsperiode.getTilDato()==null || tidsperiode.getTilDato().getYear()>=year));
+    }
+
 }

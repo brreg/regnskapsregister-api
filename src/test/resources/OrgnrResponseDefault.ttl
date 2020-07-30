@@ -1,0 +1,97 @@
+@prefix br:    <https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#> .
+@prefix schema: <http://schema.org/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://invalid.org/regnskap/5>
+        a                            br:Regnskap ;
+        dct:identifier               "5" ;
+        schema:currency              "valutakode" ;
+        br:avviklingsregnskap        true ;
+        br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
+                                       br:egenkapital          [ a                       br:Egenkapital ;
+                                                                 br:innskuttEgenkapital  [ a                          br:InnskuttEgenkapital ;
+                                                                                           br:sumInnskuttEgenkaptial  "2028"^^xsd:decimal
+                                                                                         ] ;
+                                                                 br:opptjentEgenkapital  [ a                          br:OpptjentEgenkapital ;
+                                                                                           br:sumOpptjentEgenkapital  "2029"^^xsd:decimal
+                                                                                         ] ;
+                                                                 br:sumEgenkapital       "2027"^^xsd:decimal
+                                                               ] ;
+                                       br:gjeldOversikt        [ a                   br:GjeldOversikt ;
+                                                                 br:kortsiktigGjeld  [ a                      br:KortsiktigGjeld ;
+                                                                                       br:sumKortsiktigGjeld  "2031"^^xsd:decimal
+                                                                                     ] ;
+                                                                 br:langsiktigGjeld  [ a                      br:LangsiktigGjeld ;
+                                                                                       br:sumLangsiktigGjeld  "2032"^^xsd:decimal
+                                                                                     ] ;
+                                                                 br:sumGjeld         "2030"^^xsd:decimal
+                                                               ] ;
+                                       br:sumEgenkapitalGjeld  "2026"^^xsd:decimal
+                                     ] ;
+        br:eiendeler                 [ a                              br:Eiendeler ;
+                                       br:anleggsmidler               [ a                    br:Anleggsmidler ;
+                                                                        br:sumAnleggsmidler  "2024"^^xsd:decimal
+                                                                      ] ;
+                                       br:goodwill                    "0"^^xsd:decimal ;
+                                       br:omloepsmidler               [ a                    br:Omloepsmidler ;
+                                                                        br:sumOmloepsmidler  "2025"^^xsd:decimal
+                                                                      ] ;
+                                       br:sumBankinnskuddOgKontanter  "0"^^xsd:decimal ;
+                                       br:sumEiendeler                "2023"^^xsd:decimal ;
+                                       br:sumFordringer               "0"^^xsd:decimal ;
+                                       br:sumInvesteringer            "0"^^xsd:decimal ;
+                                       br:sumVarer                    "0"^^xsd:decimal
+                                     ] ;
+        br:oppstillingsplan          "store" ;
+        br:regnskapsperiode          [ a                 dct:PeriodOfTime ;
+                                       schema:endDate    "2018-12-31"^^xsd:date ;
+                                       schema:startDate  "2018-01-01"^^xsd:date
+                                     ] ;
+        br:regnskapsprinsipper       [ a                   br:Regnskapsprinsipper ;
+                                       br:regnskapsregler  "regnskapslovenAlminneligRegler" ;
+                                       br:smaaForetak      true
+                                     ] ;
+        br:resultatregnskapResultat  [ a                         br:ResultatregnskapResultat ;
+                                       br:aarsresultat           "2037"^^xsd:decimal ;
+                                       br:driftsresultat         [ a                     br:Driftsresultat ;
+                                                                   br:driftsinntekter    [ a                      br:Driftsinntekter ;
+                                                                                           br:salgsinntekter      "0"^^xsd:decimal ;
+                                                                                           br:sumDriftsinntekter  "2041"^^xsd:decimal
+                                                                                         ] ;
+                                                                   br:driftskostnad      [ a                    br:Driftskostnad ;
+                                                                                           br:loennskostnad     "0"^^xsd:decimal ;
+                                                                                           br:sumDriftskostnad  "2043"^^xsd:decimal
+                                                                                         ] ;
+                                                                   br:sumDriftsresultat  "2039"^^xsd:decimal
+                                                                 ] ;
+                                       br:ekstraordinaerePoster  "0"^^xsd:decimal ;
+                                       br:finansresultat         [ a                 br:Finansresultat ;
+                                                                   br:finansinntekt  [ a                      br:Finansinntekt ;
+                                                                                       br:sumFinansinntekter  "2045"^^xsd:decimal
+                                                                                     ] ;
+                                                                   br:finanskostnad  [ a                            br:Finanskostnad ;
+                                                                                       br:annenRentekostnad         "0"^^xsd:decimal ;
+                                                                                       br:rentekostnadSammeKonsern  "0"^^xsd:decimal ;
+                                                                                       br:sumFinanskostnad          "2048"^^xsd:decimal
+                                                                                     ] ;
+                                                                   br:nettoFinans    "2044"^^xsd:decimal
+                                                                 ] ;
+                                       br:ordinaertResultatFoerSkattekostnad
+                                               "2033"^^xsd:decimal ;
+                                       br:ordinaertResultatSkattekostnad
+                                               "0"^^xsd:decimal ;
+                                       br:skattekostnadEkstraordinaertResultat
+                                               "0"^^xsd:decimal ;
+                                       br:totalresultat          "2038"^^xsd:decimal
+                                     ] ;
+        br:revisjon                  [ a                            br:Revisjon ;
+                                       br:ikkeRevidertAarsregnskap  true
+                                     ] ;
+        br:virksomhet                [ a                       br:Virksomhet ;
+                                       org:organization        <https://invalid.org/organizations/orgnummer> ;
+                                       br:morselskap           true ;
+                                       br:organisasjonsform    "orgform" ;
+                                       br:organisasjonsnummer  "orgnummer"
+                                     ] .

@@ -4,9 +4,13 @@ import com.hubspot.algebra.Result;
 import com.hubspot.slack.client.methods.params.chat.ChatPostMessageParams;
 import com.hubspot.slack.client.models.response.SlackError;
 import com.hubspot.slack.client.models.response.chat.ChatPostMessageResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Slack {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Slack.class);
+
     public static final String PRODFEIL_CHANNEL = "#prodfeil";
 
 
@@ -15,14 +19,19 @@ public class Slack {
             return null;
         }
 
-        Result<ChatPostMessageResponse, SlackError> postResult = BasicRuntimeConfig.getClient(token).postMessage(
-                ChatPostMessageParams.builder()
-                    .setText(message)
-                    .setChannelId(channel)
-                    .build()
+        try {
+            Result<ChatPostMessageResponse, SlackError> postResult = BasicRuntimeConfig.getClient(token).postMessage(
+                    ChatPostMessageParams.builder()
+                            .setText(message)
+                            .setChannelId(channel)
+                            .build()
             ).join();
 
-        return postResult.unwrapOrElseThrow();
+            return postResult.unwrapOrElseThrow();
+        } catch(Exception e) {
+            LOGGER.error(e.getMessage());
+            return null;
+        }
     }
 
 }

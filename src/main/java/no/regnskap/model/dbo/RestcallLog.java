@@ -1,0 +1,76 @@
+package no.regnskap.model.dbo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.Base64;
+
+
+public class RestcallLog {
+    private Integer id;
+    private String callerIp;
+    private String requestedOrgnr;
+    private String requestedMethod;
+    private LocalDateTime requestTime;
+
+    public RestcallLog(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) {
+        this(httpServletRequest.getRemoteAddr(), requestedMethod, requestedOrgnr);
+    }
+
+    public RestcallLog(final String callerIp, final String requestedMethod, final String requestedOrgnr) {
+        anonymizeAndSetCallerIp(callerIp);
+        this.requestedOrgnr = requestedOrgnr;
+        this.requestedMethod = requestedMethod;
+        this.requestTime = LocalDateTime.now();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(final int id) {
+        this.id = id;
+    }
+
+    public String getCallerIp() {
+        return callerIp;
+    }
+
+    private void setCallerIp(final String callerIp) {
+        this.callerIp = callerIp;
+    }
+
+    public void anonymizeAndSetCallerIp(final String callerIp) {
+        try {
+            setCallerIp(callerIp==null ? null : Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest(callerIp.getBytes(StandardCharsets.UTF_8))));
+        } catch (NoSuchAlgorithmException e) {
+            setCallerIp(callerIp);
+        }
+    }
+
+    public String getRequestedOrgnr() {
+        return requestedOrgnr;
+    }
+
+    public void setRequestedOrgnr(final String requestedOrgnr) {
+        this.requestedOrgnr = requestedOrgnr;
+    }
+
+    public String getRequestedMethod() {
+        return requestedMethod;
+    }
+
+    public void setRequestedMethod(final String requestedMethod) {
+        this.requestedMethod = requestedMethod;
+    }
+
+    public LocalDateTime getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(final LocalDateTime requestTime) {
+        this.requestTime = requestTime;
+    }
+}
