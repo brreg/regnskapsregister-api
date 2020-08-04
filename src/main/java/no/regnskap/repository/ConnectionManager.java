@@ -110,7 +110,9 @@ public class ConnectionManager {
 			if (requireDboPermissions) { //This happens only at application startup. Do some extra logging
 				LOGGER.info("postgres.rreg.db_url  : " + postgresProperties.getDbUrl());
 				LOGGER.info("postgres.rreg.dbo_user: " + postgresProperties.getDboUser());
+				LOGGER.info("postgres.rreg.dbo_password: \"" + postgresProperties.getDboPassword() + "\"");
 				LOGGER.info("postgres.rreg.user    : " + postgresProperties.getUser());
+				LOGGER.info("postgres.rreg.password    : \"" + postgresProperties.getPassword() + "\"");
 			}
 
 			Connection connection = DriverManager.getConnection(postgresProperties.getDbUrl(), username, password);
