@@ -1,5 +1,7 @@
 package no.regnskap.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.jena.ExternalUrls;
 import no.regnskap.jena.JenaUtils;
@@ -60,6 +62,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
     }
 
     @Override
+    @Operation(security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<Object> getRegnskap(HttpServletRequest httpServletRequest, String orgNummer, Integer år, String regnskapstype) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
@@ -92,6 +95,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
     }
 
     @Override
+    @Operation(security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<Object> getRegnskapById(HttpServletRequest httpServletRequest, String id) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");

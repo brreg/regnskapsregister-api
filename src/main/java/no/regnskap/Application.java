@@ -1,7 +1,9 @@
 package no.regnskap;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.spring.CachableDispatcherServlet;
 import org.apache.jena.riot.RIOT;
@@ -25,6 +27,11 @@ import org.springframework.web.servlet.DispatcherServlet;
                 title = "RegnskapsRegister-API",
                 version = no.regnskap.generated.spring.ApplicationInfo.VERSION
         )
+)
+@SecurityScheme(
+        name = "basicAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "basic"
 )
 @EnableScheduling
 @EnableConfigurationProperties({PostgresProperties.class, SftpProperties.class, SlackProperties.class})
