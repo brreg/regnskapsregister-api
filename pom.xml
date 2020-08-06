@@ -34,7 +34,7 @@
         <testcontainers.version>1.15.0-rc1</testcontainers.version>
         <jena.version>3.16.0</jena.version>
         <slack.version>1.11</slack.version>
-        <swagger.version>2.10.5</swagger.version>
+        <swagger.version>2.9.2</swagger.version>
 
         <start-class>no.regnskap.Application</start-class>
         <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
@@ -121,6 +121,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.2.32</version>
         </dependency>
 
         <dependency>
