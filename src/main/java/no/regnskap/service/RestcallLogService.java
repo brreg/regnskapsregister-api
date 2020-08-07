@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -28,6 +29,15 @@ public class RestcallLogService {
     }
 
     public void logCall(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) throws SQLException, NoSuchAlgorithmException {
+        if (true) {
+            LOGGER.info("===== Logging request for " + requestedMethod + " " + requestedOrgnr + " =====");
+            Enumeration<String> headerNamesEnumeration = httpServletRequest.getHeaderNames();
+            while (headerNamesEnumeration.hasMoreElements()) {
+                String headerName = headerNamesEnumeration.nextElement();
+                LOGGER.info(headerName + ": " + httpServletRequest.getHeader(headerName));
+            }
+            LOGGER.info("===== Logging complete =====");
+        }
         restcallLogRepository.persistRestcall(new RestcallLog(httpServletRequest, requestedMethod, requestedOrgnr));
     }
 
