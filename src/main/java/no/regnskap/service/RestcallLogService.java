@@ -29,10 +29,11 @@ public class RestcallLogService {
     }
 
     public void logCall(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) throws SQLException, NoSuchAlgorithmException {
-        if (true) {
+        final boolean LOG_REQUEST_HEADERS = true;
+        if (LOG_REQUEST_HEADERS && httpServletRequest!=null) {
             LOGGER.info("===== Logging request for " + requestedMethod + " " + requestedOrgnr + " =====");
             Enumeration<String> headerNamesEnumeration = httpServletRequest.getHeaderNames();
-            while (headerNamesEnumeration.hasMoreElements()) {
+            while (headerNamesEnumeration!=null && headerNamesEnumeration.hasMoreElements()) {
                 String headerName = headerNamesEnumeration.nextElement();
                 LOGGER.info(headerName + ": " + httpServletRequest.getHeader(headerName));
             }
