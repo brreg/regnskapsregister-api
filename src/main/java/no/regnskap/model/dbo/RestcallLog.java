@@ -16,7 +16,7 @@ public class RestcallLog {
     private LocalDateTime requestTime;
 
     public RestcallLog(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) {
-        this(httpServletRequest.getRemoteAddr(), requestedMethod, requestedOrgnr);
+        this(RestcallLog.getIPFromRequest(httpServletRequest), requestedMethod, requestedOrgnr);
     }
 
     public RestcallLog(final String callerIp, final String requestedMethod, final String requestedOrgnr) {
@@ -24,6 +24,19 @@ public class RestcallLog {
         this.requestedOrgnr = requestedOrgnr;
         this.requestedMethod = requestedMethod;
         this.requestTime = LocalDateTime.now();
+    }
+
+    public static String getIPFromRequest(final HttpServletRequest httpServletRequest) {
+        if (httpServletRequest == null) {
+            return null;
+        }
+
+        String ip = httpServletRequest.getHeader("X-Forwarded-For");
+        if (ip==null || ip.isEmpty()) {
+            ip = httpServletRequest.getRemoteAddr();
+        }
+
+        return ip;
     }
 
     public Integer getId() {
