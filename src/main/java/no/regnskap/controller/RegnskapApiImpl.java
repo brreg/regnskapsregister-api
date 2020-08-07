@@ -67,6 +67,8 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
 
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).contentType(MediaType.TEXT_PLAIN).body("We are curious. Can you please e-mail stsk@brreg.no and explain your usecase?  Thanks!");
+/*
             RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
             Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
             if (partner!=null && partner.isAuthorized()) {
@@ -88,6 +90,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
                     return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
                 }
             }
+ */
         } catch (Exception e) {
             LOGGER.error("getRegnskap failed: ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
