@@ -90,7 +90,6 @@ public class RegnskapApiTest extends TestContainersBase {
         }
     }
 
-    /*
     @Test
     public void getRegnskapTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
@@ -104,9 +103,7 @@ public class RegnskapApiTest extends TestContainersBase {
             assertTrue(TestUtils.forYear(regnskap.getRegnskapsperiode(), år));
         }
     }
-     */
 
-    /*
     @Test
     public void getRegnskapAcceptHeaderTest() {
         final String[] acceptHeaders = {"application/json", "application/xml", "application/ld+json",
@@ -118,7 +115,6 @@ public class RegnskapApiTest extends TestContainersBase {
             assertNotNull(response.getBody());
         }
     }
-     */
 
     @Test
     public void getRegnskapByIdTest() {
