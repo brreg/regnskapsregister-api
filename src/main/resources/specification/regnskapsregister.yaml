@@ -131,6 +131,20 @@ paths:
                 type: array
                 items:
                   type: string
+  /test/most-recent:
+    get:
+      tags:
+        - test
+      summary: For testing. Returns most recently imported orgnr
+      description: Returnerer det sist importerte orgnr
+      operationId: getMostRecent
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
   /statistikk/by-ip:
     get:
       tags:
