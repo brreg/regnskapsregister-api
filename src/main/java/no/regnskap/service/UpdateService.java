@@ -38,8 +38,8 @@ public class UpdateService {
     private RegnskapLogRepository regnskapLogRepository;
 
     private static Object updateLock = new Object();
-    private AtomicBoolean isUpdating = new AtomicBoolean(false);
-    private LocalDateTime previousUpdateTime;
+    private static AtomicBoolean isUpdating = new AtomicBoolean(false);
+    private static LocalDateTime previousUpdateTime;
 
 
     @PostConstruct
@@ -61,8 +61,7 @@ public class UpdateService {
     }
 
     private void updateAccountingData() {
-        boolean isAlreadyUpdating = isUpdating.getAndSet(true);
-        if (!isAlreadyUpdating) {
+        if (!isUpdating.getAndSet(true)) {
             try {
                 new Thread(() -> {
                     Session session = null;
