@@ -4,6 +4,7 @@
 @ApiModel(description = "{{{description}}}"){{/description}}
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}{{>additionalModelTypeAnnotations}}
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated
 public class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{{#parcelableModel}}implements Parcelable {{#serializableModel}}, Serializable {{/serializableModel}}{{/parcelableModel}}{{^parcelableModel}}{{#serializableModel}}implements Serializable {{/serializableModel}}{{/parcelableModel}}{
 {{#serializableModel}}

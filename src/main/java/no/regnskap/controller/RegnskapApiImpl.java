@@ -79,13 +79,13 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
-                if (negotiatedMimeType == null) {
-                    return new ResponseEntity<>(regnskapList, HttpStatus.OK);
-                } else {
+                if (JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
                     ExternalUrls urls = new ExternalUrls(profileConditionalValues.regnskapsregisteretUrl(),
                                                          profileConditionalValues.organizationCatalogueUrl());
                     String body = JenaUtils.modelToString(JenaUtils.createJenaResponse(regnskapList, urls), JenaUtils.mimeTypeToJenaFormat(negotiatedMimeType));
                     return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+                } else {
+                    return new ResponseEntity<>(regnskapList, HttpStatus.OK);
                 }
             }
         } catch (Exception e) {

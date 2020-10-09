@@ -5,6 +5,7 @@ import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.datatypes.xsd.impl.XSDDateType;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -16,7 +17,6 @@ import org.springframework.util.MimeType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -31,15 +31,14 @@ public class JenaUtils {
     public static final MimeType RDF_MIMETYPE     = MimeType.valueOf("application/rdf+xml");
     public static final MimeType TURTLE_MIMETYPE  = MimeType.valueOf("text/turtle");
     private static final List<MimeType> SUPPORTED_MIMETYPES = Arrays.asList(JSON_MIMETYPE, JSON_LD_MIMETYPE, RDF_MIMETYPE, TURTLE_MIMETYPE);
+    private static final List<MimeType> SUPPORTED_SERIALIZE_MIMETYPES = Arrays.asList(JSON_LD_MIMETYPE, RDF_MIMETYPE, TURTLE_MIMETYPE);
 
     private static final int PARAM_PAIR_LENGTH = 2;
 
 
     public static RDFFormat mimeTypeToJenaFormat(final MimeType mimeType) {
         RDFFormat format = null;
-        if (JSON_MIMETYPE.equals(mimeType)) {
-            format = new RDFFormat(Lang.RDFJSON);
-        } else if (JSON_LD_MIMETYPE.equals(mimeType)) {
+        if (JSON_LD_MIMETYPE.equals(mimeType)) {
             format = new RDFFormat(Lang.JSONLD);
         } else if (RDF_MIMETYPE.equals(mimeType)) {
             format = new RDFFormat(Lang.RDFXML);
@@ -165,77 +164,157 @@ public class JenaUtils {
     private static Model addRegnskap(final Model model, final Regnskap regnskap, final ExternalUrls urls) {
         Resource regnskapResource = model.createResource(urls.getSelf() + regnskap.getId());
         regnskapResource.addProperty(RDF.type, BR.Regnskap)
-            .addProperty(DCTerms.identifier, regnskap.getId())
-            .addLiteral(BR.avviklingsregnskap, regnskap.getAvviklingsregnskap())
-            .addLiteral(BR.oppstillingsplan, regnskap.getOppstillingsplan().getValue());
-
-        if (regnskap.getValuta() != null) {
-            regnskapResource.addLiteral(SCHEMA.currency, regnskap.getValuta());
+                        .addProperty(DCTerms.identifier, regnskap.getId());
+        addLiteralIfNotNull(regnskapResource, BR.avviklingsregnskap, regnskap.getAvviklingsregnskap());
+        addLiteralIfNotNull(regnskapResource, SCHEMA.currency, regnskap.getValuta());
+        if (regnskap.getOppstillingsplan() != null) {
+            addLiteralIfNotNull(regnskapResource, BR.oppstillingsplan, regnskap.getOppstillingsplan().getValue());
         }
 
-        regnskapResource.addProperty(BR.revisjon, model.createResource(BR.Revisjon)
-            .addLiteral(BR.ikkeRevidertAarsregnskap, regnskap.getRevisjon().getIkkeRevidertAarsregnskap()));
+        //Revisjon
+        if (regnskap.getRevisjon() != null) {
+            Resource revisjonResource = model.createResource(BR.Revisjon);
+            addLiteralIfNotNull(revisjonResource, BR.ikkeRevidertAarsregnskap, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
+            regnskapResource.addProperty(BR.revisjon, revisjonResource);
+        }
 
-        regnskapResource.addProperty(BR.regnskapsprinsipper, model.createResource(BR.Regnskapsprinsipper)
-            .addLiteral(BR.smaaForetak, regnskap.getRegnkapsprinsipper().getSmaaForetak())
-            .addLiteral(BR.regnskapsregler, regnskap.getRegnkapsprinsipper().getRegnskapsregler().getValue()));
+        //Regnskapsprinsipper
+        if (regnskap.getRegnkapsprinsipper() != null) {
+            Resource regnskapsprinsipper = model.createResource(BR.Regnskapsprinsipper);
+            addLiteralIfNotNull(regnskapsprinsipper, BR.smaaForetak, regnskap.getRegnkapsprinsipper().getSmaaForetak());
+            if (regnskap.getRegnkapsprinsipper().getRegnskapsregler() != null) {
+                addLiteralIfNotNull(regnskapsprinsipper, BR.regnskapsregler, regnskap.getRegnkapsprinsipper().getRegnskapsregler().getValue());
+            }
+            regnskapResource.addProperty(BR.regnskapsprinsipper, regnskapsprinsipper);
+        }
 
-        regnskapResource = addRegnskapsperiode(model, regnskapResource, regnskap.getRegnskapsperiode().getFraDato(), regnskap.getRegnskapsperiode().getTilDato());
+        if (regnskap.getRegnskapsperiode() != null) {
+            regnskapResource = addRegnskapsperiode(model, regnskapResource, regnskap.getRegnskapsperiode().getFraDato(), regnskap.getRegnskapsperiode().getTilDato());
+        }
 
         regnskapResource = addVirksomhet(model, regnskapResource, regnskap, urls);
 
-        regnskapResource.addProperty(BR.eiendeler, model.createResource(BR.Eiendeler)
-            .addLiteral(BR.goodwill, bigDecimalOrZero(regnskap.getEiendeler().getGoodwill()))
-            .addLiteral(BR.sumVarer, bigDecimalOrZero(regnskap.getEiendeler().getSumVarer()))
-            .addLiteral(BR.sumFordringer, bigDecimalOrZero(regnskap.getEiendeler().getSumFordringer()))
-            .addLiteral(BR.sumInvesteringer, bigDecimalOrZero(regnskap.getEiendeler().getSumInvesteringer()))
-            .addLiteral(BR.sumBankinnskuddOgKontanter, bigDecimalOrZero(regnskap.getEiendeler().getSumBankinnskuddOgKontanter()))
-            .addLiteral(BR.sumEiendeler, bigDecimalOrZero(regnskap.getEiendeler().getSumEiendeler()))
-            .addProperty(BR.anleggsmidler, model.createResource(BR.Anleggsmidler)
-                .addLiteral(BR.sumAnleggsmidler, bigDecimalOrZero(regnskap.getEiendeler().getAnleggsmidler().getSumAnleggsmidler())))
-            .addProperty(BR.omloepsmidler, model.createResource(BR.Omloepsmidler)
-                .addLiteral(BR.sumOmloepsmidler, bigDecimalOrZero(regnskap.getEiendeler().getOmloepsmidler().getSumOmloepsmidler()))));
+        if (regnskap.getEiendeler() != null) {
+            Resource eiendeler = model.createResource(BR.Eiendeler);
+            addLiteralIfNotNull(eiendeler, BR.goodwill, regnskap.getEiendeler().getGoodwill());
+            addLiteralIfNotNull(eiendeler, BR.sumVarer, regnskap.getEiendeler().getSumVarer());
+            addLiteralIfNotNull(eiendeler, BR.sumFordringer, regnskap.getEiendeler().getSumFordringer());
+            addLiteralIfNotNull(eiendeler, BR.sumInvesteringer, regnskap.getEiendeler().getSumInvesteringer());
+            addLiteralIfNotNull(eiendeler, BR.sumBankinnskuddOgKontanter, regnskap.getEiendeler().getSumBankinnskuddOgKontanter());
+            Resource sumEiendeler = addLiteralIfNotNull(eiendeler, BR.sumEiendeler, regnskap.getEiendeler().getSumEiendeler());
+            if (sumEiendeler != null) {
+                if (regnskap.getEiendeler().getAnleggsmidler() != null) {
+                    Resource anleggsmidler = model.createResource(BR.Anleggsmidler);
+                    addLiteralIfNotNull(anleggsmidler, BR.sumAnleggsmidler, regnskap.getEiendeler().getAnleggsmidler().getSumAnleggsmidler());
+                    sumEiendeler.addProperty(BR.anleggsmidler, anleggsmidler);
+                }
+                if (regnskap.getEiendeler().getOmloepsmidler() != null) {
+                    Resource omloepsmidler = model.createResource(BR.Omloepsmidler);
+                    addLiteralIfNotNull(omloepsmidler, BR.sumOmloepsmidler, regnskap.getEiendeler().getOmloepsmidler().getSumOmloepsmidler());
+                    sumEiendeler.addProperty(BR.omloepsmidler, omloepsmidler);
+                }
+            }
+            regnskapResource.addProperty(BR.eiendeler, eiendeler);
+        }
 
-        regnskapResource.addProperty(BR.egenkapitalGjeld, model.createResource(BR.EgenkapitalGjeld)
-            .addLiteral(BR.sumEgenkapitalGjeld, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getSumEgenkapitalGjeld()))
-            .addProperty(BR.egenkapital, model.createResource(BR.Egenkapital)
-                .addLiteral(BR.sumEgenkapital, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital()))
-                .addProperty(BR.innskuttEgenkapital, model.createResource(BR.InnskuttEgenkapital)
-                    .addLiteral(BR.sumInnskuttEgenkaptial, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial())))
-                .addProperty(BR.opptjentEgenkapital, model.createResource(BR.OpptjentEgenkapital)
-                    .addLiteral(BR.sumOpptjentEgenkapital, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital()))))
-            .addProperty(BR.gjeldOversikt, model.createResource(BR.GjeldOversikt)
-                .addLiteral(BR.sumGjeld, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld()))
-                .addProperty(BR.langsiktigGjeld, model.createResource(BR.LangsiktigGjeld)
-                    .addLiteral(BR.sumLangsiktigGjeld, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld())))
-                .addProperty(BR.kortsiktigGjeld, model.createResource(BR.KortsiktigGjeld)
-                    .addLiteral(BR.sumKortsiktigGjeld, bigDecimalOrZero(regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld())))));
+        if (regnskap.getEgenkapitalGjeld() != null) {
+            Resource egenkapitalGjeld = model.createResource(BR.EgenkapitalGjeld);
+            Resource sumEgenkapitalGjeld = addLiteralIfNotNull(egenkapitalGjeld, BR.sumEgenkapitalGjeld, regnskap.getEgenkapitalGjeld().getSumEgenkapitalGjeld());
+            if (sumEgenkapitalGjeld != null) {
+                if (regnskap.getEgenkapitalGjeld().getEgenkapital() != null) {
+                    Resource egenkapital = model.createResource(BR.Egenkapital);
+                    Resource sumEgenkapital = addLiteralIfNotNull(egenkapital, BR.sumEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital());
+                    if (sumEgenkapital != null) {
+                        if (regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital() != null) {
+                            Resource innskuttEgenkapital = model.createResource(BR.InnskuttEgenkapital);
+                            addLiteralIfNotNull(innskuttEgenkapital, BR.sumInnskuttEgenkaptial, regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial());
+                            sumEgenkapital.addProperty(BR.innskuttEgenkapital, innskuttEgenkapital);
+                        }
+                        if (regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital() != null) {
+                            Resource opptjentEgenkapital = model.createResource(BR.OpptjentEgenkapital);
+                            addLiteralIfNotNull(opptjentEgenkapital, BR.sumOpptjentEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital());
+                            sumEgenkapital.addProperty(BR.opptjentEgenkapital, opptjentEgenkapital);
+                        }
+                    }
+                    sumEgenkapitalGjeld.addProperty(BR.egenkapital, egenkapital);
+                }
+                if (regnskap.getEgenkapitalGjeld().getGjeldOversikt() != null) {
+                    Resource gjeldOversikt = model.createResource(BR.GjeldOversikt);
+                    Resource sumGjeld = addLiteralIfNotNull(gjeldOversikt, BR.sumGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld());
+                    if (sumGjeld != null) {
+                        if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld() != null) {
+                            Resource langsiktigGjeld = model.createResource(BR.LangsiktigGjeld);
+                            addLiteralIfNotNull(langsiktigGjeld, BR.sumLangsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld());
+                            sumGjeld.addProperty(BR.langsiktigGjeld, langsiktigGjeld);
+                        }
+                        if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld() != null) {
+                            Resource kortsiktigGjeld = model.createResource(BR.KortsiktigGjeld);
+                            addLiteralIfNotNull(kortsiktigGjeld, BR.sumKortsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld());
+                            sumGjeld.addProperty(BR.opptjentEgenkapital, kortsiktigGjeld);
+                        }
+                    }
+                    sumEgenkapitalGjeld.addProperty(BR.gjeldOversikt, gjeldOversikt);
+                }
+            }
+            regnskapResource.addProperty(BR.egenkapitalGjeld, egenkapitalGjeld);
+        }
 
-        regnskapResource.addProperty(BR.resultatregnskapResultat, model.createResource(BR.ResultatregnskapResultat)
-            .addLiteral(BR.aarsresultat, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getAarsresultat()))
-            .addLiteral(BR.totalresultat, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getTotalresultat()))
-            .addLiteral(BR.ordinaertResultatFoerSkattekostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad()))
-            .addLiteral(BR.ordinaertResultatSkattekostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad()))
-            .addLiteral(BR.ekstraordinaerePoster, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getEkstraordinaerePoster()))
-            .addLiteral(BR.skattekostnadEkstraordinaertResultat, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat()))
-            .addProperty(BR.driftsresultat, model.createResource(BR.Driftsresultat)
-                .addLiteral(BR.sumDriftsresultat, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat()))
-                .addProperty(BR.driftsinntekter, model.createResource(BR.Driftsinntekter)
-                    .addLiteral(BR.salgsinntekter, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSalgsinntekter()))
-                    .addLiteral(BR.sumDriftsinntekter, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter())))
-                .addProperty(BR.driftskostnad, model.createResource(BR.Driftskostnad)
-                    .addLiteral(BR.loennskostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad()))
-                    .addLiteral(BR.sumDriftskostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad()))))
-            .addProperty(BR.finansresultat, model.createResource(BR.Finansresultat)
-                .addLiteral(BR.nettoFinans, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getFinansresultat().getNettoFinans()))
-                .addProperty(BR.finansinntekt, model.createResource(BR.Finansinntekt)
-                    .addLiteral(BR.sumFinansinntekter, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter())))
-                .addProperty(BR.finanskostnad, model.createResource(BR.Finanskostnad)
-                    .addLiteral(BR.rentekostnadSammeKonsern, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getRentekostnadSammeKonsern()))
-                    .addLiteral(BR.annenRentekostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getAnnenRentekostnad()))
-                    .addLiteral(BR.sumFinanskostnad, bigDecimalOrZero(regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad())))));
-
+        if (regnskap.getResultatregnskapResultat() != null) {
+            Resource resultatregnskapResultat = model.createResource(BR.ResultatregnskapResultat);
+            addLiteralIfNotNull(resultatregnskapResultat, BR.aarsresultat, regnskap.getResultatregnskapResultat().getAarsresultat());
+            addLiteralIfNotNull(resultatregnskapResultat, BR.totalresultat, regnskap.getResultatregnskapResultat().getTotalresultat());
+            addLiteralIfNotNull(resultatregnskapResultat, BR.ordinaertResultatFoerSkattekostnad, regnskap.getResultatregnskapResultat().getOrdinaertResultatFoerSkattekostnad());
+            addLiteralIfNotNull(resultatregnskapResultat, BR.ordinaertResultatSkattekostnad, regnskap.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad());
+            addLiteralIfNotNull(resultatregnskapResultat, BR.ekstraordinaerePoster, regnskap.getResultatregnskapResultat().getEkstraordinaerePoster());
+            addLiteralIfNotNull(resultatregnskapResultat, BR.skattekostnadEkstraordinaertResultat, regnskap.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat());
+            if (regnskap.getResultatregnskapResultat().getDriftsresultat() != null) {
+                Resource driftsresultat = model.createResource(BR.Driftsresultat);
+                Resource sumDriftsresultat = addLiteralIfNotNull(driftsresultat, BR.sumDriftsresultat, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsresultat());
+                if (sumDriftsresultat != null) {
+                    if (regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter() != null) {
+                        Resource driftsinntekter = model.createResource(BR.Driftsinntekter);
+                        addLiteralIfNotNull(driftsinntekter, BR.salgsinntekter, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSalgsinntekter());
+                        addLiteralIfNotNull(driftsinntekter, BR.sumDriftsinntekter, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().getSumDriftsinntekter());
+                        sumDriftsresultat.addProperty(BR.driftsinntekter, driftsinntekter);
+                    }
+                    if (regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad() != null) {
+                        Resource driftskostnad = model.createResource(BR.Driftskostnad);
+                        addLiteralIfNotNull(driftskostnad, BR.loennskostnad, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad());
+                        addLiteralIfNotNull(driftskostnad, BR.sumDriftskostnad, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad());
+                        sumDriftsresultat.addProperty(BR.driftskostnad, driftskostnad);
+                    }
+                }
+                resultatregnskapResultat.addProperty(BR.driftsresultat, driftsresultat);
+            }
+            if (regnskap.getResultatregnskapResultat().getFinansresultat() != null) {
+                Resource finansresultat = model.createResource(BR.Finansresultat);
+                Resource nettoFinans = addLiteralIfNotNull(finansresultat, BR.nettoFinans, regnskap.getResultatregnskapResultat().getFinansresultat().getNettoFinans());
+                if (nettoFinans != null) {
+                    if (regnskap.getResultatregnskapResultat().getFinansresultat().getFinansinntekt() != null) {
+                        Resource finansinntekt = model.createResource(BR.Finansinntekt);
+                        addLiteralIfNotNull(finansinntekt, BR.sumFinansinntekter, regnskap.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter());
+                        nettoFinans.addProperty(BR.finansinntekt, finansinntekt);
+                    }
+                    if (regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad() != null) {
+                        Resource finanskostnad = model.createResource(BR.Finanskostnad);
+                        addLiteralIfNotNull(finanskostnad, BR.rentekostnadSammeKonsern, regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getRentekostnadSammeKonsern());
+                        addLiteralIfNotNull(finanskostnad, BR.annenRentekostnad, regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getAnnenRentekostnad());
+                        addLiteralIfNotNull(finanskostnad, BR.sumFinanskostnad, regnskap.getResultatregnskapResultat().getFinansresultat().getFinanskostnad().getSumFinanskostnad());
+                        nettoFinans.addProperty(BR.finanskostnad, finanskostnad);
+                    }
+                }
+                resultatregnskapResultat.addProperty(BR.finansresultat, finansresultat);
+            }
+            regnskapResource.addProperty(BR.resultatregnskapResultat, resultatregnskapResultat);
+        }
         return model;
+    }
+
+    private static Resource addLiteralIfNotNull(final Resource resource, final Property property, final Object value) {
+        if (value != null) {
+            return resource.addLiteral(property, value);
+        }
+        return null;
     }
 
     public static String modelToString(final Model model, final RDFFormat format) throws IOException {
@@ -243,10 +322,6 @@ public class JenaUtils {
             model.write(baos, format.toString());
             return new String(baos.toByteArray(), StandardCharsets.UTF_8);
         }
-    }
-
-    private static BigDecimal bigDecimalOrZero(final BigDecimal value) {
-        return (value == null) ? BigDecimal.ZERO : value;
     }
 
     private static Resource addRegnskapsperiode(final Model model, final Resource resource, final LocalDate fraDato, final LocalDate tilDato) {
@@ -289,6 +364,10 @@ public class JenaUtils {
         o[1] = localDate.getMonthValue();
         o[2] = localDate.getDayOfMonth();
         return new XSDDateTime(o, XSDDateTime.YEAR_MASK|XSDDateTime.MONTH_MASK|XSDDateTime.DAY_MASK);
+    }
+
+    public static boolean jenaCanSerialize(final MimeType mimetype) {
+        return mimetype!=null && SUPPORTED_SERIALIZE_MIMETYPES.contains(mimetype);
     }
 
 }

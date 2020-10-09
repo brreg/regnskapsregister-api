@@ -196,24 +196,24 @@ public class RegnskapRepository {
             stmt.setDate(6, ConnectionManager.toSqlDate("yyyyMMdd", regnskapXmlHead.getStartdato()));
             stmt.setDate(7, ConnectionManager.toSqlDate("yyyyMMdd", regnskapXmlHead.getAvslutningsdato()));
             stmt.setString(8, regnskapXmlHead.getMottakstype());
-            stmt.setBoolean(9, kodeToBoolean(regnskapXmlHead.getAvviklingsregnskap()));
-            stmt.setBoolean(10, kodeToBoolean(regnskapXmlHead.getFeilvaloer()));
+            setBoolean(stmt, 9, kodeToBoolean(regnskapXmlHead.getAvviklingsregnskap()));
+            setBoolean(stmt, 10, kodeToBoolean(regnskapXmlHead.getFeilvaloer()));
             stmt.setString(11, regnskapXmlHead.getJournalnr());
             stmt.setDate(12, ConnectionManager.toSqlDate("yyyyMMdd", regnskapXmlHead.getMottattDato()));
             stmt.setString(13, regnskapXmlHead.getOrgform());
-            stmt.setBoolean(14, kodeToBoolean(regnskapXmlHead.getMorselskap()));
-            stmt.setBoolean(15, kodeToBoolean(regnskapXmlHead.getReglerSmaa()));
-            stmt.setBoolean(16, kodeToBoolean(regnskapXmlHead.getFleksiblePoster()));
-            stmt.setBoolean(17, kodeToBoolean(regnskapXmlHead.getFravalgRevisjon()));
-            stmt.setBoolean(18, kodeToBoolean(regnskapXmlHead.getUtarbeidetRegnskapsforer()));
-            stmt.setBoolean(19, kodeToBoolean(regnskapXmlHead.getBistandRegnskapsforer()));
+            setBoolean(stmt, 14, kodeToBoolean(regnskapXmlHead.getMorselskap()));
+            setBoolean(stmt, 15, kodeToBoolean(regnskapXmlHead.getReglerSmaa()));
+            setBoolean(stmt, 16, kodeToBoolean(regnskapXmlHead.getFleksiblePoster()));
+            setBoolean(stmt, 17, kodeToBoolean(regnskapXmlHead.getFravalgRevisjon()));
+            setBoolean(stmt, 18, kodeToBoolean(regnskapXmlHead.getUtarbeidetRegnskapsforer()));
+            setBoolean(stmt, 19, kodeToBoolean(regnskapXmlHead.getBistandRegnskapsforer()));
             stmt.setString(20, regnskapXmlHead.getAarsregnskapstype());
-            stmt.setBoolean(21, kodeToBoolean(regnskapXmlHead.getLandForLand()));
-            stmt.setBoolean(22, kodeToBoolean(regnskapXmlHead.getRevisorberetningIkkeLevert()));
-            stmt.setBoolean(23, kodeToBoolean(regnskapXmlHead.getIfrsSelskap()));
-            stmt.setBoolean(24, kodeToBoolean(regnskapXmlHead.getForenkletIfrsSelskap()));
-            stmt.setBoolean(25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
-            stmt.setBoolean(26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
+            setBoolean(stmt, 21, kodeToBoolean(regnskapXmlHead.getLandForLand()));
+            setBoolean(stmt, 22, kodeToBoolean(regnskapXmlHead.getRevisorberetningIkkeLevert()));
+            setBoolean(stmt, 23, kodeToBoolean(regnskapXmlHead.getIfrsSelskap()));
+            setBoolean(stmt, 24, kodeToBoolean(regnskapXmlHead.getForenkletIfrsSelskap()));
+            setBoolean(stmt, 25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
+            setBoolean(stmt, 26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -270,22 +270,22 @@ public class RegnskapRepository {
             stmt.setDate(6, Date.valueOf(regnskap.getRegnskapsperiode().getFraDato()));
             stmt.setDate(7, Date.valueOf(regnskap.getRegnskapsperiode().getTilDato()));
             stmt.setNull(8, Types.VARCHAR);//stmt.setString(8, regnskapXmlHead.getMottakstype());
-            stmt.setBoolean(9, regnskap.getAvviklingsregnskap());
+            setBoolean(stmt, 9, regnskap.getAvviklingsregnskap());
             stmt.setNull(10, Types.BOOLEAN);//stmt.setBoolean(10, kodeToBoolean(regnskapXmlHead.getFeilvaloer()));
             stmt.setNull(11, Types.VARCHAR);//stmt.setString(11, regnskapXmlHead.getJournalnr());
             stmt.setNull(12, Types.DATE);//stmt.setDate(12, ConnectionManager.toSqlDate("yyyyMMdd", regnskapXmlHead.getMottattDato()));
             stmt.setString(13, regnskap.getVirksomhet().getOrganisasjonsform());
-            stmt.setBoolean(14, regnskap.getVirksomhet().getMorselskap());
-            stmt.setBoolean(15, regnskap.getRegnkapsprinsipper().getSmaaForetak());
+            setBoolean(stmt, 14, regnskap.getVirksomhet().getMorselskap());
+            setBoolean(stmt, 15, regnskap.getRegnkapsprinsipper().getSmaaForetak());
             stmt.setNull(16, Types.BOOLEAN);//stmt.setBoolean(16, kodeToBoolean(regnskapXmlHead.getFleksiblePoster()));
             stmt.setNull(17, Types.BOOLEAN);//stmt.setBoolean(17, kodeToBoolean(regnskapXmlHead.getFravalgRevisjon()));
             stmt.setNull(18, Types.BOOLEAN);//stmt.setBoolean(18, kodeToBoolean(regnskapXmlHead.getUtarbeidetRegnskapsforer()));
             stmt.setNull(19, Types.BOOLEAN);//stmt.setBoolean(19, kodeToBoolean(regnskapXmlHead.getBistandRegnskapsforer()));
             stmt.setString(20, regnskap.getOppstillingsplan().getValue());
             stmt.setNull(21, Types.BOOLEAN);//stmt.setBoolean(21, kodeToBoolean(regnskapXmlHead.getLandForLand()));
-            stmt.setBoolean(22, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
-            stmt.setBoolean(23, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.IFRS);
-            stmt.setBoolean(24, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
+            setBoolean(stmt, 22, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
+            setBoolean(stmt, 23, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.IFRS);
+            setBoolean(stmt, 24, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
             stmt.setNull(25, Types.BOOLEAN);//stmt.setBoolean(25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             stmt.setNull(26, Types.BOOLEAN);//stmt.setBoolean(26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
             stmt.executeUpdate();
@@ -321,26 +321,37 @@ public class RegnskapRepository {
           final Boolean land_for_land, final Boolean revisorberetning_ikke_levert, final Boolean ifrs_selskap,
           final Boolean forenklet_ifrs_selskap, final Boolean ifrs_konsern, final Boolean forenklet_ifrs_konsern) {
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
-        if (ifrs_selskap) {
+        if (ifrs_selskap!=null && ifrs_selskap) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
         }
-        if (forenklet_ifrs_selskap) {
+        if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
         }
 
-        Regnskap regnskap = new Regnskap()
-            .id(_id.toString())
-            .avviklingsregnskap(avviklingsregnskap)
+        Regnskap regnskap = new Regnskap().id(_id.toString())
             .valuta(valutakode)
             .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
             .regnskapsperiode(new Tidsperiode().fraDato(startdato)
-                                               .tilDato(avslutningsdato))
-            .revisjon(new Revisjon().ikkeRevidertAarsregnskap(revisorberetning_ikke_levert))
-            .regnkapsprinsipper(new Regnskapsprinsipper().smaaForetak(regler_smaa)
-                                                         .regnskapsregler(regnskapsregler))
-            .virksomhet(new Virksomhet().organisasjonsnummer(orgnr)
-                                        .organisasjonsform(orgform)
-                                        .morselskap(mor_i_konsern));
+                                               .tilDato(avslutningsdato));
+
+        if (avviklingsregnskap!=null) {regnskap.avviklingsregnskap(avviklingsregnskap);}
+
+        //Revisjon
+        Revisjon revisjon = new Revisjon();
+        if (revisorberetning_ikke_levert!=null) {revisjon.ikkeRevidertAarsregnskap(revisorberetning_ikke_levert);}
+        regnskap.revisjon(revisjon);
+
+        //Regnskapsprinsipper
+        Regnskapsprinsipper regnskapsprinsipper = new Regnskapsprinsipper().regnskapsregler(regnskapsregler);
+        if (regler_smaa!=null) {regnskapsprinsipper.smaaForetak(regler_smaa);}
+        regnskap.regnkapsprinsipper(regnskapsprinsipper);
+
+        //Virksomhet
+        Virksomhet virksomhet = new Virksomhet().organisasjonsnummer(orgnr)
+                                                .organisasjonsform(orgform);
+        if (mor_i_konsern!=null) {virksomhet.morselskap(mor_i_konsern);}
+        regnskap.virksomhet(virksomhet);
+
         return regnskap;
     }
 
@@ -390,6 +401,14 @@ public class RegnskapRepository {
         return result;
     }
 
+    private void setBoolean(final PreparedStatement stmt, final int index, final Boolean value) throws SQLException {
+        if (value==null) {
+            stmt.setNull(index, Types.BOOLEAN);
+        } else {
+            stmt.setBoolean(index, value);
+        }
+    }
+
     private Boolean readBoolean(final ResultSet rs, final String column) throws SQLException {
         Boolean result = rs.getBoolean(column);
         if (rs.wasNull()) {
@@ -414,8 +433,8 @@ public class RegnskapRepository {
         return date.toLocalDate();
     }
 
-    private boolean kodeToBoolean(final String kode) {
-        return !"N".equalsIgnoreCase(kode);
+    private Boolean kodeToBoolean(final String kode) {
+        return kode==null?null:!"N".equalsIgnoreCase(kode);
     }
 
     private String booleanToKode(final boolean value, final ResultSet rs) throws SQLException {

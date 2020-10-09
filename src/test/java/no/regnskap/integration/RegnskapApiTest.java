@@ -6,6 +6,7 @@ import no.regnskap.TestUtils;
 import no.regnskap.XmlTestData;
 import no.regnskap.controller.RegnskapApiImpl;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.generated.model.Regnskapsprinsipper;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
@@ -88,6 +89,14 @@ public class RegnskapApiTest extends TestContainersBase {
 
             hasImportedTestdata = true;
         }
+    }
+
+    @Test
+    public void regnskapsreglerEnumTest() {
+        Regnskapsprinsipper.RegnskapsreglerEnum regler = TestData.REGNSKAP_2018.getRegnkapsprinsipper().getRegnskapsregler();
+        assertTrue(regler == Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER);
+        assertFalse(regler == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
+        assertFalse(regler == Regnskapsprinsipper.RegnskapsreglerEnum.IFRS);
     }
 
     @Test

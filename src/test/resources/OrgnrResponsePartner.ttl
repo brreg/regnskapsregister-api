@@ -2,12 +2,11 @@
 @prefix schema: <http://schema.org/> .
 @prefix dct:   <http://purl.org/dc/terms/> .
 @prefix org:   <http://www.w3.org/ns/org#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://invalid.org/regnskap/<identifier>>
+<http://invalid.org/regnskap/5>
         a                            br:Regnskap ;
-        dct:identifier               "<identifier>" ;
+        dct:identifier               "5" ;
         schema:currency              "valutakode" ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
@@ -20,14 +19,14 @@
                                                                                          ] ;
                                                                  br:sumEgenkapital       "2027"^^xsd:decimal
                                                                ] ;
-                                       br:gjeldOversikt        [ a                   br:GjeldOversikt ;
-                                                                 br:kortsiktigGjeld  [ a                      br:KortsiktigGjeld ;
-                                                                                       br:sumKortsiktigGjeld  "2031"^^xsd:decimal
-                                                                                     ] ;
-                                                                 br:langsiktigGjeld  [ a                      br:LangsiktigGjeld ;
-                                                                                       br:sumLangsiktigGjeld  "2032"^^xsd:decimal
-                                                                                     ] ;
-                                                                 br:sumGjeld         "2030"^^xsd:decimal
+                                       br:gjeldOversikt        [ a                       br:GjeldOversikt ;
+                                                                 br:langsiktigGjeld      [ a                      br:LangsiktigGjeld ;
+                                                                                           br:sumLangsiktigGjeld  "2032"^^xsd:decimal
+                                                                                         ] ;
+                                                                 br:opptjentEgenkapital  [ a                      br:KortsiktigGjeld ;
+                                                                                           br:sumKortsiktigGjeld  "2031"^^xsd:decimal
+                                                                                         ] ;
+                                                                 br:sumGjeld             "2030"^^xsd:decimal
                                                                ] ;
                                        br:sumEgenkapitalGjeld  "2026"^^xsd:decimal
                                      ] ;
