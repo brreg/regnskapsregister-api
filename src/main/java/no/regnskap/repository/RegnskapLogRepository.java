@@ -34,6 +34,7 @@ public class RegnskapLogRepository {
                     stmt.setString(1, filename);
                     ResultSet rs = stmt.executeQuery();
                     hasLogged = rs.next() && rs.getInt(1)>0;
+                    LOGGER.info("Has " + (hasLogged?"":"NOT ") + "logged " + filename);
                 }
                 connection.commit();
             } catch (Exception e) {
