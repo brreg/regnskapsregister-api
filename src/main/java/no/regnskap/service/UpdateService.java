@@ -19,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Properties;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
 
 
@@ -38,30 +37,27 @@ public class UpdateService {
     private RegnskapLogRepository regnskapLogRepository;
 
     private static Object updateLock = new Object();
-    private static AtomicBoolean isUpdating = new AtomicBoolean(false);
     private static LocalDateTime previousUpdateTime;
 
 
     @PostConstruct
     @Scheduled(fixedDelay = 60000)
     void intermittentScheduleTask() {
-        synchronized (updateLock) {
-            if (previousUpdateTime==null || previousUpdateTime.plusHours(24+1).isBefore(LocalDateTime.now())) { //If we've just started up, or somehow missed a scheduled time..
-                updateAccountingData();
-            }
-        }
+        updateAccountingData();
     }
 
     @PostConstruct
     @Scheduled(cron = "0 15 5 * * *") // Check server for new accounting files once a day at 05:15
     void dailyScheduleTask() {
-        synchronized (updateLock) {
-            updateAccountingData();
-        }
+        updateAccountingData();
     }
 
     private void updateAccountingData() {
-        if (!isUpdating.getAndSet(true)) {
+        synchronized (updateLock) {
+            if (previousUpdateTime!=null && previousUpdateTime.plusHours(24+1).isAfter(LocalDateTime.now())) {
+                return; //We have updated recently
+            }
+
             try {
                 new Thread(() -> {
                     Session session = null;
@@ -74,14 +70,14 @@ public class UpdateService {
                         config.setProperty("StrictHostKeyChecking", "no");
 
                         session = jsch.getSession(sftpProperties.getUser(),
-                                                  sftpProperties.getHost(), Integer.valueOf(sftpProperties.getPort()));
+                                sftpProperties.getHost(), Integer.valueOf(sftpProperties.getPort()));
                         session.setPassword(sftpProperties.getPassword());
                         session.setConfig(config);
                         session.connect(); // Create SFTP Session
 
                         channel = session.openChannel("sftp");
                         if (channel instanceof ChannelSftp) {
-                            ChannelSftp channelSftp = (ChannelSftp)channel;
+                            ChannelSftp channelSftp = (ChannelSftp) channel;
 
                             channelSftp.connect();
                             channelSftp.cd(sftpProperties.getDirectory()); // Change Directory on SFTP Server
@@ -93,7 +89,7 @@ public class UpdateService {
                                 String extension = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1);
                                 if (!item.getAttrs().isDir() && extension.equals("xml") && !regnskapLogRepository.hasLogged(item.getFilename())) { // Do not download if it's a directory, not xml or if the file already has been persisted
                                     regnskapLogRepository.persistRegnskapFile(item.getFilename(),
-                                                                          channelSftp.get(sftpProperties.getDirectory() + "/" + item.getFilename()));
+                                            channelSftp.get(sftpProperties.getDirectory() + "/" + item.getFilename()));
                                 }
                             }
                         }
@@ -111,7 +107,6 @@ public class UpdateService {
                 }).start();
             } finally {
                 previousUpdateTime = LocalDateTime.now();
-                isUpdating.set(false);
             }
         }
     }
