@@ -84,37 +84,36 @@ public class RegnskapRepository {
     }
 
     public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
+        if (regnskapFieldIncludeMode == RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT) {
+            return getByOrgnrDefault(orgnr, år, regnskapstypeKode);
+        } else if (regnskapFieldIncludeMode == RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER) {
+            return getByOrgnrPartner(orgnr, år, regnskapstypeKode);
+        } else {
+            throw new IllegalArgumentException("Unexpected RegnskapFieldIncludeMode " + regnskapFieldIncludeMode.name());
+        }
+    }
+
+    private List<Regnskap> getByOrgnrDefault(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
         List<Regnskap> regnskapList = new ArrayList<>();
         if (orgnr != null) {
             try (Connection connection = connectionManager.getConnection()) {
                 try {
-                    String sql = "SELECT _id, orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, " +
-                            "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, " +
-                            "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
-                            "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
-                            "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
+                    String sql =
+                            "SELECT _id, orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, " +
+                             "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, " +
+                             "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
+                             "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
+                             "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
                             "FROM rreg.regnskap " +
-                            "WHERE orgnr=? ";
-
-                    if (år != null) {
-                        sql += "AND regnaar=? ";
-                    }
-
-                    if (regnskapstypeKode != null) {
-                        sql += "AND regnskapstype=? ";
-                    }
+                            "WHERE _id=" +
+                             "(SELECT MAX(_id) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)='s' " +
+                              "AND regnaar=" +
+                              "(SELECT MAX(regnaar) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)='s')" +
+                             ")";
 
                     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                        int i = 1;
-                        stmt.setString(i++, orgnr);
-
-                        if (år != null) {
-                            stmt.setInt(i++, år);
-                        }
-
-                        if (regnskapstypeKode != null) {
-                            stmt.setString(i++, regnskapstypeKode);
-                        }
+                        stmt.setString(1, orgnr);
+                        stmt.setString(2, orgnr);
 
                         ResultSet rs = stmt.executeQuery();
                         while (rs.next()) {
@@ -137,7 +136,86 @@ public class RegnskapRepository {
                         }
                     }
 
-                    populateRegnskapWithFields(connection, regnskapList, regnskapFieldIncludeMode);
+                    populateRegnskapWithFields(connection, regnskapList, RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT);
+
+                    connection.commit();
+                } catch (Exception e) {
+                    try {
+                        connection.rollback();
+                        throw e;
+                    } catch (SQLException e2) {
+                        throw e2;
+                    }
+                }
+            }
+        }
+        return regnskapList;
+    }
+
+    private List<Regnskap> getByOrgnrPartner(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
+        List<Regnskap> regnskapList = new ArrayList<>();
+        if (orgnr != null) {
+            try (Connection connection = connectionManager.getConnection()) {
+                try {
+                    String sql =
+                            "SELECT _id, orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, " +
+                             "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, " +
+                             "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
+                             "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
+                             "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
+                            "FROM rreg.regnskap a ";
+
+                    if (år != null) {
+                        sql += "WHERE a.regnaar=? ";
+                    }
+
+                    if (regnskapstypeKode != null) {
+                        sql += (år==null ? "WHERE" : "AND") + " LOWER(a.regnskapstype)=? ";
+                    }
+
+                    sql += "INNER JOIN " +
+                             "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rreg.regnskap " +
+                              "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
+                             "ON a._id=b._id " +
+                            "INNER JOIN " +
+                             "(SELECT MAX(regnaar) AS regnaar FROM rreg.regnskap WHERE orgnr=?) c " +
+                            "ON a.regnaar > (c.regnaar-3)";
+
+                    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                        int i = 1;
+                        if (år != null) {
+                            stmt.setInt(i++, år);
+                        }
+
+                        if (regnskapstypeKode != null) {
+                            stmt.setString(i++, regnskapstypeKode);
+                        }
+
+                        stmt.setString(i++, orgnr);
+                        stmt.setString(i++, orgnr);
+
+                        ResultSet rs = stmt.executeQuery();
+                        while (rs.next()) {
+                            Regnskap regnskap = createRegnskap(readInteger(rs, "_id"),
+                                    readString(rs, "orgnr"), readString(rs, "regnskapstype"),
+                                    readInteger(rs, "regnaar"), readString(rs, "oppstillingsplan_versjonsnr"),
+                                    readString(rs, "valutakode"), readDate(rs, "startdato"),
+                                    readDate(rs, "avslutningsdato"), readString(rs, "mottakstype"),
+                                    readBoolean(rs, "avviklingsregnskap"), readBoolean(rs, "feilvaloer"),
+                                    readString(rs, "journalnr"), readDate(rs, "mottatt_dato"),
+                                    readString(rs, "orgform"), readBoolean(rs, "mor_i_konsern"),
+                                    readBoolean(rs, "regler_smaa"), readBoolean(rs, "fleksible_poster"),
+                                    readBoolean(rs, "fravalg_revisjon"), readBoolean(rs, "utarbeidet_regnskapsforer"),
+                                    readBoolean(rs, "bistand_regnskapsforer"), readString(rs, "aarsregnskapstype"),
+                                    readBoolean(rs, "land_for_land"), readBoolean(rs, "revisorberetning_ikke_levert"),
+                                    readBoolean(rs, "ifrs_selskap"), readBoolean(rs, "forenklet_ifrs_selskap"),
+                                    readBoolean(rs, "ifrs_konsern"), readBoolean(rs, "forenklet_ifrs_konsern"));
+
+                            regnskapList.add(regnskap);
+                        }
+                    }
+
+                    populateRegnskapWithFields(connection, regnskapList, RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER);
 
                     connection.commit();
                 } catch (Exception e) {
