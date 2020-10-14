@@ -48,10 +48,7 @@ paths:
           description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
           required: false
           schema:
-            type: string
-            enum:
-              - selskap
-              - konsern
+            $ref: "#/components/schemas/Regnskapstype"
       responses:
         '200':
           description: OK
@@ -241,6 +238,8 @@ components:
           id:
             type: string
             description: system-generert id (GUID)
+          regnskapstype:
+            $ref: "#/components/schemas/Regnskapstype"
           virksomhet:
             $ref: "#/components/schemas/Virksomhet"
           regnskapsperiode:
@@ -446,3 +445,8 @@ components:
       properties:
         sumLangsiktigGjeld:
           type: number
+    Regnskapstype:
+      type: string
+      enum:
+        - selskap
+        - konsern

@@ -7,6 +7,7 @@ import no.regnskap.XmlTestData;
 import no.regnskap.controller.RegnskapApiImpl;
 import no.regnskap.generated.model.Regnskap;
 import no.regnskap.generated.model.Regnskapsprinsipper;
+import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
@@ -132,7 +133,7 @@ public class RegnskapApiTest extends TestContainersBase {
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
         final String orgNummer = "980919676";
         final int år = 2018;
-        final String regnskapstype = "S";
+        final Regnskapstype regnskapstype = Regnskapstype.SELSKAP;
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
@@ -148,7 +149,7 @@ public class RegnskapApiTest extends TestContainersBase {
                                         "application/rdf+json", "application/rdf+xml", "text/turtle"};
         for (String acceptHeader : acceptHeaders) {
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn(acceptHeader);
-            ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "980919676", 2018, "S");
+            ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "980919676", 2018, Regnskapstype.SELSKAP);
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertNotNull(response.getBody());
         }

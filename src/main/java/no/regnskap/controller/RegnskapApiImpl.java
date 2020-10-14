@@ -3,6 +3,7 @@ package no.regnskap.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.jena.ExternalUrls;
 import no.regnskap.jena.JenaUtils;
 import no.regnskap.mapper.RegnskapFieldsMapper;
@@ -63,7 +64,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @Override
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
-    public ResponseEntity<Object> getRegnskap(HttpServletRequest httpServletRequest, String orgNummer, Integer år, String regnskapstype) {
+    public ResponseEntity<Object> getRegnskap(HttpServletRequest httpServletRequest, String orgNummer, Integer år, Regnskapstype regnskapstype) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
 

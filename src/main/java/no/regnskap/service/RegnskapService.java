@@ -1,6 +1,7 @@
 package no.regnskap.service;
 
 import no.regnskap.generated.model.Regnskap;
+import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.mapper.RegnskapFieldsMapper;
 import no.regnskap.repository.RegnskapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import java.util.List;
 
 @Service
 public class RegnskapService {
-    public static final String REGNSKAPSTYPE_SELSKAP = "s";
-    public static final String REGNSKAPSTYPE_KONSERN = "k";
 
     @Autowired
     private RegnskapRepository regnskapRepository;
@@ -24,8 +23,8 @@ public class RegnskapService {
         return regnskapRepository.getById(id, regnskapFieldIncludeMode);
     }
 
-    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
-        return regnskapRepository.getByOrgnr(orgnr, år, regnskapstypeKode, regnskapFieldIncludeMode);
+    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final Regnskapstype regnskapstype, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
+        return regnskapRepository.getByOrgnr(orgnr, år, regnskapstype, regnskapFieldIncludeMode);
     }
 
     public List<String> getLog() throws SQLException {

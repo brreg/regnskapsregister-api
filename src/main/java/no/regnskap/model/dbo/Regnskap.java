@@ -1,11 +1,15 @@
 package no.regnskap.model.dbo;
 
+import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.model.RegnskapFields;
 
 import java.time.LocalDate;
 
 
 public class Regnskap {
+    public static final String REGNSKAPSTYPE_SELSKAP = "s";
+    public static final String REGNSKAPSTYPE_KONSERN = "k";
+
     private Integer id;
     private String orgnr;
     private String regnskapstype;
@@ -51,12 +55,32 @@ public class Regnskap {
         this.orgnr = orgnr;
     }
 
-    public String getRegnskapstype() {
-        return regnskapstype;
+    public Regnskapstype getRegnskapstype() {
+        return regnskapstypeFromString(this.regnskapstype);
     }
 
-    public void setRegnskapstype(String regnskapstype) {
-        this.regnskapstype = regnskapstype;
+    public void setRegnskapstype(Regnskapstype regnskapstype) {
+        this.regnskapstype = Regnskap.regnskapstypeToString(regnskapstype);
+    }
+
+    public static Regnskapstype regnskapstypeFromString(final String regnskapstype) {
+        if (REGNSKAPSTYPE_SELSKAP.equalsIgnoreCase(regnskapstype)) {
+            return Regnskapstype.SELSKAP;
+        } else if (REGNSKAPSTYPE_KONSERN.equalsIgnoreCase(regnskapstype)) {
+            return Regnskapstype.KONSERN;
+        } else {
+            return null;
+        }
+    }
+
+    public static String regnskapstypeToString(final Regnskapstype regnskapstype) {
+        if (Regnskapstype.SELSKAP == regnskapstype) {
+            return REGNSKAPSTYPE_SELSKAP;
+        } else if (Regnskapstype.KONSERN == regnskapstype) {
+            return REGNSKAPSTYPE_KONSERN;
+        } else {
+            return null;
+        }
     }
 
     public Integer getRegnaar() {

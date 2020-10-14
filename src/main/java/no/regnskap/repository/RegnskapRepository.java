@@ -83,17 +83,17 @@ public class RegnskapRepository {
         return regnskap;
     }
 
-    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final String regnskapstypeKode, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
+    public List<Regnskap> getByOrgnr(final String orgnr, final Integer år, final Regnskapstype regnskapstype, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         if (regnskapFieldIncludeMode == RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT) {
-            return getByOrgnrDefault(orgnr, år, regnskapstypeKode);
+            return getByOrgnrDefault(orgnr, år, regnskapstype);
         } else if (regnskapFieldIncludeMode == RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER) {
-            return getByOrgnrPartner(orgnr, år, regnskapstypeKode);
+            return getByOrgnrPartner(orgnr, år, regnskapstype);
         } else {
             throw new IllegalArgumentException("Unexpected RegnskapFieldIncludeMode " + regnskapFieldIncludeMode.name());
         }
     }
 
-    private List<Regnskap> getByOrgnrDefault(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
+    private List<Regnskap> getByOrgnrDefault(final String orgnr, final Integer år, final Regnskapstype regnskapstype) throws SQLException {
         List<Regnskap> regnskapList = new ArrayList<>();
         if (orgnr != null) {
             try (Connection connection = connectionManager.getConnection()) {
@@ -106,14 +106,16 @@ public class RegnskapRepository {
                              "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
                             "FROM rreg.regnskap " +
                             "WHERE _id=" +
-                             "(SELECT MAX(_id) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)='s' " +
+                             "(SELECT MAX(_id) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=? " +
                               "AND regnaar=" +
-                              "(SELECT MAX(regnaar) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)='s')" +
+                              "(SELECT MAX(regnaar) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=?)" +
                              ")";
 
                     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                         stmt.setString(1, orgnr);
-                        stmt.setString(2, orgnr);
+                        stmt.setString(2, no.regnskap.model.dbo.Regnskap.REGNSKAPSTYPE_SELSKAP.toLowerCase());
+                        stmt.setString(3, orgnr);
+                        stmt.setString(4, no.regnskap.model.dbo.Regnskap.REGNSKAPSTYPE_SELSKAP.toLowerCase());
 
                         ResultSet rs = stmt.executeQuery();
                         while (rs.next()) {
@@ -152,7 +154,7 @@ public class RegnskapRepository {
         return regnskapList;
     }
 
-    private List<Regnskap> getByOrgnrPartner(final String orgnr, final Integer år, final String regnskapstypeKode) throws SQLException {
+    private List<Regnskap> getByOrgnrPartner(final String orgnr, final Integer år, final Regnskapstype regnskapstype) throws SQLException {
         List<Regnskap> regnskapList = new ArrayList<>();
         if (orgnr != null) {
             try (Connection connection = connectionManager.getConnection()) {
@@ -177,7 +179,7 @@ public class RegnskapRepository {
                         sql += "WHERE a.regnaar=? ";
                     }
 
-                    if (regnskapstypeKode != null) {
+                    if (regnskapstype != null) {
                         sql += (år==null ? "WHERE" : "AND") + " LOWER(a.regnskapstype)=? ";
                     }
 
@@ -190,8 +192,8 @@ public class RegnskapRepository {
                             stmt.setInt(i++, år);
                         }
 
-                        if (regnskapstypeKode != null) {
-                            stmt.setString(i++, regnskapstypeKode.toLowerCase());
+                        if (regnskapstype != null) {
+                            stmt.setString(i++, no.regnskap.model.dbo.Regnskap.regnskapstypeToString(regnskapstype).toLowerCase());
                         }
 
                         ResultSet rs = stmt.executeQuery();
@@ -341,7 +343,7 @@ public class RegnskapRepository {
         Integer regnskapId = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskap.getVirksomhet().getOrganisasjonsnummer());
-            stmt.setNull(2, Types.VARCHAR);//stmt.setString(2, regnskapXmlHead.getRegnskapstype());
+            stmt.setString(2, no.regnskap.model.dbo.Regnskap.regnskapstypeToString(regnskap.getRegnskapstype()));
             stmt.setNull(3, Types.INTEGER);//stmt.setInt(3, regnskapXmlHead.getRegnaar());
             stmt.setNull(4, Types.VARCHAR);//stmt.setString(4, regnskapXmlHead.getOppstillingsplanVersjonsnr());
             stmt.setString(5, regnskap.getValuta());
@@ -407,6 +409,7 @@ public class RegnskapRepository {
         }
 
         Regnskap regnskap = new Regnskap().id(_id.toString())
+            .regnskapstype(no.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype))
             .valuta(valutakode)
             .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
             .regnskapsperiode(new Tidsperiode().fraDato(startdato)
