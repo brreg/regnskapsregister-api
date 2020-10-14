@@ -158,12 +158,20 @@ public class RegnskapRepository {
             try (Connection connection = connectionManager.getConnection()) {
                 try {
                     String sql =
-                            "SELECT _id, orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, " +
-                             "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, " +
-                             "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
-                             "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
-                             "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
+                            "SELECT a._id, a.orgnr, a.regnskapstype, a.regnaar, a.oppstillingsplan_versjonsnr, a.valutakode, a.startdato, " +
+                             "a.avslutningsdato, a.mottakstype, a.avviklingsregnskap, a.feilvaloer, a.journalnr, a.mottatt_dato, " +
+                             "a.orgform, a.mor_i_konsern, a.regler_smaa, a.fleksible_poster, a.fravalg_revisjon, a.utarbeidet_regnskapsforer, " +
+                             "a.bistand_regnskapsforer, a.aarsregnskapstype, a.land_for_land, a.revisorberetning_ikke_levert, " +
+                             "a.ifrs_selskap, a.forenklet_ifrs_selskap, a.ifrs_konsern, a.forenklet_ifrs_konsern " +
                             "FROM rreg.regnskap a ";
+
+                    sql += "INNER JOIN " +
+                             "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rreg.regnskap " +
+                              "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
+                             "ON a._id=b._id " +
+                            "INNER JOIN " +
+                             "(SELECT MAX(regnaar) AS regnaar FROM rreg.regnskap WHERE orgnr=?) c " +
+                            "ON a.regnaar > (c.regnaar-3) ";
 
                     if (år != null) {
                         sql += "WHERE a.regnaar=? ";
@@ -173,26 +181,18 @@ public class RegnskapRepository {
                         sql += (år==null ? "WHERE" : "AND") + " LOWER(a.regnskapstype)=? ";
                     }
 
-                    sql += "INNER JOIN " +
-                             "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rreg.regnskap " +
-                              "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
-                             "ON a._id=b._id " +
-                            "INNER JOIN " +
-                             "(SELECT MAX(regnaar) AS regnaar FROM rreg.regnskap WHERE orgnr=?) c " +
-                            "ON a.regnaar > (c.regnaar-3)";
-
                     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                         int i = 1;
+                        stmt.setString(i++, orgnr);
+                        stmt.setString(i++, orgnr);
+
                         if (år != null) {
                             stmt.setInt(i++, år);
                         }
 
                         if (regnskapstypeKode != null) {
-                            stmt.setString(i++, regnskapstypeKode);
+                            stmt.setString(i++, regnskapstypeKode.toLowerCase());
                         }
-
-                        stmt.setString(i++, orgnr);
-                        stmt.setString(i++, orgnr);
 
                         ResultSet rs = stmt.executeQuery();
                         while (rs.next()) {

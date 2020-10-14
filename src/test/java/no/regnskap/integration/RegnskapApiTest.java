@@ -103,8 +103,37 @@ public class RegnskapApiTest extends TestContainersBase {
     public void getRegnskapTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = "980919676";
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<Regnskap> body = (List<Regnskap>) response.getBody();
+        for (Regnskap regnskap : body) {
+            assertEquals(orgNummer, regnskap.getVirksomhet().getOrganisasjonsnummer());
+            assertTrue(TestUtils.forYear(regnskap.getRegnskapsperiode(), 2018));
+        }
+    }
+
+    @Test
+    public void getRegnskapPartnerTest() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
+        final String orgNummer = "980919676";
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<Regnskap> body = (List<Regnskap>) response.getBody();
+        for (Regnskap regnskap : body) {
+            assertEquals(orgNummer, regnskap.getVirksomhet().getOrganisasjonsnummer());
+            assertTrue(TestUtils.forYear(regnskap.getRegnskapsperiode(), 2018));
+        }
+    }
+
+    @Test
+    public void getRegnskapPartner2018SelskapTest() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
+        final String orgNummer = "980919676";
         final int år = 2018;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, "S");
+        final String regnskapstype = "S";
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         for (Regnskap regnskap : body) {
