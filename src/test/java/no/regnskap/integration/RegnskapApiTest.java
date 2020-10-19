@@ -158,8 +158,9 @@ public class RegnskapApiTest extends TestContainersBase {
     @Test
     public void getRegnskapByIdTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        final String id = "1";
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, id);
+        final String orgNummer = "980919676";
+        final Integer id = 1;
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Regnskap body = (Regnskap) response.getBody();
         assertEquals(id, body.getId());
@@ -168,8 +169,9 @@ public class RegnskapApiTest extends TestContainersBase {
     @Test
     public void getRegnskapByIdPartnerTest() {
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        final String id = "1";
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, id);
+        final String orgNummer = "980919676";
+        final Integer id = 1;
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Regnskap body = (Regnskap) response.getBody();
         assertEquals(id, body.getId());
@@ -178,7 +180,7 @@ public class RegnskapApiTest extends TestContainersBase {
     @Test
     public void getRegnskapByIdDefaultTurtleTest() throws IOException, SQLException {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018Id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         Model modelFromResponse = JenaResponseReader.parseResponse((String)response.getBody(), "TURTLE");
@@ -202,7 +204,7 @@ public class RegnskapApiTest extends TestContainersBase {
     public void getRegnskapByIdPartnerTurtleTest() throws IOException, SQLException {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018Id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         Model modelFromResponse = JenaResponseReader.parseResponse((String)response.getBody(), "TURTLE");
@@ -225,7 +227,7 @@ public class RegnskapApiTest extends TestContainersBase {
     @Test
     void correctSumsInPersistenceFieldsDefault() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018Id);
         Regnskap regnskap = (Regnskap) response.getBody();
 
         long baseValue = 2018L;
@@ -266,7 +268,7 @@ public class RegnskapApiTest extends TestContainersBase {
     void correctSumsInPersistenceFieldsPartner() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, regnskap2018Id.toString());
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018Id);
         Regnskap regnskap = (Regnskap) response.getBody();
 
         long baseValue = 2018L;

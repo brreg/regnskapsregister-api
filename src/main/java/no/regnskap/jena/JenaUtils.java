@@ -162,9 +162,9 @@ public class JenaUtils {
     }
 
     private static Model addRegnskap(final Model model, final Regnskap regnskap, final ExternalUrls urls) {
-        Resource regnskapResource = model.createResource(urls.getSelf() + regnskap.getId());
+        Resource regnskapResource = model.createResource(urls.createResourceUri(regnskap.getVirksomhet().getOrganisasjonsnummer(), regnskap.getId()));
         regnskapResource.addProperty(RDF.type, BR.Regnskap)
-                        .addProperty(DCTerms.identifier, regnskap.getId());
+                        .addProperty(DCTerms.identifier, regnskap.getId().toString());
         addLiteralIfNotNull(regnskapResource, BR.avviklingsregnskap, regnskap.getAvviklingsregnskap());
         addLiteralIfNotNull(regnskapResource, SCHEMA.currency, regnskap.getValuta());
         if (regnskap.getOppstillingsplan() != null) {

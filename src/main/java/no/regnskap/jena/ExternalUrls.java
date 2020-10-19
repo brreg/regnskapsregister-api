@@ -3,8 +3,8 @@ package no.regnskap.jena;
 
 public class ExternalUrls {
 
-    private String self;
-    private String organizationCatalogue;
+    private final String self;
+    private final String organizationCatalogue;
 
 
     public ExternalUrls(final String self, final String organizationCatalogue) {
@@ -16,16 +16,12 @@ public class ExternalUrls {
         return self;
     }
 
-    public void setSelf(final String self) {
-        this.self = self;
+    public String createResourceUri(final String orgno, final Integer id) {
+        return String.format(getSelf(), orgno, id);
     }
 
     public String getOrganizationCatalogue() {
         return organizationCatalogue;
-    }
-
-    public void setOrganizationCatalogue(final String organizationCatalogue) {
-        this.organizationCatalogue = organizationCatalogue;
     }
 
 }

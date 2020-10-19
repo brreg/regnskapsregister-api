@@ -26,7 +26,7 @@ public class TestData {
 
     private static no.regnskap.generated.model.Regnskap createRegnskap(Integer id, int year) {
         return new no.regnskap.generated.model.Regnskap()
-            .id(id.toString())
+            .id(id)
             .avviklingsregnskap(true)
             .valuta("valutakode")
             .oppstillingsplan(no.regnskap.generated.model.Regnskap.OppstillingsplanEnum.fromValue("store"))
@@ -43,8 +43,8 @@ public class TestData {
                     .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER))
             .virksomhet(
                 new Virksomhet()
-                    .organisasjonsnummer("orgnummer")
-                    .organisasjonsform("orgform")
+                    .organisasjonsnummer("123456789")
+                    .organisasjonsform("AS")
                     .morselskap(true))
             .egenkapitalGjeld(egenkapitalGjeldWithValues(year))
             .eiendeler(eiendelerWithValues(year))

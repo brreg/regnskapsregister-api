@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("test")
 class TestProfileConditionalValues implements ProfileConditionalValues {
-    private static final String REGNSKAPSREGISTERET_URL = "http://invalid.org/regnskap/";
+    private static final String REGNSKAPSREGISTERET_URL = "http://invalid.org/regnskap/%s/%d";
     private static final String ORGANIZATION_CATALOGUE_URL = "https://invalid.org/organizations/";
 
     @Override

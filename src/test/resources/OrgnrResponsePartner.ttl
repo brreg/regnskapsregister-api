@@ -4,7 +4,7 @@
 @prefix org:   <http://www.w3.org/ns/org#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://invalid.org/regnskap/5>
+<http://invalid.org/regnskap/123456789/5>
         a                            br:Regnskap ;
         dct:identifier               "5" ;
         schema:currency              "valutakode" ;
@@ -90,8 +90,8 @@
                                        br:ikkeRevidertAarsregnskap  true
                                      ] ;
         br:virksomhet                [ a                       br:Virksomhet ;
-                                       org:organization        <https://invalid.org/organizations/orgnummer> ;
+                                       org:organization        <https://invalid.org/organizations/123456789> ;
                                        br:morselskap           true ;
-                                       br:organisasjonsform    "orgform" ;
-                                       br:organisasjonsnummer  "orgnummer"
+                                       br:organisasjonsform    "AS" ;
+                                       br:organisasjonsnummer  "123456789"
                                      ] .

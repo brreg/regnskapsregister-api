@@ -74,7 +74,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
                 regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
             }
 
-            List<Regnskap> regnskapList = regnskapService.getByOrgnr(orgNummer, år, regnskapstype, regnskapFieldIncludeMode);
+            List<Regnskap> regnskapList = regnskapService.getByOrgnr(orgNummer, null, år, regnskapstype, regnskapFieldIncludeMode);
 
             if (regnskapList == null || regnskapList.size() == 0) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -97,7 +97,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @Override
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
-    public ResponseEntity<Object> getRegnskapById(HttpServletRequest httpServletRequest, String id) {
+    public ResponseEntity<Object> getRegnskapById(HttpServletRequest httpServletRequest, String orgNummer, Integer id) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");
 
@@ -107,7 +107,8 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
                 regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
             }
 
-            Regnskap regnskap = regnskapService.getById(id, regnskapFieldIncludeMode);
+            List<Regnskap> regnskaper = regnskapService.getByOrgnr(orgNummer, id, null, null, regnskapFieldIncludeMode);
+            Regnskap regnskap = (regnskaper==null || regnskaper.isEmpty()) ? null : regnskaper.get(0);
 
             if (regnskap == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

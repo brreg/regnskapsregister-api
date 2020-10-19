@@ -23,7 +23,7 @@ servers:
   - url: 'http://rreg.ut1.rreg-dev.brreg.no/swagger-ui/'
     description: Server i utviklingsmiljø
 paths:
-  /regnskap:
+  /regnskap/{orgNummer}:
     get:
       tags:
         - regnskap
@@ -32,7 +32,7 @@ paths:
       operationId: getRegnskap
       parameters:
         - name: orgNummer
-          in: query
+          in: path
           description: Virksomhetens organisasjonsnummer
           required: true
           schema:
@@ -71,19 +71,26 @@ paths:
             text/turtle:
               schema:
                 type: object
-  /regnskap/{id}:
+  /regnskap/{orgNummer}/{id}:
     get:
       tags:
         - regnskap
       description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
+        - name: orgNummer
+          in: path
+          description: Virksomhetens organisasjonsnummer
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: id
           required: true
           schema:
-            type: string
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
@@ -236,8 +243,9 @@ components:
         description: Et regnskap for et gitt år
         properties:
           id:
-            type: string
-            description: system-generert id (GUID)
+            type: integer
+            format: int32
+            description: system-generert id
           regnskapstype:
             $ref: "#/components/schemas/Regnskapstype"
           virksomhet:
