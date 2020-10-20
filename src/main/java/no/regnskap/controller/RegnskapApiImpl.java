@@ -64,6 +64,12 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
 
     @Override
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
+    public ResponseEntity<Object> getRegnskapDeprecated(HttpServletRequest httpServletRequest, String orgNummer, Integer år, Regnskapstype regnskapstype) {
+        return getRegnskap(httpServletRequest, orgNummer, år, regnskapstype);
+    }
+
+    @Override
+    @Operation(security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<Object> getRegnskap(HttpServletRequest httpServletRequest, String orgNummer, Integer år, Regnskapstype regnskapstype) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
