@@ -505,5 +505,5 @@ components:
     Regnskapstype:
       type: string
       enum:
-        - selskap
-        - konsern
+        - SELSKAP
+        - KONSERN
