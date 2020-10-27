@@ -39,6 +39,9 @@ public class Partner {
                     LOGGER.error("Authorize failed: " + e.getMessage());
                 }
             }
+            if (!partner.isAuthorized()) {
+                throw new IllegalArgumentException("Invalid username/password");
+            }
         }
         return partner;
     }

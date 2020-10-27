@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
@@ -75,9 +76,13 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
 
             RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
-            Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
-            if (partner!=null && partner.isAuthorized()) {
-                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+            try {
+                Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
+                if (partner!=null && partner.isAuthorized()) {
+                    regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+                }
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
             List<Regnskap> regnskapList = regnskapService.getByOrgnr(orgNummer, null, år, regnskapstype, regnskapFieldIncludeMode);
@@ -108,9 +113,13 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");
 
             RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
-            Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
-            if (partner!=null && partner.isAuthorized()) {
-                regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+            try {
+                Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
+                if (partner != null && partner.isAuthorized()) {
+                    regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+                }
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
             List<Regnskap> regnskaper = regnskapService.getByOrgnr(orgNummer, id, null, null, regnskapFieldIncludeMode);
@@ -135,4 +144,10 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
         }
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleBadRequest(HttpMessageNotReadableException e) {
+        LOGGER.info("Returning BAD Request: ", e);
+        throw e;
+    }
 }

@@ -128,6 +128,17 @@ public class RegnskapApiTest extends TestContainersBase {
     }
 
     @Test
+    public void getRegnskapInvalidPartnerTest() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic d3Jvbmc6cGFzc3dvcmQ="); // "Basic wrong:password"
+        final String orgNummer = "980919676";
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        List<Regnskap> body = (List<Regnskap>) response.getBody();
+        assertNull(body);
+    }
+
+    @Test
     public void getRegnskapPartner2018SelskapTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
