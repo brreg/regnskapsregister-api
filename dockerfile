@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM amd64/openjdk:14-alpine
 
 ENV TZ=Europe/Oslo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
