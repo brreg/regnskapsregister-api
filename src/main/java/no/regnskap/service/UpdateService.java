@@ -88,8 +88,12 @@ public class UpdateService {
                             for (ChannelSftp.LsEntry item : fileList) {
                                 String extension = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1);
                                 if (!item.getAttrs().isDir() && extension.equals("xml") && !regnskapLogRepository.hasLogged(item.getFilename())) { // Do not download if it's a directory, not xml or if the file already has been persisted
-                                    regnskapLogRepository.persistRegnskapFile(item.getFilename(),
-                                            channelSftp.get(sftpProperties.getDirectory() + "/" + item.getFilename()));
+                                    try {
+                                        regnskapLogRepository.persistRegnskapFile(item.getFilename(),
+                                                channelSftp.get(sftpProperties.getDirectory() + "/" + item.getFilename()));
+                                    } catch (Exception e) {
+                                        LOGGER.error("Exception when downloading accounting file {}: {}", sftpProperties.getDirectory() + "/" + item.getFilename(), e.getMessage());
+                                    }
                                 }
                             }
                         }

@@ -51,11 +51,11 @@ public class RegnskapLogRepository {
     }
 
     public void persistRegnskapFile(final String filename, final InputStream regnskapStream) throws IOException, SQLException {
-        XmlMapper xmlMapper = new XmlMapper();
-        RegnskapXmlWrap regnskapXmlWrap = xmlMapper.readValue(regnskapStream, RegnskapXmlWrap.class);
-
         try (Connection connection = connectionManager.getConnection()) {
             try {
+                XmlMapper xmlMapper = new XmlMapper();
+                RegnskapXmlWrap regnskapXmlWrap = xmlMapper.readValue(regnskapStream, RegnskapXmlWrap.class);
+
                 long persisCount = 0;
 
                 //Persist all regnskap
