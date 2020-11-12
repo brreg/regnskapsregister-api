@@ -17,6 +17,8 @@ public class RegnskapXmlHead {
 
     private String valutakode;
 
+    private String regnskap_dokumenttype;
+
     private String startdato;
 
     private String avslutningsdato;
@@ -91,6 +93,14 @@ public class RegnskapXmlHead {
 
     public void setOppstillingsplanVersjonsnr(final String oppstillingsplanVersjonsnr) {
         this.oppstillingsplanVersjonsnr = oppstillingsplanVersjonsnr;
+    }
+
+    public String getRegnskapDokumenttype() {
+        return regnskap_dokumenttype;
+    }
+
+    public void setRegnskapDokumenttype(final String regnskap_dokumenttype) {
+        this.regnskap_dokumenttype = regnskap_dokumenttype;
     }
 
     public String getValutakode() {

@@ -46,7 +46,7 @@ public class RegnskapRepository {
                              "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, " +
                              "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
                              "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
-                             "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern " +
+                             "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype " +
                             "FROM rreg.regnskap ";
 
                     if (orgnr!=null && id!=null) {
@@ -85,7 +85,8 @@ public class RegnskapRepository {
                                     readBoolean(rs, "bistand_regnskapsforer"), readString(rs, "aarsregnskapstype"),
                                     readBoolean(rs, "land_for_land"), readBoolean(rs, "revisorberetning_ikke_levert"),
                                     readBoolean(rs, "ifrs_selskap"), readBoolean(rs, "forenklet_ifrs_selskap"),
-                                    readBoolean(rs, "ifrs_konsern"), readBoolean(rs, "forenklet_ifrs_konsern"));
+                                    readBoolean(rs, "ifrs_konsern"), readBoolean(rs, "forenklet_ifrs_konsern"),
+                                    readString(rs, "regnskap_dokumenttype"));
 
                             regnskapList.add(regnskap);
                         }
@@ -117,7 +118,7 @@ public class RegnskapRepository {
                              "a.avslutningsdato, a.mottakstype, a.avviklingsregnskap, a.feilvaloer, a.journalnr, a.mottatt_dato, " +
                              "a.orgform, a.mor_i_konsern, a.regler_smaa, a.fleksible_poster, a.fravalg_revisjon, a.utarbeidet_regnskapsforer, " +
                              "a.bistand_regnskapsforer, a.aarsregnskapstype, a.land_for_land, a.revisorberetning_ikke_levert, " +
-                             "a.ifrs_selskap, a.forenklet_ifrs_selskap, a.ifrs_konsern, a.forenklet_ifrs_konsern " +
+                             "a.ifrs_selskap, a.forenklet_ifrs_selskap, a.ifrs_konsern, a.forenklet_ifrs_konsern, a.regnskap_dokumenttype " +
                             "FROM rreg.regnskap a ";
 
                     if (orgnr!=null && id!=null) {
@@ -173,7 +174,8 @@ public class RegnskapRepository {
                                     readBoolean(rs, "bistand_regnskapsforer"), readString(rs, "aarsregnskapstype"),
                                     readBoolean(rs, "land_for_land"), readBoolean(rs, "revisorberetning_ikke_levert"),
                                     readBoolean(rs, "ifrs_selskap"), readBoolean(rs, "forenklet_ifrs_selskap"),
-                                    readBoolean(rs, "ifrs_konsern"), readBoolean(rs, "forenklet_ifrs_konsern"));
+                                    readBoolean(rs, "ifrs_konsern"), readBoolean(rs, "forenklet_ifrs_konsern"),
+                                    readString(rs, "regnskap_dokumenttype"));
 
                             regnskapList.add(regnskap);
                         }
@@ -226,8 +228,8 @@ public class RegnskapRepository {
                  "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                  "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
                  "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, "+
-                 "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                 "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Integer regnskapId = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskapXmlHead.getOrgnr());
@@ -256,6 +258,7 @@ public class RegnskapRepository {
             setBoolean(stmt, 24, kodeToBoolean(regnskapXmlHead.getForenkletIfrsSelskap()));
             setBoolean(stmt, 25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             setBoolean(stmt, 26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
+            stmt.setString(27, regnskapXmlHead.getRegnskapDokumenttype());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -300,8 +303,8 @@ public class RegnskapRepository {
                 "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                 "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
                 "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, "+
-                "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Integer regnskapId = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskap.getVirksomhet().getOrganisasjonsnummer());
@@ -314,7 +317,7 @@ public class RegnskapRepository {
             stmt.setNull(8, Types.VARCHAR);//stmt.setString(8, regnskapXmlHead.getMottakstype());
             setBoolean(stmt, 9, regnskap.getAvviklingsregnskap());
             stmt.setNull(10, Types.BOOLEAN);//stmt.setBoolean(10, kodeToBoolean(regnskapXmlHead.getFeilvaloer()));
-            stmt.setNull(11, Types.VARCHAR);//stmt.setString(11, regnskapXmlHead.getJournalnr());
+            stmt.setString(11, regnskap.getJournalnr());
             stmt.setNull(12, Types.DATE);//stmt.setDate(12, ConnectionManager.toSqlDate("yyyyMMdd", regnskapXmlHead.getMottattDato()));
             stmt.setString(13, regnskap.getVirksomhet().getOrganisasjonsform());
             setBoolean(stmt, 14, regnskap.getVirksomhet().getMorselskap());
@@ -330,6 +333,7 @@ public class RegnskapRepository {
             setBoolean(stmt, 24, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
             stmt.setNull(25, Types.BOOLEAN);//stmt.setBoolean(25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             stmt.setNull(26, Types.BOOLEAN);//stmt.setBoolean(26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
+            stmt.setString(27, regnskap.getRegnskapDokumenttype());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -361,7 +365,8 @@ public class RegnskapRepository {
           final Boolean regler_smaa, final Boolean fleksible_poster, final Boolean fravalg_revisjon,
           final Boolean utarbeidet_regnskapsforer, final Boolean bistand_regnskapsforer, final String aarsregnskapstype,
           final Boolean land_for_land, final Boolean revisorberetning_ikke_levert, final Boolean ifrs_selskap,
-          final Boolean forenklet_ifrs_selskap, final Boolean ifrs_konsern, final Boolean forenklet_ifrs_konsern) {
+          final Boolean forenklet_ifrs_selskap, final Boolean ifrs_konsern, final Boolean forenklet_ifrs_konsern,
+          final String regnskap_dokumenttype) {
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
         if (ifrs_selskap!=null && ifrs_selskap) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
@@ -370,12 +375,13 @@ public class RegnskapRepository {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
         }
 
-        Regnskap regnskap = new Regnskap().id(_id)
+        Regnskap regnskap = new Regnskap().id(_id).journalnr(journalnr)
             .regnskapstype(no.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype))
             .valuta(valutakode)
             .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
             .regnskapsperiode(new Tidsperiode().fraDato(startdato)
-                                               .tilDato(avslutningsdato));
+                                               .tilDato(avslutningsdato))
+            .regnskapDokumenttype(regnskap_dokumenttype);
 
         if (avviklingsregnskap!=null) {regnskap.avviklingsregnskap(avviklingsregnskap);}
 
@@ -405,10 +411,11 @@ public class RegnskapRepository {
     }
 
     private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
-        final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap=?";
+        final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap IN"+
+                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Regnskap regnskap : regnskapList) {
-                stmt.setInt(1, Integer.valueOf(regnskap.getId()));
+                stmt.setString(1, regnskap.getJournalnr());
                 ResultSet rs = stmt.executeQuery();
 
                 List<RegnskapXmlInfo> feltList = new ArrayList<>();
@@ -424,6 +431,7 @@ public class RegnskapRepository {
                 regnskap.egenkapitalGjeld(fields.getEgenkapitalGjeld());
                 regnskap.eiendeler(fields.getEiendeler());
                 regnskap.resultatregnskapResultat(fields.getResultatregnskapResultat());
+                regnskap.setRegnskapDokumenttype(null); //We may have mixed RES and BAL. Just clear regnskap_dokumenttype
             }
         }
     }

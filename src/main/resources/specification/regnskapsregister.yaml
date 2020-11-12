@@ -295,8 +295,12 @@ components:
             type: integer
             format: int32
             description: system-generert id
+          journalnr:
+            type: string
           regnskapstype:
             $ref: "#/components/schemas/Regnskapstype"
+          regnskapDokumenttype:
+            type: String
           virksomhet:
             $ref: "#/components/schemas/Virksomhet"
           regnskapsperiode:

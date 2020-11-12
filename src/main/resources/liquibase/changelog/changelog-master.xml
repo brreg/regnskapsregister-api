@@ -8,5 +8,6 @@
     <include file="liquibase/changelog/changelog-1.0.xml"/>
     <include file="liquibase/changelog/changelog-1.1.xml"/>
     <include file="liquibase/changelog/changelog-1.2.xml"/>
+    <include file="liquibase/changelog/changelog-1.3.xml"/>
 
 </databaseChangeLog>

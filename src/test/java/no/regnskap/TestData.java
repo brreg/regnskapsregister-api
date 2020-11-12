@@ -27,6 +27,7 @@ public class TestData {
     private static no.regnskap.generated.model.Regnskap createRegnskap(Integer id, int year) {
         return new no.regnskap.generated.model.Regnskap()
             .id(id)
+            .journalnr(Integer.toString(id))
             .avviklingsregnskap(true)
             .valuta("valutakode")
             .oppstillingsplan(no.regnskap.generated.model.Regnskap.OppstillingsplanEnum.fromValue("store"))
