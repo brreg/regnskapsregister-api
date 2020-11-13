@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -231,6 +232,11 @@ public class RegnskapRepository {
                  "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Integer regnskapId = null;
+        if (regnskapXmlHead.getMottattDato()==null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            Date today = new Date(System.currentTimeMillis());
+            regnskapXmlHead.setMottattDato(formatter.format(today));
+        }
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskapXmlHead.getOrgnr());
             stmt.setString(2, regnskapXmlHead.getRegnskapstype());
