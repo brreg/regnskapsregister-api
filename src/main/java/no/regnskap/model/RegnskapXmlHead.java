@@ -13,11 +13,13 @@ public class RegnskapXmlHead {
 
     private Integer regnaar;
 
+    @JacksonXmlProperty(localName = "oppstillingsplan_versjonsnr")
     private String oppstillingsplanVersjonsnr;
 
     private String valutakode;
 
-    private String regnskap_dokumenttype;
+    @JacksonXmlProperty(localName = "regnskap_dokumenttype")
+    private String regnskapDokumenttype;
 
     private String startdato;
 
@@ -38,28 +40,39 @@ public class RegnskapXmlHead {
     @JacksonXmlProperty(localName = "mor_i_konsern")
     private String morselskap;
 
+    @JacksonXmlProperty(localName = "regler_smaa")
     private String reglerSmaa;
 
+    @JacksonXmlProperty(localName = "fleksible_poster")
     private String fleksiblePoster;
 
+    @JacksonXmlProperty(localName = "fravalg_revisjon")
     private String fravalgRevisjon;
 
+    @JacksonXmlProperty(localName = "utarbeidet_regnskapsforer")
     private String utarbeidetRegnskapsforer;
 
+    @JacksonXmlProperty(localName = "bistand_regnskapsforer")
     private String bistandRegnskapsforer;
 
     private String aarsregnskapstype;
 
+    @JacksonXmlProperty(localName = "land_for_land")
     private String landForLand;
 
+    @JacksonXmlProperty(localName = "revisorberetning_ikke_levert")
     private String revisorberetningIkkeLevert;
 
+    @JacksonXmlProperty(localName = "ifrs_selskap")
     private String ifrsSelskap;
 
+    @JacksonXmlProperty(localName = "forenklet_ifrs_selskap")
     private String forenkletIfrsSelskap;
 
+    @JacksonXmlProperty(localName = "ifrs_konsern")
     private String ifrsKonsern;
 
+    @JacksonXmlProperty(localName = "forenklet_ifrs_konsern")
     private String forenkletIfrsKonsern;
 
 
@@ -96,11 +109,11 @@ public class RegnskapXmlHead {
     }
 
     public String getRegnskapDokumenttype() {
-        return regnskap_dokumenttype;
+        return regnskapDokumenttype;
     }
 
     public void setRegnskapDokumenttype(final String regnskap_dokumenttype) {
-        this.regnskap_dokumenttype = regnskap_dokumenttype;
+        this.regnskapDokumenttype = regnskap_dokumenttype;
     }
 
     public String getValutakode() {
