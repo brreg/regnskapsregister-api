@@ -4,6 +4,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import no.regnskap.FileimportProperties;
 import no.regnskap.SftpProperties;
 import no.regnskap.SlackProperties;
 import no.regnskap.repository.RegnskapLogRepository;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -29,6 +32,9 @@ public class UpdateService {
 
     @Autowired
     private SftpProperties sftpProperties;
+
+    @Autowired
+    private FileimportProperties fileimportProperties;
 
     @Autowired
     private SlackProperties slackProperties;
@@ -60,6 +66,8 @@ public class UpdateService {
 
             try {
                 new Thread(() -> {
+                    fileImport();
+
                     Session session = null;
                     Channel channel = null;
 
@@ -98,6 +106,7 @@ public class UpdateService {
                             }
                         }
                     } catch (Exception e) {
+                        LOGGER.error("Failed fetching accounting files from {}@{}:{}", sftpProperties.getUser(), sftpProperties.getHost(), sftpProperties.getPort());
                         LOGGER.error("Exception when downloading accounting files: " + e.getMessage());
                         Slack.postMessage(slackProperties.getToken(), Slack.PRODFEIL_CHANNEL, "Exception when downloading accounting files: " + e.getMessage());
                     } finally {
@@ -115,4 +124,29 @@ public class UpdateService {
         }
     }
 
+    private void fileImport() {
+        if (fileimportProperties.getDirectory()==null || fileimportProperties.getDirectory().isEmpty()) {
+            return;
+        }
+
+        File directory = new File(fileimportProperties.getDirectory());
+        if (!directory.isDirectory()) {
+            return;
+        }
+
+        for (File file : directory.listFiles()) {
+            if (!file.isFile()) {
+                continue;
+            }
+            final String filename = file.getName();
+            String extension = filename.substring(filename.lastIndexOf('.') + 1);
+            try {
+                if (extension.equals("xml") && !regnskapLogRepository.hasLogged(filename)) {
+                        regnskapLogRepository.persistRegnskapFile(filename, new FileInputStream(file));
+                }
+            } catch (Exception e) {
+                LOGGER.error("Exception when importing local file {}", filename);
+            }
+        }
+    }
 }
