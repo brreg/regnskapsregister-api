@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 @Component
@@ -51,10 +52,37 @@ public class RegnskapLogRepository {
     }
 
     public void persistRegnskapFile(final String filename, final InputStream regnskapStream) throws IOException, SQLException {
+        File tmpFile = null;
+        File tmpZipFile = null;
         try (Connection connection = connectionManager.getConnection()) {
-            try {
+            { //Just a scope for buffer[] ...
+                byte[] buffer = new byte[100 * 1024]; //100KB chunks
+                int bytesRead;
+
+                //Dump regnskapStream to temp file
+                tmpFile = File.createTempFile("rreg-", ".xml");
+                try (OutputStream os = new FileOutputStream(tmpFile)) {
+                    while ((bytesRead = regnskapStream.read(buffer)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                }
+
+                //Zip file
+                tmpZipFile = File.createTempFile("rreg-", ".zip");
+                try (FileInputStream fis = new FileInputStream(tmpFile);
+                     FileOutputStream fos = new FileOutputStream(tmpZipFile);
+                     ZipOutputStream zos = new ZipOutputStream(fos)) {
+                    zos.putNextEntry(new ZipEntry(filename));
+                    while ((bytesRead = fis.read(buffer)) != -1) {
+                        zos.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+
+            try (FileInputStream xmlFis = new FileInputStream(tmpFile);
+                 FileInputStream zipFis = new FileInputStream(tmpZipFile)) {
                 XmlMapper xmlMapper = new XmlMapper();
-                RegnskapXmlWrap regnskapXmlWrap = xmlMapper.readValue(regnskapStream, RegnskapXmlWrap.class);
+                RegnskapXmlWrap regnskapXmlWrap = xmlMapper.readValue(xmlFis, RegnskapXmlWrap.class);
 
                 long persisCount = 0;
 
@@ -69,11 +97,12 @@ public class RegnskapLogRepository {
                 }
 
                 //Persist filename log entry
-                final String sql = "INSERT INTO rreg.regnskaplog (filename,logtime) " +
-                                   "VALUES (?,?)";
+                final String sql = "INSERT INTO rreg.regnskaplog (filename,logtime,zipfile) " +
+                                   "VALUES (?,?,?)";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, filename);
                     stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+                    stmt.setBinaryStream(3, zipFis);
                     stmt.executeUpdate();
                 }
 
@@ -86,6 +115,14 @@ public class RegnskapLogRepository {
                 } catch (SQLException e2) {
                     throw e2;
                 }
+            }
+        } finally {
+            if (tmpFile != null) {
+                tmpFile.delete();
+            }
+
+            if (tmpZipFile != null) {
+                tmpZipFile.delete();
             }
         }
     }
