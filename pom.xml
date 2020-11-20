@@ -37,8 +37,6 @@
         <swagger.version>2.9.2</swagger.version>
 
         <start-class>no.regnskap.Application</start-class>
-        <docker.image.name>brreg/regnskapsregister-api</docker.image.name>
-        <docker.image.tag>latest</docker.image.tag>
     </properties>
 
     
@@ -341,34 +339,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.11</version>
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>push</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>tag</id>
-                        <goals>
-                            <goal>tag</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dockerfile>dockerfile</dockerfile>
-                    <repository>${docker.image.name}</repository>
-                    <tag>${docker.image.tag}</tag>
-                    <buildArgs>
-                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                    </buildArgs>
-                </configuration>
             </plugin>
 
             <plugin>
