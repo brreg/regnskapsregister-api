@@ -44,7 +44,7 @@ jobs:
 
       - name: Apply Helm template
         run: |
-          helm repo add brreg https://github.com/brreg/helm-chart/raw/main/
+          helm repo add brreg https://raw.githubusercontent.com/brreg/helm-chart/main/
           helm fetch --untar --untardir ./helm brreg/regnskapsregister-api
           helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/fdk-infra/regnskapsregister-api:$GITHUB_SHA" -f ./helm/regnskapsregister-api/values/ut1.yaml ./helm/regnskapsregister-api/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
