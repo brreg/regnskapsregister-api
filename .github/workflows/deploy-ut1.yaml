@@ -12,6 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Create yaml file from secret
+        id: write_file
+        uses: timheuer/base64-to-file@master
+        with:
+          fileName: 'secret.yaml'
+          encodedString: ${{ secrets.RREG_UT1_SECRETS }}
+
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@master
         with:
