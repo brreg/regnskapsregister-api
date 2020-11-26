@@ -197,7 +197,7 @@
     </dependencies>
 
     <build>
-        <finalName>app.jar</finalName>
+        <finalName>app</finalName>
 
         <resources>
             <resource>
