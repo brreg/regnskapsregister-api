@@ -197,6 +197,8 @@
     </dependencies>
 
     <build>
+        <finalName>app.jar</finalName>
+
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
