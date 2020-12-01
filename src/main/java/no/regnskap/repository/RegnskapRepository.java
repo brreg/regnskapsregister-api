@@ -97,11 +97,16 @@ public class RegnskapRepository {
                         }
                     }
 
+                    LOGGER.info("getByOrgnrDefault populating regnskap");
+
                     populateRegnskapWithFields(connection, regnskapList, RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT);
 
                     connection.commit();
+
+                    LOGGER.info("getByOrgnrDefault done");
                 } catch (Exception e) {
                     try {
+                        LOGGER.info("getByOrgnrDefault rolling back: " + e.getMessage());
                         connection.rollback();
                         throw e;
                     } catch (SQLException e2) {
@@ -110,6 +115,7 @@ public class RegnskapRepository {
                 }
             }
         }
+        LOGGER.info("getByOrgnrDefault returning "+regnskapList.size()+" regnskap");
         return regnskapList;
     }
 
