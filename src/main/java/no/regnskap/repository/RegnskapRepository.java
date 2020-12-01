@@ -38,7 +38,6 @@ public class RegnskapRepository {
     }
 
     private List<Regnskap> getByOrgnrDefault(final String orgnr, final Integer id) throws SQLException {
-        LOGGER.info("getByOrgnrDefault " + orgnr);
         List<Regnskap> regnskapList = new ArrayList<>();
         if (orgnr != null) {
             try (Connection connection = connectionManager.getConnection()) {
@@ -61,8 +60,6 @@ public class RegnskapRepository {
                                ")";
                     }
 
-                    LOGGER.info("getByOrgnrDefault \n" + sql);
-
                     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                         if (orgnr!=null && id!=null) {
                             stmt.setString(1, orgnr);
@@ -76,7 +73,6 @@ public class RegnskapRepository {
 
                         ResultSet rs = stmt.executeQuery();
                         while (rs.next()) {
-                            LOGGER.info("getByOrgnrDefault found regnskap");
                             Regnskap regnskap = createRegnskap(readInteger(rs, "_id"),
                                     readString(rs, "orgnr"), readString(rs, "regnskapstype"),
                                     readInteger(rs, "regnaar"), readString(rs, "oppstillingsplan_versjonsnr"),
@@ -97,16 +93,11 @@ public class RegnskapRepository {
                         }
                     }
 
-                    LOGGER.info("getByOrgnrDefault populating regnskap");
-
                     populateRegnskapWithFields(connection, regnskapList, RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT);
 
                     connection.commit();
-
-                    LOGGER.info("getByOrgnrDefault done");
                 } catch (Exception e) {
                     try {
-                        LOGGER.info("getByOrgnrDefault rolling back: " + e.getMessage());
                         connection.rollback();
                         throw e;
                     } catch (SQLException e2) {
@@ -115,7 +106,6 @@ public class RegnskapRepository {
                 }
             }
         }
-        LOGGER.info("getByOrgnrDefault returning "+regnskapList.size()+" regnskap");
         return regnskapList;
     }
 
