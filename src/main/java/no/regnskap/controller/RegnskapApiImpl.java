@@ -92,7 +92,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
-                LOGGER.info("negotiated "+negotiatedMimeType.toString()+" mimetype");
+                LOGGER.info("negotiated "+(negotiatedMimeType==null?"<null>":negotiatedMimeType.toString())+" mimetype");
                 if (JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
                     ExternalUrls urls = new ExternalUrls(profileConditionalValues.regnskapsregisteretUrl(),
                                                          profileConditionalValues.organizationCatalogueUrl());
