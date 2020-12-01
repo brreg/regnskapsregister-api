@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="extfrg" id="1.6-0">
+        <createIndex tableName="felt" schemaName="rreg" indexName="felt_idregnskap_idx" unique="false">
+            <column name="_id_regnskap"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
