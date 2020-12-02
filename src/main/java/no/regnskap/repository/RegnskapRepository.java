@@ -127,7 +127,7 @@ public class RegnskapRepository {
                     } else {
                         sql += "INNER JOIN " +
                                 "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rreg.regnskap " +
-                                "WHERE orgnr=? GROUP BY regnskapstype, regnaar, journalnr) b " +
+                                "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
                                 "ON a._id=b._id " +
                                 "INNER JOIN " +
                                 "(SELECT MAX(regnaar) AS regnaar FROM rreg.regnskap WHERE orgnr=?) c " +
