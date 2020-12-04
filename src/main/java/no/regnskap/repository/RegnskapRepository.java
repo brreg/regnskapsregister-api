@@ -315,7 +315,7 @@ public class RegnskapRepository {
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskap.getVirksomhet().getOrganisasjonsnummer());
             stmt.setString(2, no.regnskap.model.dbo.Regnskap.regnskapstypeToString(regnskap.getRegnskapstype()));
-            stmt.setNull(3, Types.INTEGER);//stmt.setInt(3, regnskapXmlHead.getRegnaar());
+            stmt.setInt(3, regnskap.getRegnskapsperiode().getFraDato().getYear());
             stmt.setNull(4, Types.VARCHAR);//stmt.setString(4, regnskapXmlHead.getOppstillingsplanVersjonsnr());
             stmt.setString(5, regnskap.getValuta());
             stmt.setDate(6, Date.valueOf(regnskap.getRegnskapsperiode().getFraDato()));
@@ -418,10 +418,11 @@ public class RegnskapRepository {
 
     private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap IN"+
-                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=?)";
+                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=? AND regnskapstype=?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Regnskap regnskap : regnskapList) {
                 stmt.setString(1, regnskap.getJournalnr());
+                stmt.setString(2, no.regnskap.model.dbo.Regnskap.regnskapstypeToString(regnskap.getRegnskapstype()));
                 ResultSet rs = stmt.executeQuery();
 
                 List<RegnskapXmlInfo> feltList = new ArrayList<>();

@@ -4,9 +4,9 @@
 @prefix org:   <http://www.w3.org/ns/org#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://invalid.org/regnskap/123456789/5>
+<http://invalid.org/regnskap/123456789/7>
         a                            br:Regnskap ;
-        dct:identifier               "5" ;
+        dct:identifier               "7" ;
         schema:currency              "valutakode" ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
@@ -40,9 +40,8 @@
                                                                       ] ;
                                        br:sumBankinnskuddOgKontanter  "2022"^^xsd:decimal ;
                                        br:sumEiendeler                "2023"^^xsd:decimal ;
-                                       br:sumFordringer               "2020"^^xsd:decimal ;
-                                       br:sumInvesteringer            "2021"^^xsd:decimal ;
-                                       br:sumVarer                    "2019"^^xsd:decimal
+                                       br:sumFordringer               "102"^^xsd:decimal ;
+                                       br:sumVarer                    "100"^^xsd:decimal
                                      ] ;
         br:oppstillingsplan          "store" ;
         br:regnskapsperiode          [ a                 dct:PeriodOfTime ;
