@@ -418,7 +418,7 @@ public class RegnskapRepository {
 
     private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
         final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap IN"+
-                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=? AND regnskapstype=?)";
+                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=? AND LOWER(regnskapstype)=?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Regnskap regnskap : regnskapList) {
                 stmt.setString(1, regnskap.getJournalnr());
