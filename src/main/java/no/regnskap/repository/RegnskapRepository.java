@@ -373,16 +373,28 @@ public class RegnskapRepository {
           final Boolean land_for_land, final Boolean revisorberetning_ikke_levert, final Boolean ifrs_selskap,
           final Boolean forenklet_ifrs_selskap, final Boolean ifrs_konsern, final Boolean forenklet_ifrs_konsern,
           final String regnskap_dokumenttype) {
+
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
-        if (ifrs_selskap!=null && ifrs_selskap) {
-            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
-        }
-        if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
-            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+        Regnskapstype regnskapsType = no.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype);
+
+        if (regnskapsType == Regnskapstype.SELSKAP) {
+            if (ifrs_selskap!=null && ifrs_selskap) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+            }
+            if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            }
+        } else if (regnskapsType == Regnskapstype.KONSERN) {
+            if (ifrs_konsern!=null && ifrs_konsern) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+            }
+            if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            }
         }
 
         Regnskap regnskap = new Regnskap().id(_id).journalnr(journalnr)
-            .regnskapstype(no.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype))
+            .regnskapstype(regnskapsType)
             .valuta(valutakode)
             .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
             .regnskapsperiode(new Tidsperiode().fraDato(startdato)
