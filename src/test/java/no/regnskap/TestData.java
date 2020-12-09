@@ -46,7 +46,8 @@ public class TestData {
             .regnskapstype(regnskapsType)
             .revisjon(
                 new Revisjon()
-                    .ikkeRevidertAarsregnskap(true))
+                    .ikkeRevidertAarsregnskap(true)
+                    .fravalgRevisjon(true))
             .regnskapsperiode(
                 new Tidsperiode()
                     .fraDato(LocalDate.of(year, 1, 1))

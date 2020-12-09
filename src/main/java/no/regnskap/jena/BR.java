@@ -42,6 +42,7 @@ public class BR {
 
     public static final Property revisjon = model.createProperty(uri, "revisjon");
     public static final Property ikkeRevidertAarsregnskap = model.createProperty(uri, "ikkeRevidertAarsregnskap");
+    public static final Property fravalgRevisjon = model.createProperty(uri, "fravalgRevisjon");
 
     public static final Property regnskapsperiode = model.createProperty(uri, "regnskapsperiode");
 

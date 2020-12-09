@@ -457,6 +457,8 @@ components:
       properties:
         ikkeRevidertAarsregnskap:
           type: boolean
+        fravalgRevisjon:
+          type: boolean
     Regnskapsprinsipper:
       type: object
       properties:

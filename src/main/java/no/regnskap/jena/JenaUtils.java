@@ -175,6 +175,7 @@ public class JenaUtils {
         if (regnskap.getRevisjon() != null) {
             Resource revisjonResource = model.createResource(BR.Revisjon);
             addLiteralIfNotNull(revisjonResource, BR.ikkeRevidertAarsregnskap, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
+            addLiteralIfNotNull(revisjonResource, BR.fravalgRevisjon, regnskap.getRevisjon().getFravalgRevisjon());
             regnskapResource.addProperty(BR.revisjon, revisjonResource);
         }
 

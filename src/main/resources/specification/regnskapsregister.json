@@ -402,6 +402,9 @@
         "properties": {
           "ikkeRevidertAarsregnskap": {
             "type": "boolean"
+          },
+          "fravalgRevisjon": {
+            "type": "boolean"
           }
         }
       },

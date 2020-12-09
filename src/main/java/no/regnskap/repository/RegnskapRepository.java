@@ -329,7 +329,7 @@ public class RegnskapRepository {
             setBoolean(stmt, 14, regnskap.getVirksomhet().getMorselskap());
             setBoolean(stmt, 15, regnskap.getRegnkapsprinsipper().getSmaaForetak());
             stmt.setNull(16, Types.BOOLEAN);//stmt.setBoolean(16, kodeToBoolean(regnskapXmlHead.getFleksiblePoster()));
-            stmt.setNull(17, Types.BOOLEAN);//stmt.setBoolean(17, kodeToBoolean(regnskapXmlHead.getFravalgRevisjon()));
+            setBoolean(stmt, 17, regnskap.getRevisjon().getFravalgRevisjon());
             stmt.setNull(18, Types.BOOLEAN);//stmt.setBoolean(18, kodeToBoolean(regnskapXmlHead.getUtarbeidetRegnskapsforer()));
             stmt.setNull(19, Types.BOOLEAN);//stmt.setBoolean(19, kodeToBoolean(regnskapXmlHead.getBistandRegnskapsforer()));
             stmt.setString(20, regnskap.getOppstillingsplan().getValue());
@@ -406,6 +406,7 @@ public class RegnskapRepository {
         //Revisjon
         Revisjon revisjon = new Revisjon();
         if (revisorberetning_ikke_levert!=null) {revisjon.ikkeRevidertAarsregnskap(revisorberetning_ikke_levert);}
+        if (fravalg_revisjon!=null) {revisjon.fravalgRevisjon(fravalg_revisjon);}
         regnskap.revisjon(revisjon);
 
         //Regnskapsprinsipper

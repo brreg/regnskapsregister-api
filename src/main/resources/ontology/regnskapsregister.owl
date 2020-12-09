@@ -327,6 +327,13 @@
         <rdfs:comment xml:lang="no">Om regnskapet er revidert eller ikke</rdfs:comment>
         <rdfs:label xml:lang="no">ikkeRevidertAarsregnskap</rdfs:label>
     </owl:DatatypeProperty>
+    <!--
+     https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#fravalgRevisjon
+    -->
+    <owl:DatatypeProperty rdf:about="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#fravalgRevisjon">
+        <rdfs:comment xml:lang="no">Om generalforsamlingen har valgt å revidere regnskapet eller ikke</rdfs:comment>
+        <rdfs:label xml:lang="no">fravalgRevisjon</rdfs:label>
+    </owl:DatatypeProperty>
 
     <!--
      https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#smaaForetak
