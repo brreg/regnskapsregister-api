@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.5.RELEASE</version>
+        <version>2.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -31,8 +31,8 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <testcontainers.version>1.15.0</testcontainers.version>
-        <jena.version>3.16.0</jena.version>
+        <testcontainers.version>1.15.1</testcontainers.version>
+        <jena.version>3.17.0</jena.version>
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
 
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>4.1.1</version>
+            <version>4.2.2</version>
         </dependency>
 
         <!-- TEST -->
