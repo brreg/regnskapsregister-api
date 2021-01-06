@@ -18,16 +18,19 @@ tags:
   - name: regnskapsregisteret
     description: Regnskapsregister API
 servers:
-  - url: 'http://rreg.ut1.rreg-dev.brreg.no'
+  - url: 'http://34.98.91.231/swagger-ui/'
+    description: Server i prodmiljø
+  - url: 'http://rreg.ut1.rreg-dev.brreg.no/swagger-ui/'
     description: Server i utviklingsmiljø
 paths:
   /regnskap:
     get:
+      deprecated: true
       tags:
         - regnskap
       summary: Query for regnskap.
       description: Returnerer en samling årsregnskap
-      operationId: getRegnskap
+      operationId: getRegnskapDeprecated
       parameters:
         - name: orgNummer
           in: query
@@ -35,6 +38,18 @@ paths:
           required: true
           schema:
             type: string
+        - name: år
+          in: query
+          description: Hent årsregnskap for spesifikt år
+          required: false
+          schema:
+            type: integer
+        - name: regnskapstype
+          in: query
+          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
+          required: false
+          schema:
+            $ref: "#/components/schemas/Regnskapstype"
       responses:
         '200':
           description: OK
@@ -57,19 +72,74 @@ paths:
             text/turtle:
               schema:
                 type: object
-  /regnskap/{id}:
+  /regnskap/{orgNummer}:
+    get:
+      tags:
+        - regnskap
+      summary: Query for regnskap.
+      description: Returnerer en samling årsregnskap
+      operationId: getRegnskap
+      parameters:
+        - name: orgNummer
+          in: path
+          description: Virksomhetens organisasjonsnummer
+          required: true
+          schema:
+            type: string
+        - name: år
+          in: query
+          description: Hent årsregnskap for spesifikt år
+          required: false
+          schema:
+            type: integer
+        - name: regnskapstype
+          in: query
+          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
+          required: false
+          schema:
+            $ref: "#/components/schemas/Regnskapstype"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: object
+            application/ld+json:
+              schema:
+                type: object
+            application/rdf+json:
+              schema:
+                type: object
+            application/rdf+xml:
+              schema:
+                type: object
+            text/turtle:
+              schema:
+                type: object
+  /regnskap/{orgNummer}/{id}:
     get:
       tags:
         - regnskap
       description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
+        - name: orgNummer
+          in: path
+          description: Virksomhetens organisasjonsnummer
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: id
           required: true
           schema:
-            type: string
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
@@ -114,6 +184,107 @@ paths:
                 type: array
                 items:
                   type: string
+  /test/most-recent:
+    get:
+      tags:
+        - test
+      summary: For testing. Returns most recently imported orgnr
+      description: Returnerer det sist importerte orgnr
+      operationId: getMostRecent
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+  /statistikk/by-ip:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by IP
+      description: Returnerer en liste over de mest aktive IP-ene
+      operationId: getStatisticsByIp
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /statistikk/by-orgnr:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by organization number
+      description: Returnerer en liste over de mest søkte organisasjonsnummerene
+      operationId: getStatisticsByOrgnr
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /statistikk/by-method:
+    get:
+      tags:
+        - statistikk
+      summary: Query for statisctics, by REST method
+      description: Returnerer en liste over kall til de ulike REST-metodene
+      operationId: getStatisticsByMethod
+      parameters:
+        - name: fraDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tilDato
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
 components:
   schemas:
     Regnskap:
@@ -121,8 +292,15 @@ components:
         description: Et regnskap for et gitt år
         properties:
           id:
+            type: integer
+            format: int32
+            description: system-generert id
+          journalnr:
             type: string
-            description: system-generert id (GUID)
+          regnskapstype:
+            $ref: "#/components/schemas/Regnskapstype"
+          regnskapDokumenttype:
+            type: String
           virksomhet:
             $ref: "#/components/schemas/Virksomhet"
           regnskapsperiode:
@@ -155,6 +333,12 @@ components:
       properties:
         ordinaertResultatFoerSkattekostnad:
           type: number
+        ordinaertResultatSkattekostnad:
+          type: number
+        ekstraordinaerePoster:
+          type: number
+        skattekostnadEkstraordinaertResultat:
+          type: number
         aarsresultat:
           type: number
         totalresultat:
@@ -175,6 +359,16 @@ components:
     Eiendeler:
       type: object
       properties:
+        goodwill:
+          type: number
+        sumVarer:
+          type: number
+        sumFordringer:
+          type: number
+        sumInvesteringer:
+          type: number
+        sumBankinnskuddOgKontanter:
+          type: number
         sumEiendeler:
             type: number
         omloepsmidler:
@@ -212,11 +406,15 @@ components:
     Driftsinntekter:
       type: object
       properties:
+        salgsinntekter:
+          type: number
         sumDriftsinntekter:
           type: number
     Driftskostnad:
       type: object
       properties:
+        loennskostnad:
+          type: number
         sumDriftskostnad:
           type: number
     Finansinntekt:
@@ -227,6 +425,10 @@ components:
     Finanskostnad:
       type: object
       properties:
+        rentekostnadSammeKonsern:
+          type: number
+        annenRentekostnad:
+          type: number
         sumFinanskostnad:
           type: number
     Virksomhet:
@@ -254,6 +456,8 @@ components:
       type: object
       properties:
         ikkeRevidertAarsregnskap:
+          type: boolean
+        fravalgRevisjon:
           type: boolean
     Regnskapsprinsipper:
       type: object
@@ -304,3 +508,8 @@ components:
       properties:
         sumLangsiktigGjeld:
           type: number
+    Regnskapstype:
+      type: string
+      enum:
+        - SELSKAP
+        - KONSERN

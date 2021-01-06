@@ -2,10 +2,10 @@ package {{package}};
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import no.brreg.Generated;
 {{#imports}}import {{import}};
 {{/imports}}
-import org.openapitools.jackson.nullable.JsonNullable;
 {{#serializableModel}}
 import java.io.Serializable;
 {{/serializableModel}}
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.*;
 {{/withXml}}
 {{^parent}}
 {{#hateoas}}
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 {{/hateoas}}
 {{/parent}}
 

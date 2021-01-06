@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="extfrg" id="1.1-0">
+        <createTable tableName="regnskap" schemaName="rreg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="regnskap_pk"/>
+            </column>
+            <column name="orgnr" type="TEXT"/>
+            <column name="regnskapstype" type="TEXT"/>
+            <column name="regnaar" type="INT"/>
+            <column name="oppstillingsplan_versjonsnr" type="TEXT"/>
+            <column name="valutakode" type="TEXT"/>
+            <column name="startdato" type="DATE"/>
+            <column name="avslutningsdato" type="DATE"/>
+            <column name="mottakstype" type="TEXT"/>
+            <column name="avviklingsregnskap" type="BOOLEAN"/>
+            <column name="feilvaloer" type="BOOLEAN"/>
+            <column name="journalnr" type="TEXT"/>
+            <column name="mottatt_dato" type="DATE"/>
+            <column name="orgform" type="TEXT"/>
+            <column name="mor_i_konsern" type="BOOLEAN"/>
+            <column name="regler_smaa" type="BOOLEAN"/>
+            <column name="fleksible_poster" type="BOOLEAN"/>
+            <column name="fravalg_revisjon" type="BOOLEAN"/>
+            <column name="utarbeidet_regnskapsforer" type="BOOLEAN"/>
+            <column name="bistand_regnskapsforer" type="BOOLEAN"/>
+            <column name="aarsregnskapstype" type="TEXT"/>
+            <column name="land_for_land" type="BOOLEAN"/>
+            <column name="revisorberetning_ikke_levert" type="BOOLEAN"/>
+            <column name="ifrs_selskap" type="BOOLEAN"/>
+            <column name="forenklet_ifrs_selskap" type="BOOLEAN"/>
+            <column name="ifrs_konsern" type="BOOLEAN"/>
+            <column name="forenklet_ifrs_konsern" type="BOOLEAN"/>
+        </createTable>
+
+        <createIndex tableName="regnskap" schemaName="rreg" indexName="regnskap_orgnr_idx" unique="false">
+            <column name="orgnr"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="extfrg" id="1.1-1">
+        <createTable tableName="felt" schemaName="rreg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="felt_pk"/>
+            </column>
+            <column name="_id_regnskap" type="INT"/>
+            <column name="kode" type="TEXT"/>
+            <column name="sum" type="NUMERIC"/>
+        </createTable>
+
+        <createIndex tableName="felt" schemaName="rreg" indexName="felt_kode_idx" unique="false">
+            <column name="kode"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="_id_regnskap" baseTableName="felt" baseTableSchemaName="rreg"
+                                 constraintName="rreg_f_r_fk" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedColumnNames="_id" referencedTableName="regnskap" referencedTableSchemaName="rreg"/>
+    </changeSet>
+
+    <changeSet author="extfrg" id="1.1-2">
+        <createTable tableName="regnskaplog" schemaName="rreg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="regnskaplog_pk"/>
+            </column>
+            <column name="filename" type="TEXT"/>
+            <column name="logtime" type="TIMESTAMP"/>
+        </createTable>
+
+        <createIndex tableName="regnskaplog" schemaName="rreg" indexName="regnskaplog_filename_idx" unique="true">
+            <column name="filename"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="extfrg" id="1.1-3">
+        <createTable tableName="restcallog" schemaName="rreg">
+            <column autoIncrement="true" name="_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="restcallog_pk"/>
+            </column>
+            <column name="calleriphash" type="TEXT"/>
+            <column name="requestedorgnr" type="TEXT"/>
+            <column name="requestedmethod" type="TEXT"/>
+            <column name="requestedtime" type="TIMESTAMP"/>
+        </createTable>
+
+        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_callerip_idx" unique="false">
+            <column name="calleriphash"/>
+        </createIndex>
+
+        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_requestedorgnr_idx" unique="false">
+            <column name="requestedorgnr"/>
+        </createIndex>
+
+        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_requestedtime_idx" unique="false">
+            <column name="requestedtime"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
