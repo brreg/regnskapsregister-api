@@ -84,26 +84,31 @@ public class RegnskapLogRepository {
                 XmlMapper xmlMapper = new XmlMapper();
                 RegnskapXmlWrap regnskapXmlWrap = xmlMapper.readValue(xmlFis, RegnskapXmlWrap.class);
 
-                long persisCount = 0;
-
-                //Persist all regnskap
-                for (RegnskapXml regnskapXml : regnskapXmlWrap.getList()) {
-                    if (regnskapXml.essentialFieldsIncluded()) {
-                        regnskapRepository.persistRegnskap(connection, regnskapXml);
-                        persisCount++;
-                    } else {
-                        LOGGER.info("Skipping " + regnskapXml.getReference() + " from file " + filename + ". Missing essential fields.");
-                    }
-                }
-
                 //Persist filename log entry
+                Integer regnskapLogId = null;
                 final String sql = "INSERT INTO rreg.regnskaplog (filename,logtime,zipfile) " +
-                                   "VALUES (?,?,?)";
-                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                        "VALUES (?,?,?)";
+                try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                     stmt.setString(1, filename);
                     stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
                     stmt.setBinaryStream(3, zipFis);
                     stmt.executeUpdate();
+
+                    ResultSet rs = stmt.getGeneratedKeys();
+                    if (rs.next()) {
+                        regnskapLogId = rs.getInt(1);
+                    }
+                }
+
+                //Persist all regnskap
+                long persisCount = 0;
+                for (RegnskapXml regnskapXml : regnskapXmlWrap.getList()) {
+                    if (regnskapXml.essentialFieldsIncluded()) {
+                        regnskapRepository.persistRegnskap(connection, regnskapXml, regnskapLogId);
+                        persisCount++;
+                    } else {
+                        LOGGER.info("Skipping " + regnskapXml.getReference() + " from file " + filename + ". Missing essential fields.");
+                    }
                 }
 
                 LOGGER.info("Persisted " + persisCount + " regnskap from " + filename);

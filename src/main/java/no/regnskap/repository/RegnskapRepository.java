@@ -222,15 +222,15 @@ public class RegnskapRepository {
         return logList;
     }
 
-    public void persistRegnskap(final Connection connection, final RegnskapXml regnskapXml) throws SQLException {
+    public void persistRegnskap(final Connection connection, final RegnskapXml regnskapXml, final Integer regnskapLogId) throws SQLException {
         RegnskapXmlHead regnskapXmlHead = regnskapXml.getHead();
         String sql = "INSERT INTO rreg.regnskap " +
                 "(orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, "+
                  "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                  "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
                  "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, "+
-                 "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                 "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype, _id_regnskaplog) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Integer regnskapId = null;
         if (regnskapXmlHead.getMottattDato()==null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -265,6 +265,7 @@ public class RegnskapRepository {
             setBoolean(stmt, 25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             setBoolean(stmt, 26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
             stmt.setString(27, regnskapXmlHead.getRegnskapDokumenttype());
+            setInteger(stmt, 28, regnskapLogId);
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -309,8 +310,8 @@ public class RegnskapRepository {
                 "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                 "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
                 "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, "+
-                "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype, _id_regnskaplog) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Integer regnskapId = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, regnskap.getVirksomhet().getOrganisasjonsnummer());
@@ -340,6 +341,7 @@ public class RegnskapRepository {
             stmt.setNull(25, Types.BOOLEAN);//stmt.setBoolean(25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             stmt.setNull(26, Types.BOOLEAN);//stmt.setBoolean(26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
             stmt.setString(27, regnskap.getRegnskapDokumenttype());
+            stmt.setNull(28, Types.INTEGER);
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -462,6 +464,14 @@ public class RegnskapRepository {
             return null;
         }
         return result;
+    }
+
+    private void setInteger(final PreparedStatement stmt, final int index, final Integer value) throws SQLException {
+        if (value==null) {
+            stmt.setNull(index, Types.INTEGER);
+        } else {
+            stmt.setInt(index, value);
+        }
     }
 
     private Integer readInteger(final ResultSet rs, final String column) throws SQLException {
