@@ -84,6 +84,8 @@ Likewise, when something is pushed to the branch "prod", GitHub Actions will aut
 ## Useful links
 [RREG-API GitHub repository](https://github.com/brreg/regnskapsregister-api/)
 
+[RREG-API Helm Chart](https://github.com/brreg/helm-chart/tree/main/helm-chart-sources/regnskapsregister-api)
+
 ### UT1
 
 [RREG-API GCP deployment details](https://console.cloud.google.com/kubernetes/deployment/europe-north1-a/rreg-dev/ut1/regnskapsregister-api/overview)
