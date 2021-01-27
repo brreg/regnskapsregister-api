@@ -182,6 +182,18 @@ public class RegnskapApiTest extends TestContainersBase {
     }
 
     @Test
+    public void getRegnskapPartner2018SelskapInvalidÅrTest() {
+        Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
+        Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
+        final String orgNummer = TestData.TEST_ORGNR;
+        final int år = Integer.parseInt(TestData.TEST_ORGNR);
+        final Regnskapstype regnskapstype = Regnskapstype.SELSKAP;
+        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
     public void getRegnskapAcceptHeaderTest() {
         final String[] acceptHeaders = {"application/json", "application/xml", "application/ld+json",
                                         "application/rdf+json", "application/rdf+xml", "text/turtle"};
