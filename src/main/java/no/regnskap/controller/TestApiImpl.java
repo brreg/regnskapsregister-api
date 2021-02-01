@@ -49,7 +49,7 @@ public class TestApiImpl implements no.regnskap.generated.api.TestApi {
         }
 
         if (orgnr == null || orgnr.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(orgnr, HttpStatus.OK);
         }

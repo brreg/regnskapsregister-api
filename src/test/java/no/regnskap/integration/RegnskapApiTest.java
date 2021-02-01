@@ -189,7 +189,7 @@ public class RegnskapApiTest extends TestContainersBase {
         final int år = Integer.parseInt(TestData.TEST_ORGNR);
         final Regnskapstype regnskapstype = Regnskapstype.SELSKAP;
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
     }
 

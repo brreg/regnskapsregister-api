@@ -30,7 +30,7 @@ public class StatistikkApiImpl implements no.regnskap.generated.api.StatistikkAp
             List<String> logList = restcallLogService.getStatisticsByIp(fraDato, tilDato);
 
             if (logList == null || logList.size() == 0) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
@@ -46,7 +46,7 @@ public class StatistikkApiImpl implements no.regnskap.generated.api.StatistikkAp
             List<String> logList = restcallLogService.getStatisticsByMethod(fraDato, tilDato);
 
             if (logList == null || logList.size() == 0) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
@@ -62,7 +62,7 @@ public class StatistikkApiImpl implements no.regnskap.generated.api.StatistikkAp
             List<String> logList = restcallLogService.getStatisticsByOrgnr(fraDato, tilDato);
 
             if (logList == null || logList.size() == 0) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
