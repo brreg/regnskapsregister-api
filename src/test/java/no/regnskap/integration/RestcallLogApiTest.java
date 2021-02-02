@@ -43,9 +43,9 @@ class RestcallLogApiTest extends TestContainersBase {
 
 
     List<RestcallLog> testData = Collections.unmodifiableList(Arrays.asList(
-            new RestcallLog("10.0.0.1","getRegnskapById","123456789"),
-            new RestcallLog("10.0.0.1","getRegnskap","234567890"),
-            new RestcallLog("10.0.0.2","getRegnskap","123456789")));
+            new RestcallLog("salt", "10.0.0.1","getRegnskapById","123456789"),
+            new RestcallLog("salt", "10.0.0.1","getRegnskap","234567890"),
+            new RestcallLog("salt", "10.0.0.2","getRegnskap","123456789")));
 
     @BeforeEach
     void resetMocks() throws SQLException, NoSuchAlgorithmException {
@@ -68,8 +68,8 @@ class RestcallLogApiTest extends TestContainersBase {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<String> body = response.getBody();
         assertEquals(2, body.size());
-        assertEquals("2;7RZlwZAUbE3Ljrhx8dJJnWG7KTs=", body.get(0)); //Should have two calls from most active IP
-        assertEquals("1;WrGH47xjdblaAlDy2MZnI96X3Lk=", body.get(1)); //Should have one call from least active IP
+        assertEquals("2;MwEi0roqzdZjSX+WElSHwFwQ/48=", body.get(0)); //Should have two calls from most active IP
+        assertEquals("1;7n3g5s74o7oxbIe1y+wHIldfDHs=", body.get(1)); //Should have one call from least active IP
     }
 
     @Test
