@@ -36,6 +36,7 @@ RRAPI_SFTP_USER="RRmasse"
 RRAPI_SFTP_PASSWORD="<password>"
 RRAPI_SFTP_DIRECTORY="/out"
 RRAPI_SLACK_TOKEN="disabled"
+RRAPI_IP_SALT="salt"
 ```
 
 In addition, you can add this to the application.properties file:

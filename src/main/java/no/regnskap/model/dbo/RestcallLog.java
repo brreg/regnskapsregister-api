@@ -15,12 +15,12 @@ public class RestcallLog {
     private String requestedMethod;
     private LocalDateTime requestTime;
 
-    public RestcallLog(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) {
-        this(RestcallLog.getIPFromRequest(httpServletRequest), requestedMethod, requestedOrgnr);
+    public RestcallLog(final String salt, final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) {
+        this(salt, RestcallLog.getIPFromRequest(httpServletRequest), requestedMethod, requestedOrgnr);
     }
 
-    public RestcallLog(final String callerIp, final String requestedMethod, final String requestedOrgnr) {
-        anonymizeAndSetCallerIp(callerIp);
+    public RestcallLog(final String salt, final String callerIp, final String requestedMethod, final String requestedOrgnr) {
+        anonymizeAndSetCallerIp(salt, callerIp);
         this.requestedOrgnr = requestedOrgnr;
         this.requestedMethod = requestedMethod;
         this.requestTime = LocalDateTime.now();
@@ -55,9 +55,9 @@ public class RestcallLog {
         this.callerIp = callerIp;
     }
 
-    public void anonymizeAndSetCallerIp(final String callerIp) {
+    public void anonymizeAndSetCallerIp(final String salt, final String callerIp) {
         try {
-            setCallerIp(callerIp==null ? null : Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest(callerIp.getBytes(StandardCharsets.UTF_8))));
+            setCallerIp(callerIp==null ? null : Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((salt+callerIp).getBytes(StandardCharsets.UTF_8))));
         } catch (NoSuchAlgorithmException e) {
             setCallerIp(callerIp);
         }
