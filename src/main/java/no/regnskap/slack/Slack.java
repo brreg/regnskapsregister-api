@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 public class Slack {
     private static final Logger LOGGER = LoggerFactory.getLogger(Slack.class);
 
-    public static final String PRODFEIL_CHANNEL = "#prodfeil";
-
 
     public static ChatPostMessageResponse postMessage(final String token, final String channel, final String message) {
         if (token==null || token.isEmpty() || "disabled".equalsIgnoreCase(token)) {
