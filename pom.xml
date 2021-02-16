@@ -39,7 +39,6 @@
         <start-class>no.regnskap.Application</start-class>
     </properties>
 
-    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
