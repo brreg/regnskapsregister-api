@@ -85,7 +85,7 @@ jobs:
           cluster_name: rreg-prod
 
       - name: Deploy to PROD
-        uses: docker://bitnami/kubectl:latest
+        uses: docker://bitnami/kubectl:prod_latest
         env:
           KUBECONFIG: '/github/workspace/.kube/config'
         with:
