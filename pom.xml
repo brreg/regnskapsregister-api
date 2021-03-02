@@ -420,4 +420,23 @@
             </plugin>
         </plugins>
     </build>
+
+     <repositories>
+        <repository>
+            <id>maven-all</id>
+            <name>Maven all</name>
+            <url>https://nexus-repo1.brreg.no/repository/maven-all/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>https://nexus-repo1.brreg.no/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>maven-releases</id>
+            <url>https://nexus-repo1.brreg.no/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
