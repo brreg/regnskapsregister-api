@@ -435,6 +435,7 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                         </configuration>
                     </execution>
+                    <!--
                     <execution>
                         <id>jacoco-report</id>
                         <phase>verify</phase>
@@ -442,6 +443,7 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    -->
                 </executions>
             </plugin>
 
