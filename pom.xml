@@ -325,8 +325,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <excludes>
+                        <exclude>${integration.test.pattern}</exclude>
+                    </excludes>
                     <groups>unit</groups>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <argLine>${surefireArgLine} -Dfile.encoding=${java.encoding}</argLine>
                 </configuration>
             </plugin>
 
