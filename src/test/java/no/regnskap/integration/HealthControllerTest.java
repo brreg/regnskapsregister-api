@@ -4,7 +4,7 @@ import no.regnskap.controller.HealthController;
 import no.regnskap.utils.TestContainersBase;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jubiter.api.Disabled;
+import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
