@@ -322,7 +322,7 @@
                     <encoding>${java.encoding}</encoding>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
-                <executions>
+                <!-- <executions>
                     <execution>
                         <id>default-compile</id>
                         <phase>none</phase>
@@ -345,7 +345,7 @@
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions> -->
             </plugin>
 
             <plugin>
