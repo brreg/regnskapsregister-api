@@ -42,7 +42,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Disabled("Disabled until TestContainer support have been added to Jenkins slave")
 @SpringBootTest
 @ContextConfiguration(initializers = {TestContainersBase.Initializer.class})
 @Tag("service")

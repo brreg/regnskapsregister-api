@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+@Disabled("Disabled until TestContainer support have been added to Jenkins slave")
 @SpringBootTest
 @ContextConfiguration(initializers = {TestContainersBase.Initializer.class})
 @Tag("service")
