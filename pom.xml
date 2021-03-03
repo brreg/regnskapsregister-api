@@ -359,12 +359,11 @@
                     </excludes>
                     <groups>unit</groups>
                     <useSystemClassLoader>false</useSystemClassLoader>
-                    <argLine>${surefireArgLine} -Dfile.encoding=${java.encoding}</argLine>
                 </configuration>
             </plugin>
 
             <!-- Integration test runner -->
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M3</version>
@@ -376,7 +375,7 @@
                         <include>${integration.test.pattern}</include>
                     </includes>
                 </configuration>
-            </plugin>
+            </plugin> -->
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -410,6 +409,7 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                         </configuration>
                     </execution>
+                    <!--
                     <execution>
                         <id>pre-integration-test</id>
                         <phase>pre-integration-test</phase>
@@ -421,8 +421,10 @@
                             <propertyName>surefireArgLine</propertyName>
                         </configuration>
                     </execution>
+                    -->
                     <!-- Ensures that the code coverage report for integration tests is
                         created after integration tests have been run. -->
+                    <!-- 
                     <execution>
                         <id>post-integration-test</id>
                         <phase>post-integration-test</phase>
@@ -431,11 +433,11 @@
                         </goals>
                         <configuration>
                             <dataFile>${sonar.jacoco.itReportPath}</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                         </configuration>
                     </execution>
-
+                    -->
+                    <!--
                     <execution>
                         <id>jacoco-report</id>
                         <phase>verify</phase>
@@ -443,6 +445,7 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    -->
                     
                 </executions>
             </plugin>
