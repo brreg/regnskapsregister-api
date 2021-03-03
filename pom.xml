@@ -229,9 +229,6 @@
         </profile>
     </profiles>
 
-    <url>https://nexus.brreg.no/content/sites/brJEE-site/${project.groupId}/${project.artifactId}/index.html</url>
-
-
     <build>
         <finalName>app</finalName>
 
