@@ -46,6 +46,9 @@
         <sonar.jacoco.itReportPath>${project.build.directory}/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.jacoco.reportPath>${project.build.directory}/jacoco-ut.exec</sonar.jacoco.reportPath>
         <integration.test.pattern>**/*IntegrationTest.java, **/*IT.java, **/RunCucumberTests.java</integration.test.pattern>
+        <sonar.exclusions>
+            **/src/main/java/no/**/*
+        </sonar.exclusions>
     </properties>
 
     <dependencies>
