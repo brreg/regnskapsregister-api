@@ -25,7 +25,8 @@ def overrides = [
         "buildLoglevel": "DEBUG",
         "cleanJVMOpts": true,
         //TODO: ikke sikkert bruken av branch er i henhold til BR praksis
-        "deployFromBranch": "prod",
+        //Midlertidig deploybranch for å teste at deployprosessen fungerer
+        "deployFromBranch": "DBF-847_jenkins_byggejobb",
         "mavenProfile" : "all-tests"
 ]
 jenkinsfile.run(version, overrides)
