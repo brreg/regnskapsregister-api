@@ -218,7 +218,6 @@
     </profiles>
 
     <build>
-        <finalName>app</finalName>
 
         <resources>
             <resource>
