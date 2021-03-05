@@ -5,11 +5,11 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.5-0">
-        <createIndex tableName="regnskap" schemaName="rreg" indexName="regnskap_regnaar_idx" unique="false">
+        <createIndex tableName="regnskap" schemaName="rregapi" indexName="regnskap_regnaar_idx" unique="false">
             <column name="regnaar"/>
         </createIndex>
 
-        <createIndex tableName="regnskap" schemaName="rreg" indexName="regnskap_regnskapstype_idx" unique="false">
+        <createIndex tableName="regnskap" schemaName="rregapi" indexName="regnskap_regnskapstype_idx" unique="false">
             <column name="regnskapstype"/>
         </createIndex>
     </changeSet>

@@ -5,7 +5,7 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.4-0">
-        <addColumn tableName="regnskaplog" schemaName="rreg">
+        <addColumn tableName="regnskaplog" schemaName="rregapi">
             <column name="zipfile" type="bytea"/>
         </addColumn>
     </changeSet>

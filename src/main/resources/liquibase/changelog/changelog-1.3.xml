@@ -5,13 +5,13 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.3-0">
-        <addColumn tableName="regnskap" schemaName="rreg">
+        <addColumn tableName="regnskap" schemaName="rregapi">
             <column name="regnskap_dokumenttype" type="TEXT"/>
         </addColumn>
     </changeSet>
 
     <changeSet author="extfrg" id="1.3-1">
-        <createIndex tableName="regnskap" schemaName="rreg" indexName="regnskap_journalnr_idx" unique="false">
+        <createIndex tableName="regnskap" schemaName="rregapi" indexName="regnskap_journalnr_idx" unique="false">
             <column name="journalnr"/>
         </createIndex>
     </changeSet>

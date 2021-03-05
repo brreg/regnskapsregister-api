@@ -49,7 +49,7 @@ public class Partner {
     private void authorize(final ConnectionManager connectionManager, final String key) throws SQLException {
         try (Connection connection = connectionManager.getConnection()) {
             try {
-                final String sql = "SELECT COUNT(name) FROM rreg.partners WHERE name=? AND key=?";
+                final String sql = "SELECT COUNT(name) FROM rregapi.partners WHERE name=? AND key=?";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, this.name);
                     stmt.setString(2, key);

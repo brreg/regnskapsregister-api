@@ -48,15 +48,15 @@ public class RegnskapRepository {
                              "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, " +
                              "bistand_regnskapsforer, aarsregnskapstype, land_for_land, revisorberetning_ikke_levert, " +
                              "ifrs_selskap, forenklet_ifrs_selskap, ifrs_konsern, forenklet_ifrs_konsern, regnskap_dokumenttype " +
-                            "FROM rreg.regnskap ";
+                            "FROM rregapi.regnskap ";
 
                     if (orgnr!=null && id!=null) {
                         sql += "WHERE orgnr=? and _id=?";
                     } else {
                         sql += "WHERE _id=" +
-                               "(SELECT MAX(_id) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=? " +
+                               "(SELECT MAX(_id) FROM rregapi.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=? " +
                                 "AND regnaar=" +
-                                 "(SELECT MAX(regnaar) FROM rreg.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=?)" +
+                                 "(SELECT MAX(regnaar) FROM rregapi.regnskap WHERE orgnr=? AND LOWER(regnskapstype)=?)" +
                                ")";
                     }
 
@@ -120,17 +120,17 @@ public class RegnskapRepository {
                              "a.orgform, a.mor_i_konsern, a.regler_smaa, a.fleksible_poster, a.fravalg_revisjon, a.utarbeidet_regnskapsforer, " +
                              "a.bistand_regnskapsforer, a.aarsregnskapstype, a.land_for_land, a.revisorberetning_ikke_levert, " +
                              "a.ifrs_selskap, a.forenklet_ifrs_selskap, a.ifrs_konsern, a.forenklet_ifrs_konsern, a.regnskap_dokumenttype " +
-                            "FROM rreg.regnskap a ";
+                            "FROM rregapi.regnskap a ";
 
                     if (orgnr!=null && id!=null) {
                         sql += "WHERE orgnr=? and _id=?";
                     } else {
                         sql += "INNER JOIN " +
-                                "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rreg.regnskap " +
+                                "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rregapi.regnskap " +
                                 "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
                                 "ON a._id=b._id " +
                                 "INNER JOIN " +
-                                "(SELECT MAX(regnaar) AS regnaar FROM rreg.regnskap WHERE orgnr=?) c " +
+                                "(SELECT MAX(regnaar) AS regnaar FROM rregapi.regnskap WHERE orgnr=?) c " +
                                 "ON a.regnaar > (c.regnaar-3) ";
 
                         if (år != null) {
@@ -202,7 +202,7 @@ public class RegnskapRepository {
         List<String> logList = new ArrayList<>();
         try (Connection connection = connectionManager.getConnection()) {
             try {
-                String sql = "SELECT filename FROM rreg.regnskaplog ORDER BY filename ASC";
+                String sql = "SELECT filename FROM rregapi.regnskaplog ORDER BY filename ASC";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
@@ -224,7 +224,7 @@ public class RegnskapRepository {
 
     public void persistRegnskap(final Connection connection, final RegnskapXml regnskapXml, final Integer regnskapLogId) throws SQLException {
         RegnskapXmlHead regnskapXmlHead = regnskapXml.getHead();
-        String sql = "INSERT INTO rreg.regnskap " +
+        String sql = "INSERT INTO rregapi.regnskap " +
                 "(orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, "+
                  "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                  "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
@@ -274,7 +274,7 @@ public class RegnskapRepository {
             }
         }
 
-        sql = "INSERT INTO rreg.felt " +
+        sql = "INSERT INTO rregapi.felt " +
                 "(_id_regnskap, kode, sum) " +
                 "VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -305,7 +305,7 @@ public class RegnskapRepository {
     }
 
     public Integer persistRegnskap(final Connection connection, final Regnskap regnskap) throws SQLException {
-        String sql = "INSERT INTO rreg.regnskap " +
+        String sql = "INSERT INTO rregapi.regnskap " +
                 "(orgnr, regnskapstype, regnaar, oppstillingsplan_versjonsnr, valutakode, startdato, "+
                 "avslutningsdato, mottakstype, avviklingsregnskap, feilvaloer, journalnr, mottatt_dato, "+
                 "orgform, mor_i_konsern, regler_smaa, fleksible_poster, fravalg_revisjon, utarbeidet_regnskapsforer, "+
@@ -350,7 +350,7 @@ public class RegnskapRepository {
             }
         }
 
-        sql = "INSERT INTO rreg.felt " +
+        sql = "INSERT INTO rregapi.felt " +
                 "(_id_regnskap, kode, sum) " +
                 "VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -432,8 +432,8 @@ public class RegnskapRepository {
     }
 
     private void populateRegnskapWithFields(final Connection connection, final List<Regnskap> regnskapList, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
-        final String sql = "SELECT kode, sum FROM rreg.felt WHERE _id_regnskap IN"+
-                          " (SELECT _id FROM rreg.regnskap WHERE journalnr=? AND LOWER(regnskapstype)=?)";
+        final String sql = "SELECT kode, sum FROM rregapi.felt WHERE _id_regnskap IN"+
+                          " (SELECT _id FROM rregapi.regnskap WHERE journalnr=? AND LOWER(regnskapstype)=?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Regnskap regnskap : regnskapList) {
                 stmt.setString(1, regnskap.getJournalnr());

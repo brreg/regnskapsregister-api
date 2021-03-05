@@ -42,7 +42,7 @@ public class RestcallLogRepository {
             final String and = (fraDato != null && tilDato != null) ? "AND " : "";
             final String tilFilter = (tilDato != null) ? "requestedtime<=? " : "";
 
-            final String sql = "SELECT COUNT(*) AS c, " + column + " FROM rreg.restcallog " +
+            final String sql = "SELECT COUNT(*) AS c, " + column + " FROM rregapi.restcallog " +
                     where + fraFilter + and + tilFilter +
                     "GROUP BY " + column + " " +
                     "ORDER BY c DESC " +
@@ -78,7 +78,7 @@ public class RestcallLogRepository {
     public void persistRestcall(final RestcallLog restcallLog) throws SQLException, NoSuchAlgorithmException {
         try (Connection connection = connectionManager.getConnection()) {
             try {
-                final String sql = "INSERT INTO rreg.restcallog (calleriphash,requestedorgnr,requestedmethod,requestedtime) " +
+                final String sql = "INSERT INTO rregapi.restcallog (calleriphash,requestedorgnr,requestedmethod,requestedtime) " +
                                    "VALUES (?,?,?,?)";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, restcallLog.getCallerIp());

@@ -5,7 +5,7 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.2-0">
-        <createTable tableName="partners" schemaName="rreg">
+        <createTable tableName="partners" schemaName="rregapi">
             <column name="name" type="TEXT">
                 <constraints primaryKey="true" primaryKeyName="partners_pk"/>
             </column>

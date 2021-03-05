@@ -5,7 +5,7 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.1-0">
-        <createTable tableName="regnskap" schemaName="rreg">
+        <createTable tableName="regnskap" schemaName="rregapi">
             <column autoIncrement="true" name="_id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="regnskap_pk"/>
             </column>
@@ -37,13 +37,13 @@
             <column name="forenklet_ifrs_konsern" type="BOOLEAN"/>
         </createTable>
 
-        <createIndex tableName="regnskap" schemaName="rreg" indexName="regnskap_orgnr_idx" unique="false">
+        <createIndex tableName="regnskap" schemaName="rregapi" indexName="regnskap_orgnr_idx" unique="false">
             <column name="orgnr"/>
         </createIndex>
     </changeSet>
 
     <changeSet author="extfrg" id="1.1-1">
-        <createTable tableName="felt" schemaName="rreg">
+        <createTable tableName="felt" schemaName="rregapi">
             <column autoIncrement="true" name="_id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="felt_pk"/>
             </column>
@@ -52,17 +52,17 @@
             <column name="sum" type="NUMERIC"/>
         </createTable>
 
-        <createIndex tableName="felt" schemaName="rreg" indexName="felt_kode_idx" unique="false">
+        <createIndex tableName="felt" schemaName="rregapi" indexName="felt_kode_idx" unique="false">
             <column name="kode"/>
         </createIndex>
 
-        <addForeignKeyConstraint baseColumnNames="_id_regnskap" baseTableName="felt" baseTableSchemaName="rreg"
+        <addForeignKeyConstraint baseColumnNames="_id_regnskap" baseTableName="felt" baseTableSchemaName="rregapi"
                                  constraintName="rreg_f_r_fk" onDelete="CASCADE" onUpdate="CASCADE"
-                                 referencedColumnNames="_id" referencedTableName="regnskap" referencedTableSchemaName="rreg"/>
+                                 referencedColumnNames="_id" referencedTableName="regnskap" referencedTableSchemaName="rregapi"/>
     </changeSet>
 
     <changeSet author="extfrg" id="1.1-2">
-        <createTable tableName="regnskaplog" schemaName="rreg">
+        <createTable tableName="regnskaplog" schemaName="rregapi">
             <column autoIncrement="true" name="_id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="regnskaplog_pk"/>
             </column>
@@ -70,13 +70,13 @@
             <column name="logtime" type="TIMESTAMP"/>
         </createTable>
 
-        <createIndex tableName="regnskaplog" schemaName="rreg" indexName="regnskaplog_filename_idx" unique="true">
+        <createIndex tableName="regnskaplog" schemaName="rregapi" indexName="regnskaplog_filename_idx" unique="true">
             <column name="filename"/>
         </createIndex>
     </changeSet>
 
     <changeSet author="extfrg" id="1.1-3">
-        <createTable tableName="restcallog" schemaName="rreg">
+        <createTable tableName="restcallog" schemaName="rregapi">
             <column autoIncrement="true" name="_id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="restcallog_pk"/>
             </column>
@@ -86,15 +86,15 @@
             <column name="requestedtime" type="TIMESTAMP"/>
         </createTable>
 
-        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_callerip_idx" unique="false">
+        <createIndex tableName="restcallog" schemaName="rregapi" indexName="restcallog_callerip_idx" unique="false">
             <column name="calleriphash"/>
         </createIndex>
 
-        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_requestedorgnr_idx" unique="false">
+        <createIndex tableName="restcallog" schemaName="rregapi" indexName="restcallog_requestedorgnr_idx" unique="false">
             <column name="requestedorgnr"/>
         </createIndex>
 
-        <createIndex tableName="restcallog" schemaName="rreg" indexName="restcallog_requestedtime_idx" unique="false">
+        <createIndex tableName="restcallog" schemaName="rregapi" indexName="restcallog_requestedtime_idx" unique="false">
             <column name="requestedtime"/>
         </createIndex>
     </changeSet>

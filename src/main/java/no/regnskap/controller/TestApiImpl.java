@@ -27,7 +27,7 @@ public class TestApiImpl implements no.regnskap.generated.api.TestApi {
         String orgnr = null;
         try (Connection connection = connectionManager.getConnection()) {
             try {
-                String sql = "SELECT orgnr FROM rreg.regnskap ORDER BY _id DESC LIMIT 1";
+                String sql = "SELECT orgnr FROM rregapi.regnskap ORDER BY _id DESC LIMIT 1";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     ResultSet rs = stmt.executeQuery();
                     if (rs.next()) {

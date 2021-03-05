@@ -96,7 +96,7 @@ public class RegnskapApiTest extends TestContainersBase {
 
             //Add partner
             Connection connection = connectionManager.getConnection();
-            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rreg.partners (name,key) VALUES ('test','test')")) {
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
                 stmt.executeUpdate();
             }
             connection.commit();

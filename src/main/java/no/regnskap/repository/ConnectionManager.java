@@ -27,7 +27,7 @@ public class ConnectionManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
 
 	public static final String DB        = "postgres";
-	public static final String DB_SCHEMA = "rreg";
+	public static final String DB_SCHEMA = "rregapi";
 
 	private static final HashMap<String,DateTimeFormatter> dateTimeFormatters = new HashMap();
 

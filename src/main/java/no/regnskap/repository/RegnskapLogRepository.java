@@ -30,7 +30,7 @@ public class RegnskapLogRepository {
         boolean hasLogged = false;
         try (Connection connection = connectionManager.getConnection()) {
             try {
-                final String sql = "SELECT COUNT(filename) FROM rreg.regnskaplog WHERE filename=?";
+                final String sql = "SELECT COUNT(filename) FROM rregapi.regnskaplog WHERE filename=?";
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, filename);
                     ResultSet rs = stmt.executeQuery();
@@ -86,7 +86,7 @@ public class RegnskapLogRepository {
 
                 //Persist filename log entry
                 Integer regnskapLogId = null;
-                final String sql = "INSERT INTO rreg.regnskaplog (filename,logtime,zipfile) " +
+                final String sql = "INSERT INTO rregapi.regnskaplog (filename,logtime,zipfile) " +
                         "VALUES (?,?,?)";
                 try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                     stmt.setString(1, filename);
