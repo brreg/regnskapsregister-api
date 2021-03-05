@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true)
-@ConfigurationProperties(prefix = "postgres.rregapi")
+@ConfigurationProperties(prefix = "postgres.rreg")
 public class PostgresProperties {
     private String db_url;
     private String dbo_user;
