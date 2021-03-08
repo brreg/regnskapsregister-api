@@ -1,5 +1,0 @@
-package no.regnskap.generated.spring;
-
-public class ApplicationInfo {
-    public static final String VERSION = "%VERSION%";
-}

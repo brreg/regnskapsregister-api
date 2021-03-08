@@ -37,7 +37,7 @@
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
 
-        <start-class>no.regnskap.Application</start-class>
+        <start-class>no.brreg.regnskap.Application</start-class>
 
         <sonar.host.url>http://sonar1.brreg.no:9000</sonar.host.url>
         <sonar.maven.version>6.2</sonar.maven.version>
@@ -254,9 +254,9 @@
                             <generatorName>spring</generatorName>
                             <templateDirectory>${project.basedir}/src/main/resources/openAPI/openapi-generator-maven-plugin/templates/JavaSpring</templateDirectory>
                             <output>${project.build.directory}/generated-sources/openapi</output>
-                            <invokerPackage>no.regnskap.generated</invokerPackage>
-                            <apiPackage>no.regnskap.generated.api</apiPackage>
-                            <modelPackage>no.regnskap.generated.model</modelPackage>
+                            <invokerPackage>no.brreg.regnskap.generated</invokerPackage>
+                            <apiPackage>no.brreg.regnskap.generated.api</apiPackage>
+                            <modelPackage>no.brreg.regnskap.generated.model</modelPackage>
                             <configOptions>
                                 <allowUnicodeIdentifiers>true</allowUnicodeIdentifiers>
                                 <sourceFolder>src/main/java/gen</sourceFolder>
@@ -288,8 +288,8 @@
                 <configuration>
                     <ignoreErrors>false</ignoreErrors>
                     <ignoreMissingFile>false</ignoreMissingFile>
-                    <file>${project.basedir}/src/main/java/no/regnskap/spring/ApplicationInfo.template</file>
-                    <outputFile>${project.basedir}/src/main/java/no/regnskap/spring/ApplicationInfo.java</outputFile>
+                    <file>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.template</file>
+                    <outputFile>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.java</outputFile>
                     <token>%VERSION%</token>
                     <value>${project.version}</value>
                 </configuration>
