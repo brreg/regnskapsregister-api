@@ -108,7 +108,7 @@ public class UpdateService {
                     } catch (Exception e) {
                         LOGGER.error("Failed fetching accounting files from {}@{}:{}", sftpProperties.getUser(), sftpProperties.getHost(), sftpProperties.getPort());
                         LOGGER.error("Exception when downloading accounting files: " + e.getMessage());
-                        Slack.postMessage(slackProperties.getToken(), Slack.PRODFEIL_CHANNEL, "Exception when downloading accounting files: " + e.getMessage());
+                        Slack.postMessage(slackProperties.getToken(), slackProperties.getChannel(), "Exception when downloading accounting files: " + e.getMessage());
                     } finally {
                         if (channel != null) {
                             channel.disconnect();

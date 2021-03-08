@@ -1,0 +1,92 @@
+name: Deploy to UT1
+
+on:
+  push:
+    branches:
+      - ut1
+jobs:
+  build-and-test-and-deploy:
+    name: Build, test and deploy to UT1 environment when push to branch ut1
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create yaml file from secret
+        id: write_file
+        uses: timheuer/base64-to-file@master
+        with:
+          fileName: 'secret.yaml'
+          encodedString: ${{ secrets.RREG_UT1_SECRETS }}
+
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          service_account_key: ${{ secrets.GCP_SA_BRREG_RREG_DEV_CONTAINER_KEY }}
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      - run: gcloud auth configure-docker
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Package and run tests with maven
+        run: mvn --batch-mode --no-transfer-progress clean install
+
+      - name: Build Docker image with GitHub commit sha tag
+        run: docker build -f dockerfile -t eu.gcr.io/fdk-infra/regnskapsregister-api:${{ github.sha }} -t eu.gcr.io/fdk-infra/regnskapsregister-api:ut1_latest .
+
+      - name: Run Aqua Security Trivy vulnerability scanner, continue on error
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'eu.gcr.io/fdk-infra/regnskapsregister-api:${{ github.sha }}'
+          format: 'json'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'HIGH,MEDIUM'
+
+      - name: Run Aqua Security Trivy vulnerability scanner, stop on error
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'eu.gcr.io/fdk-infra/regnskapsregister-api:${{ github.sha }}'
+          format: 'json'
+#          exit-code: '1'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+
+      - name: Publish docker image to Google Cloud
+        run: docker -- push --all-tags eu.gcr.io/fdk-infra/regnskapsregister-api
+
+      - name: Apply Helm template
+        run: |
+          helm repo add brreg https://raw.githubusercontent.com/brreg/helm-chart/main/
+          helm fetch --untar --untardir ./helm brreg/regnskapsregister-api
+          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/fdk-infra/regnskapsregister-api:${{ github.sha }}" -f ${{ steps.write_file.outputs.filePath }} -f ./helm/regnskapsregister-api/values/ut1.yaml ./helm/regnskapsregister-api/ > ./kubectlapply.yaml
+          chmod o+w ./kubectlapply.yaml
+          cat kubectlapply.yaml
+
+      - name: Get kubeconfig file from GKE
+        uses: machine-learning-apps/gke-kubeconfig@master
+        with:
+          application_credentials: ${{ secrets.GCP_SA_BRREG_RREG_DEV_AUTODEPLOY_KEY }}
+          project_id: rreg-dev
+          location_zone: europe-north1-a
+          cluster_name: rreg-dev
+
+      - name: Deploy to UT1
+        uses: docker://bitnami/kubectl:latest
+        env:
+          KUBECONFIG: '/github/workspace/.kube/config'
+        with:
+          args: "apply -f ./kubectlapply.yaml --force"

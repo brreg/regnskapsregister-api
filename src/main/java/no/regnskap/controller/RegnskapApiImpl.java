@@ -53,7 +53,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             List<String> logList = regnskapService.getLog();
 
             if (logList == null || logList.size() == 0) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
@@ -61,12 +61,6 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             LOGGER.error("getLog failed: ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @Override
-    @Operation(security = @SecurityRequirement(name = "basicAuth"))
-    public ResponseEntity<Object> getRegnskapDeprecated(HttpServletRequest httpServletRequest, String orgNummer, Integer år, Regnskapstype regnskapstype) {
-        return getRegnskap(httpServletRequest, orgNummer, år, regnskapstype);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             List<Regnskap> regnskapList = regnskapService.getByOrgnr(orgNummer, null, år, regnskapstype, regnskapFieldIncludeMode);
 
             if (regnskapList == null || regnskapList.size() == 0) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
                 if (JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
@@ -126,7 +120,7 @@ public class RegnskapApiImpl implements no.regnskap.generated.api.RegnskapApi {
             Regnskap regnskap = (regnskaper==null || regnskaper.isEmpty()) ? null : regnskaper.get(0);
 
             if (regnskap == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
                 if (negotiatedMimeType == null) {

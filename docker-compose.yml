@@ -17,7 +17,9 @@ services:
       - RRAPI_SFTP_PASSWORD
       - RRAPI_SFTP_PORT
       - RRAPI_SFTP_DIRECTORY
+      - RRAPI_SLACK_CHANNEL
       - RRAPI_SLACK_TOKEN
+      - RRAPI_IP_SALT
     ports:
       - 8080:8080
 

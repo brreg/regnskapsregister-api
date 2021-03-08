@@ -1,5 +1,6 @@
 package no.regnskap.service;
 
+import no.regnskap.IpProperties;
 import no.regnskap.model.dbo.RestcallLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class RestcallLogService {
     private static final int MAX_RETURNED_LOG_ROWS = 50;
 
     @Autowired
+    private IpProperties ipProperties;
+
+    @Autowired
     private RestcallLogRepository restcallLogRepository;
 
 
@@ -29,7 +33,7 @@ public class RestcallLogService {
     }
 
     public void logCall(final HttpServletRequest httpServletRequest, final String requestedMethod, final String requestedOrgnr) throws SQLException, NoSuchAlgorithmException {
-        final boolean LOG_REQUEST_HEADERS = true;
+        final boolean LOG_REQUEST_HEADERS = false;
         if (LOG_REQUEST_HEADERS && httpServletRequest!=null) {
             LOGGER.info("===== Logging request for " + RestcallLog.getIPFromRequest(httpServletRequest) + " " + requestedMethod + " " + requestedOrgnr + " =====");
             Enumeration<String> headerNamesEnumeration = httpServletRequest.getHeaderNames();
@@ -39,7 +43,7 @@ public class RestcallLogService {
             }
             LOGGER.info("===== Logging complete =====");
         }
-        restcallLogRepository.persistRestcall(new RestcallLog(httpServletRequest, requestedMethod, requestedOrgnr));
+        restcallLogRepository.persistRestcall(new RestcallLog(ipProperties.getSalt(), httpServletRequest, requestedMethod, requestedOrgnr));
     }
 
     public List<String> getStatisticsByIp(LocalDate fraDato, LocalDate tilDato) throws SQLException {

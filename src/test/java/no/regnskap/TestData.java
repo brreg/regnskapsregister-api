@@ -21,19 +21,33 @@ public class TestData {
     public static final Map<String, String> SFTP_ENV_VALUES =
         ImmutableMap.of("SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY);
 
-    public static Integer ID_2018 = 12;
-    public static no.regnskap.generated.model.Regnskap REGNSKAP_2018 = createRegnskap(ID_2018, 2018);
+    public static final String TEST_ORGNR = "123456789";
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2016S = createRegnskap(201601, 2016, Regnskapstype.SELSKAP);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2017S = createRegnskap(201701, 2017, Regnskapstype.SELSKAP);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2018_1S = createRegnskap(201801, 2018, Regnskapstype.SELSKAP);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2018_2S = createRegnskap(201802, 2018, Regnskapstype.SELSKAP);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2018_3K = createRegnskap(201803, 2018, Regnskapstype.KONSERN);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2019_1S = createRegnskap(201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.SELSKAP);
+    public static final no.regnskap.generated.model.Regnskap REGNSKAP_2019_2K = createRegnskap(201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.KONSERN);
 
-    private static no.regnskap.generated.model.Regnskap createRegnskap(Integer id, int year) {
-        return new no.regnskap.generated.model.Regnskap()
+    public static final int TEST_SELSKAP_VARER = 100;
+    public static final int TEST_KONSERN_VARER = 101;
+    public static final int TEST_SELSKAP_FORDRINGER = 102;
+    public static final int TEST_KONSERN_INVESTERINGER = 103;
+
+
+    private static no.regnskap.generated.model.Regnskap createRegnskap(final Integer id, final int year, final Regnskapstype regnskapsType) {
+        no.regnskap.generated.model.Regnskap regnskap = new no.regnskap.generated.model.Regnskap()
             .id(id)
             .journalnr(Integer.toString(id))
             .avviklingsregnskap(true)
             .valuta("valutakode")
             .oppstillingsplan(no.regnskap.generated.model.Regnskap.OppstillingsplanEnum.fromValue("store"))
+            .regnskapstype(regnskapsType)
             .revisjon(
                 new Revisjon()
-                    .ikkeRevidertAarsregnskap(true))
+                    .ikkeRevidertAarsregnskap(true)
+                    .fravalgRevisjon(true))
             .regnskapsperiode(
                 new Tidsperiode()
                     .fraDato(LocalDate.of(year, 1, 1))
@@ -44,20 +58,30 @@ public class TestData {
                     .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER))
             .virksomhet(
                 new Virksomhet()
-                    .organisasjonsnummer("123456789")
+                    .organisasjonsnummer(TEST_ORGNR)
                     .organisasjonsform("AS")
                     .morselskap(true))
             .egenkapitalGjeld(egenkapitalGjeldWithValues(year))
             .eiendeler(eiendelerWithValues(year))
             .resultatregnskapResultat(resultatregnskapResultatWithValues(year));
+
+        if (regnskapsType == Regnskapstype.SELSKAP) {
+            regnskap.getEiendeler().sumVarer(BigDecimal.valueOf(TEST_SELSKAP_VARER))
+                                   .sumFordringer(BigDecimal.valueOf(TEST_SELSKAP_FORDRINGER));
+        } else {
+            regnskap.getEiendeler().sumVarer(BigDecimal.valueOf(TEST_KONSERN_VARER))
+                                   .sumInvesteringer(BigDecimal.valueOf(TEST_KONSERN_INVESTERINGER));
+        }
+
+        return regnskap;
     }
 
     private static Eiendeler eiendelerWithValues(long baseValue) {
         return new Eiendeler()
             .goodwill(BigDecimal.valueOf(baseValue))
-            .sumVarer(BigDecimal.valueOf(baseValue + 1))
-            .sumFordringer(BigDecimal.valueOf(baseValue + 2))
-            .sumInvesteringer(BigDecimal.valueOf(baseValue + 3))
+            //.sumVarer(BigDecimal.valueOf(baseValue + 1)) // Add this manually, for testing Selskap vs Konsern
+            //.sumFordringer(BigDecimal.valueOf(baseValue + 2)) // Add this manually, for testing Selskap vs Konsern
+            //.sumInvesteringer(BigDecimal.valueOf(baseValue + 3)) // Add this manually, for testing Selskap vs Konsern
             .sumBankinnskuddOgKontanter(BigDecimal.valueOf(baseValue + 4))
             .sumEiendeler(BigDecimal.valueOf(baseValue + 5))
             .anleggsmidler(new Anleggsmidler().sumAnleggsmidler(BigDecimal.valueOf(baseValue + 6)))

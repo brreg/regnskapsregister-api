@@ -4,9 +4,9 @@
 @prefix org:   <http://www.w3.org/ns/org#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://invalid.org/regnskap/123456789/5>
+<http://invalid.org/regnskap/123456789/7>
         a                            br:Regnskap ;
-        dct:identifier               "5" ;
+        dct:identifier               "7" ;
         schema:currency              "valutakode" ;
         br:avviklingsregnskap        true ;
         br:egenkapitalGjeld          [ a                       br:EgenkapitalGjeld ;
@@ -73,6 +73,7 @@
                                        br:totalresultat   "2038"^^xsd:decimal
                                      ] ;
         br:revisjon                  [ a                            br:Revisjon ;
+                                       br:fravalgRevisjon           true ;
                                        br:ikkeRevidertAarsregnskap  true
                                      ] ;
         br:virksomhet                [ a                       br:Virksomhet ;

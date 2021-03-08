@@ -7,7 +7,16 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "regnskap.slack")
 public class SlackProperties {
 
+    private String channel;
     private String token;
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
     public String getToken() {
         return token;

@@ -23,55 +23,6 @@ servers:
   - url: 'http://rreg.ut1.rreg-dev.brreg.no/swagger-ui/'
     description: Server i utviklingsmiljø
 paths:
-  /regnskap:
-    get:
-      deprecated: true
-      tags:
-        - regnskap
-      summary: Query for regnskap.
-      description: Returnerer en samling årsregnskap
-      operationId: getRegnskapDeprecated
-      parameters:
-        - name: orgNummer
-          in: query
-          description: Virksomhetens organisasjonsnummer
-          required: true
-          schema:
-            type: string
-        - name: år
-          in: query
-          description: Hent årsregnskap for spesifikt år
-          required: false
-          schema:
-            type: integer
-        - name: regnskapstype
-          in: query
-          description: Hent årsregnskap for spesifik regnskapstype (selskap eller konsern)
-          required: false
-          schema:
-            $ref: "#/components/schemas/Regnskapstype"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-            application/xml:
-              schema:
-                type: object
-            application/ld+json:
-              schema:
-                type: object
-            application/rdf+json:
-              schema:
-                type: object
-            application/rdf+xml:
-              schema:
-                type: object
-            text/turtle:
-              schema:
-                type: object
   /regnskap/{orgNummer}:
     get:
       tags:
@@ -456,6 +407,8 @@ components:
       type: object
       properties:
         ikkeRevidertAarsregnskap:
+          type: boolean
+        fravalgRevisjon:
           type: boolean
     Regnskapsprinsipper:
       type: object

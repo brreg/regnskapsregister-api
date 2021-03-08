@@ -34,7 +34,7 @@ import org.springframework.web.servlet.DispatcherServlet;
         scheme = "basic"
 )
 @EnableScheduling
-@EnableConfigurationProperties({PostgresProperties.class, SftpProperties.class, FileimportProperties.class, SlackProperties.class})
+@EnableConfigurationProperties({PostgresProperties.class, SftpProperties.class, FileimportProperties.class, SlackProperties.class, IpProperties.class})
 public class Application {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Application.class);
