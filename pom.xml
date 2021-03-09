@@ -31,7 +31,6 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <testcontainers.version>1.15.1</testcontainers.version>
         <jena.version>3.17.0</jena.version>
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
@@ -75,13 +74,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
             <version>1.6.3</version>
@@ -109,12 +101,7 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
+
 
         <!-- Generated code dependencies -->
         <dependency>
@@ -157,6 +144,7 @@
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
         </dependency>
+
 
         <!-- Slack client -->
         <dependency>

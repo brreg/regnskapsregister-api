@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ContextConfiguration(initializers = {EmbeddedPostgresBase.Initializer.class})
-
 class RestcallLogApiTest extends EmbeddedPostgresBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiTest.class);
 
