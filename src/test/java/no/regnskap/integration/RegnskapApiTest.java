@@ -11,23 +11,20 @@ import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.utils.TestContainersBase;
+import no.regnskap.utils.EmbeddedPostgresBase;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,10 +40,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
-@ContextConfiguration(initializers = {TestContainersBase.Initializer.class})
-@Tag("service")
-public class RegnskapApiTest extends TestContainersBase {
+@ContextConfiguration(initializers = {EmbeddedPostgresBase.Initializer.class})
+public class RegnskapApiTest extends EmbeddedPostgresBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerTest.class);
 
     final static String TESTDATA_FILENAME = "xmlTestString";
