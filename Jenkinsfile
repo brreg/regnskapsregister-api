@@ -24,8 +24,6 @@ def overrides = [
         "noCucumber": true,
         "buildLoglevel": "DEBUG",
         "cleanJVMOpts": true,
-        //TODO: ikke sikkert bruken av branch er i henhold til BR praksis
-        //Midlertidig deploybranch for å teste at deployprosessen fungerer
         "deployFromBranch": "main",
         "mavenProfile" : "all-tests"
 ]
