@@ -337,7 +337,7 @@ public class RegnskapApiTest extends EmbeddedPostgresIT {
         assertEquals(baseValue + 16, regnskap.getResultatregnskapResultat().getOrdinaertResultatSkattekostnad().intValue());
         assertEquals(baseValue + 17, regnskap.getResultatregnskapResultat().getEkstraordinaerePoster().intValue());
         assertEquals(baseValue + 18, regnskap.getResultatregnskapResultat().getSkattekostnadEkstraordinaertResultat().intValue());
-        assertEquals(baseValue + 19, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getLoennskostnad().intValue());
+        assertEquals(baseValue + 19, regnskap.getResultatregnskapResultat().getAarsresultat().intValue());
         assertEquals(baseValue + 25, regnskap.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().getSumDriftskostnad().intValue());
         assertEquals(baseValue + 26, regnskap.getResultatregnskapResultat().getFinansresultat().getNettoFinans().intValue());
         assertEquals(baseValue + 27, regnskap.getResultatregnskapResultat().getFinansresultat().getFinansinntekt().getSumFinansinntekter().intValue());
