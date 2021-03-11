@@ -54,7 +54,7 @@ class RestcallLogApiTest extends EmbeddedPostgresIT {
         );
 
         Connection connection = connectionManager.getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement("TRUNCATE rreg.restcallog")) {
+        try (PreparedStatement stmt = connection.prepareStatement("TRUNCATE rregapi.restcallog")) {
             stmt.executeUpdate();
         }
         connection.commit();
