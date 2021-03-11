@@ -34,8 +34,7 @@ public class EmbeddedPostgresBase {
         connectionManager.updateDbUrl(embeddedPostgres.getJdbcUrl("postgres", "postgres"));
     }
 
-    public static class Initializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
             try {
                 embeddedPostgres = EmbeddedPostgres.start();
