@@ -5,7 +5,7 @@
     <groupId>no.brreg.regnskap</groupId>
     <artifactId>regnskapsregister-api</artifactId>
     <name>Regnskapsregister</name>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -31,8 +31,6 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <!-- gammel versjon 1.15.1-->
-        <testcontainers.version>1.13.0</testcontainers.version>
         <jena.version>3.17.0</jena.version>
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
@@ -46,10 +44,8 @@
         <sonar.jacoco.itReportPath>${project.build.directory}/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.jacoco.reportPath>${project.build.directory}/jacoco-ut.exec</sonar.jacoco.reportPath>
         <integration.test.pattern>**/*IntegrationTest.java, **/*IT.java, **/RunCucumberTests.java</integration.test.pattern>
-        <sonar.exclusions>
-            **/src/main/java/no/**/*
-        </sonar.exclusions>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -86,9 +82,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
+            <version>1.2.10</version>
             <scope>test</scope>
         </dependency>
 
@@ -97,12 +93,7 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
+
 
         <!-- Generated code dependencies -->
         <dependency>
@@ -145,6 +136,7 @@
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
         </dependency>
+
 
         <!-- Slack client -->
         <dependency>
@@ -191,6 +183,18 @@
         </dependency>
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.zonky.test.postgres</groupId>
+                <artifactId>embedded-postgres-binaries-bom</artifactId>
+                <version>12.3.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <profiles>
         <profile>
             <id>all-tests</id>
@@ -216,6 +220,7 @@
             <id>dev</id>
         </profile>
     </profiles>
+
 
     <build>
 
