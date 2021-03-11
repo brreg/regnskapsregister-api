@@ -11,7 +11,7 @@ import no.regnskap.generated.model.Regnskapstype;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RegnskapLogRepository;
 import no.regnskap.repository.RegnskapRepository;
-import no.regnskap.utils.EmbeddedPostgresBase;
+import no.regnskap.utils.EmbeddedPostgresIT;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
@@ -40,8 +39,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@ContextConfiguration(initializers = {EmbeddedPostgresBase.Initializer.class})
-public class RegnskapApiTest extends EmbeddedPostgresBase {
+public class RegnskapApiTest extends EmbeddedPostgresIT {
     private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerTest.class);
 
     final static String TESTDATA_FILENAME = "xmlTestString";

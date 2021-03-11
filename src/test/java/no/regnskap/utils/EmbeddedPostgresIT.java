@@ -2,6 +2,7 @@ package no.regnskap.utils;
 
 import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 import no.regnskap.Application;
+import no.regnskap.TestData;
 import no.regnskap.repository.ConnectionManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -21,8 +23,9 @@ import java.io.IOException;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class})
 @WebAppConfiguration
-public class EmbeddedPostgresBase {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmbeddedPostgresBase.class);
+@ContextConfiguration(initializers = {EmbeddedPostgresIT.Initializer.class})
+public abstract class EmbeddedPostgresIT {
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmbeddedPostgresIT.class);
 
     @Autowired
     private ConnectionManager connectionManager;
@@ -31,7 +34,7 @@ public class EmbeddedPostgresBase {
 
     @BeforeEach
     public void updatePostgresDbUrl() {
-        connectionManager.updateDbUrl(embeddedPostgres.getJdbcUrl("postgres", "postgres"));
+        connectionManager.updateDbUrl(embeddedPostgres.getJdbcUrl(TestData.POSTGRES_USER, TestData.POSTGRES_DB_NAME));
     }
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -44,11 +47,11 @@ public class EmbeddedPostgresBase {
             }
 
             TestPropertyValues.of(
-                    "postgres.rreg.db_url=" + embeddedPostgres.getJdbcUrl("postgres", "postgres"),
-                    "postgres.rreg.dbo_user=postgres",
-                    "postgres.rreg.dbo_password=postgres",
-                    "postgres.rreg.user=postgres",
-                    "postgres.rreg.password=postgres"
+                    "postgres.rreg.db_url=" + embeddedPostgres.getJdbcUrl(TestData.POSTGRES_USER, TestData.POSTGRES_DB_NAME),
+                    "postgres.rreg.dbo_user=" + TestData.POSTGRES_USER,
+                    "postgres.rreg.dbo_password=" + TestData.POSTGRES_PASSWORD,
+                    "postgres.rreg.user=" + TestData.POSTGRES_USER,
+                    "postgres.rreg.password=" + TestData.POSTGRES_PASSWORD
             ).applyTo(configurableApplicationContext.getEnvironment());
         }
     }

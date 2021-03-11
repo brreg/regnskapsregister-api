@@ -4,7 +4,7 @@ import no.regnskap.controller.StatistikkApiImpl;
 import no.regnskap.model.dbo.RestcallLog;
 import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RestcallLogRepository;
-import no.regnskap.utils.EmbeddedPostgresBase;
+import no.regnskap.utils.EmbeddedPostgresIT;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
@@ -27,8 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@ContextConfiguration(initializers = {EmbeddedPostgresBase.Initializer.class})
-class RestcallLogApiTest extends EmbeddedPostgresBase {
+class RestcallLogApiTest extends EmbeddedPostgresIT {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiTest.class);
 
     @Autowired
