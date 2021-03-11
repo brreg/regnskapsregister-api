@@ -26,8 +26,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class RestcallLogApiTest extends EmbeddedPostgresIT {
-    private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiTest.class);
+class RestcallLogApiIT extends EmbeddedPostgresIT {
+    private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiIT.class);
 
     @Autowired
     ConnectionManager connectionManager;

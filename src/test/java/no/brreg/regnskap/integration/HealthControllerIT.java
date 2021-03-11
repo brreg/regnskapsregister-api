@@ -13,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class HealthControllerTest extends EmbeddedPostgresIT {
-    private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerTest.class);
+public class HealthControllerIT extends EmbeddedPostgresIT {
+    private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerIT.class);
 
     @Autowired
     private HealthController healthController;

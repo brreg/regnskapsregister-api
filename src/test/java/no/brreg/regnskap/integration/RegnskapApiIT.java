@@ -40,8 +40,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class RegnskapApiTest extends EmbeddedPostgresIT {
-    private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerTest.class);
+public class RegnskapApiIT extends EmbeddedPostgresIT {
+    private final static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiIT.class);
 
     final static String TESTDATA_FILENAME = "xmlTestString";
 
