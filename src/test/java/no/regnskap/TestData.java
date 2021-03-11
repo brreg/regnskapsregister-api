@@ -9,9 +9,9 @@ import java.util.*;
 
 
 public class TestData {
-    public static final String POSTGRES_DB_NAME = "integration-tests-db";
-    public static final String POSTGRES_USER = "testuser";
-    public static final String POSTGRES_PASSWORD = "testpassword";
+    public static final String POSTGRES_DB_NAME = "postgres";
+    public static final String POSTGRES_USER = "postgres";
+    public static final String POSTGRES_PASSWORD = "postgres";
 
     public static final String SFTP_USER = "sftpuser";
     public static final String SFTP_PWD = "sftppwd";

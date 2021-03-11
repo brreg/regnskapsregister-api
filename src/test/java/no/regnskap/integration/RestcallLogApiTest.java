@@ -2,21 +2,22 @@ package no.regnskap.integration;
 
 import no.regnskap.controller.StatistikkApiImpl;
 import no.regnskap.model.dbo.RestcallLog;
+import no.regnskap.repository.ConnectionManager;
 import no.regnskap.repository.RestcallLogRepository;
-import no.regnskap.utils.TestContainersBase;
+import no.regnskap.utils.EmbeddedPostgresIT;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,18 +26,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@SpringBootTest
-@ContextConfiguration(initializers = {RestcallLogApiTest.Initializer.class})
-@Tag("service")
-class RestcallLogApiTest extends TestContainersBase {
+class RestcallLogApiTest extends EmbeddedPostgresIT {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiTest.class);
+
+    @Autowired
+    ConnectionManager connectionManager;
 
     @Autowired
     private StatistikkApiImpl statistikkApi;
 
     @Autowired
     private RestcallLogRepository restcallLogRepository;
-    private static boolean hasImportedTestdata = false;
 
     @Mock
     HttpServletRequest httpServletRequestMock;
@@ -53,11 +53,14 @@ class RestcallLogApiTest extends TestContainersBase {
                 httpServletRequestMock
         );
 
-        if (!hasImportedTestdata) {
-            for (RestcallLog restcallLog : testData) {
-                restcallLogRepository.persistRestcall(restcallLog);
-            }
-            hasImportedTestdata = true;
+        Connection connection = connectionManager.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement("TRUNCATE rreg.restcallog")) {
+            stmt.executeUpdate();
+        }
+        connection.commit();
+
+        for (RestcallLog restcallLog : testData) {
+            restcallLogRepository.persistRestcall(restcallLog);
         }
     }
 
