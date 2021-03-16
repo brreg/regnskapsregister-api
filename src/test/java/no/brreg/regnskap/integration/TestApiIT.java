@@ -1,6 +1,9 @@
 package no.brreg.regnskap.integration;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -20,9 +23,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import no.brreg.regnskap.TestData;
+import no.brreg.regnskap.XmlTestData;
 import no.brreg.regnskap.controller.TestApiImpl;
 import no.brreg.regnskap.repository.ConnectionManager;
+import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.repository.RegnskapRepository;
+
 import no.brreg.regnskap.utils.EmbeddedPostgresIT;
 
 public class TestApiIT extends EmbeddedPostgresIT {
@@ -32,6 +38,9 @@ public class TestApiIT extends EmbeddedPostgresIT {
     @Autowired
     private TestApiImpl testApiImpl;
 
+    @Autowired
+    private RegnskapLogRepository regnskapLogRepository;
+    
     private static boolean hasImportedTestdata = false;
     private static Integer regnskapId1;
     private static Integer regnskapId2;
@@ -53,6 +62,9 @@ public class TestApiIT extends EmbeddedPostgresIT {
         );
 
         if (!hasImportedTestdata) {
+            InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
+            regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+
             regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
             regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
 
