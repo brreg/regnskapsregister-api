@@ -108,8 +108,8 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     @Test
     public void getRegnskapTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        final String orgNummer = TestData.TEST_ORGNR;
-        //Get most recent SELSKAP regnskap for TestData.TEST_ORGNR
+        final String orgNummer = TestData.TEST_ORGNR_1;
+        //Get most recent SELSKAP regnskap for TestData.TEST_ORGNR_1
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
@@ -123,8 +123,8 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     public void getRegnskapPartnerTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        final String orgNummer = TestData.TEST_ORGNR;
-        //Get most recent regnskap of any type for three most recent years for TestData.TEST_ORGNR
+        final String orgNummer = TestData.TEST_ORGNR_1;
+        //Get most recent regnskap of any type for three most recent years for TestData.TEST_ORGNR_1
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
@@ -151,7 +151,7 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     public void getRegnskapInvalidPartnerTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic d3Jvbmc6cGFzc3dvcmQ="); // "Basic wrong:password"
-        final String orgNummer = TestData.TEST_ORGNR;
+        final String orgNummer = TestData.TEST_ORGNR_1;
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
@@ -162,7 +162,7 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     public void getRegnskapPartner2018SelskapTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        final String orgNummer = TestData.TEST_ORGNR;
+        final String orgNummer = TestData.TEST_ORGNR_1;
         final int år = 2018;
         final Regnskapstype regnskapstype = Regnskapstype.SELSKAP;
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
@@ -178,8 +178,8 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     public void getRegnskapPartner2018SelskapInvalidÅrTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         Mockito.when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        final String orgNummer = TestData.TEST_ORGNR;
-        final int år = Integer.parseInt(TestData.TEST_ORGNR);
+        final String orgNummer = TestData.TEST_ORGNR_1;
+        final int år = Integer.parseInt(TestData.TEST_ORGNR_1);
         final Regnskapstype regnskapstype = Regnskapstype.SELSKAP;
         ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -192,7 +192,7 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
                                         "application/rdf+json", "application/rdf+xml", "text/turtle"};
         for (String acceptHeader : acceptHeaders) {
             Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn(acceptHeader);
-            ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, TestData.TEST_ORGNR, 2018, Regnskapstype.SELSKAP);
+            ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, TestData.TEST_ORGNR_1, 2018, Regnskapstype.SELSKAP);
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertNotNull(response.getBody());
         }

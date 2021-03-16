@@ -21,22 +21,26 @@ public class TestData {
     public static final Map<String, String> SFTP_ENV_VALUES =
         ImmutableMap.of("SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY);
 
-    public static final String TEST_ORGNR = "123456789";
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2016S = createRegnskap(201601, 2016, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2017S = createRegnskap(201701, 2017, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_1S = createRegnskap(201801, 2018, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_2S = createRegnskap(201802, 2018, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_3K = createRegnskap(201803, 2018, Regnskapstype.KONSERN);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_1S = createRegnskap(201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_2K = createRegnskap(201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.KONSERN);
+    public static final String TEST_ORGNR_1 = "123456789";
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2016S = createRegnskap(TEST_ORGNR_1, 201601, 2016, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2017S = createRegnskap(TEST_ORGNR_1, 201701, 2017, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_1S = createRegnskap(TEST_ORGNR_1, 201801, 2018, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_2S = createRegnskap(TEST_ORGNR_1, 201802, 2018, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_3K = createRegnskap(TEST_ORGNR_1, 201803, 2018, Regnskapstype.KONSERN);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_1S = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_2K = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.KONSERN);
 
     public static final int TEST_SELSKAP_VARER = 100;
     public static final int TEST_KONSERN_VARER = 101;
     public static final int TEST_SELSKAP_FORDRINGER = 102;
     public static final int TEST_KONSERN_INVESTERINGER = 103;
 
+    public static final String TEST_ORGNR_2 = "333444555";
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2_2016S = createRegnskap(TEST_ORGNR_2, 201601, 2016, Regnskapstype.SELSKAP);
+   
 
-    private static no.brreg.regnskap.generated.model.Regnskap createRegnskap(final Integer id, final int year, final Regnskapstype regnskapsType) {
+
+    private static no.brreg.regnskap.generated.model.Regnskap createRegnskap(String orgnr, final Integer id, final int year, final Regnskapstype regnskapsType) {
         no.brreg.regnskap.generated.model.Regnskap regnskap = new no.brreg.regnskap.generated.model.Regnskap()
             .id(id)
             .journalnr(Integer.toString(id))
@@ -58,7 +62,7 @@ public class TestData {
                     .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER))
             .virksomhet(
                 new Virksomhet()
-                    .organisasjonsnummer(TEST_ORGNR)
+                    .organisasjonsnummer(orgnr)
                     .organisasjonsform("AS")
                     .morselskap(true))
             .egenkapitalGjeld(egenkapitalGjeldWithValues(year))
