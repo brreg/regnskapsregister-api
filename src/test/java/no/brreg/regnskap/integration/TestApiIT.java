@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -77,7 +78,7 @@ public class TestApiIT extends EmbeddedPostgresIT {
             hasImportedTestdata = true;
         }
     }
-
+    @Disabled
     @Test
     public void orgnrOfLastAddedRegnskapIsReturned() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
