@@ -63,8 +63,6 @@ public class TestApiIT extends EmbeddedPostgresIT {
         );
 
         if (!hasImportedTestdata) {
-            InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
-            regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
 
             //regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
             regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
