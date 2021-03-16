@@ -39,7 +39,7 @@ public class TestData {
     public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2_2016S = createRegnskap(TEST_ORGNR_2, 201601, 2016, Regnskapstype.SELSKAP);
     
     public static final String TEST_ORGNR_3 = "444555666";
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_3_2016S = createRegnskap(TEST_ORGNR_2, 201601, 2016, Regnskapstype.SELSKAP);
+    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_3_2016S = createRegnskap(TEST_ORGNR_3, 201601, 2016, Regnskapstype.SELSKAP);
    
 
 
