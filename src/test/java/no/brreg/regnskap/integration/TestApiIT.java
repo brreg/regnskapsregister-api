@@ -68,7 +68,7 @@ public class TestApiIT extends EmbeddedPostgresIT {
             regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_3_2016S);
 
             Connection connection = connectionManager.getConnection();
-            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test2','test2')")) {
                 stmt.executeUpdate();
             }
             connection.commit();
