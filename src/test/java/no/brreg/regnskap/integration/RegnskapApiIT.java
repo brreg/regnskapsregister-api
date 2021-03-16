@@ -15,7 +15,6 @@ import no.brreg.regnskap.utils.EmbeddedPostgresIT;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;

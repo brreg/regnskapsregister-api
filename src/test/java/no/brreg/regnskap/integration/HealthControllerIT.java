@@ -3,7 +3,6 @@ package no.brreg.regnskap.integration;
 import no.brreg.regnskap.controller.HealthController;
 import no.brreg.regnskap.utils.EmbeddedPostgresIT;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
