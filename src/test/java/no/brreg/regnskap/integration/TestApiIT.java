@@ -66,8 +66,8 @@ public class TestApiIT extends EmbeddedPostgresIT {
             InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
             regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
 
-            regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
-            //regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
+            //regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
+            regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
 
             Connection connection = connectionManager.getConnection();
             try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
@@ -84,6 +84,6 @@ public class TestApiIT extends EmbeddedPostgresIT {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         ResponseEntity<String> response = testApiImpl.getMostRecent(httpServletRequestMock);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(response.getBody(), TestData.TEST_ORGNR_1);
+        assertEquals(response.getBody(), TestData.TEST_ORGNR_2);
     }
 }
