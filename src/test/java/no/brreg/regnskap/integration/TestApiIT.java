@@ -46,6 +46,14 @@ public class TestApiIT extends EmbeddedPostgresIT {
     private static Integer regnskapId1;
     private static Integer regnskapId2;
 
+    private static Integer regnskap2016Id;
+    private static Integer regnskap2017Id;
+    private static Integer regnskap2018_1Id;
+    private static Integer regnskap2018_2Id;
+    private static Integer regnskap2018_3Id;
+    private static Integer regnskap2019_1Id;
+    private static Integer regnskap2019_2Id;
+
     @Autowired
     private RegnskapRepository regnskapRepository;
 
@@ -63,9 +71,26 @@ public class TestApiIT extends EmbeddedPostgresIT {
         );
 
         if (!hasImportedTestdata) {
+            InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
+            regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+
+            regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
+            regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
+            regnskap2018_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_1S);
+            regnskap2018_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_2S);
+            regnskap2018_3Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_3K);
+            regnskap2019_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_1S);
+            regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
 
             regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
             regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_3_2016S);
+
+            //Add partner
+            Connection connection = connectionManager.getConnection();
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
+                stmt.executeUpdate();
+            }
+            connection.commit();
 
             hasImportedTestdata = true;
         }
