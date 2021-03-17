@@ -93,9 +93,6 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
             regnskap2019_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_1S);
             regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
 
-            regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
-            regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_3_2016S);
-
             //Add partner
             Connection connection = connectionManager.getConnection();
             try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
