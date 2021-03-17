@@ -58,6 +58,9 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
     private static Integer regnskap2019_1Id;
     private static Integer regnskap2019_2Id;
 
+    private static Integer regnskapId1;
+    private static Integer regnskapId2;
+
     @Autowired
     private RegnskapRepository regnskapRepository;
 
@@ -76,7 +79,11 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
 
         if (!hasImportedTestdata) {
             InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
-            regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+            try {
+                regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+            } catch (SQLException e) {
+                LOGGER.info("Regnskap file test data already loaded");
+            }
 
             regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
             regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
@@ -86,12 +93,18 @@ public class RegnskapApiIT extends EmbeddedPostgresIT {
             regnskap2019_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_1S);
             regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
 
+            regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2016S);
+            regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_3_2016S);
+
             //Add partner
             Connection connection = connectionManager.getConnection();
             try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                LOGGER.info("Partner test data already loaded");
             }
-            connection.commit();
+            ;
 
             hasImportedTestdata = true;
         }

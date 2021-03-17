@@ -1,5 +1,8 @@
 package no.brreg.regnskap.integration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
@@ -33,7 +36,8 @@ import no.brreg.regnskap.repository.RegnskapRepository;
 import no.brreg.regnskap.utils.EmbeddedPostgresIT;
 
 public class TestApiIT extends EmbeddedPostgresIT {
-    
+    private final static Logger LOGGER = LoggerFactory.getLogger(TestApiIT.class);
+
     final static String TESTDATA_FILENAME = "xmlTestString";
 
     @Autowired
@@ -71,8 +75,12 @@ public class TestApiIT extends EmbeddedPostgresIT {
         );
 
         if (!hasImportedTestdata) {
-            //InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
-            //regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+            InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
+            try {
+                regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+            } catch (SQLException e) {
+                LOGGER.info("Regnskap file test data already loaded");
+            }
 
             regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
             regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
@@ -86,11 +94,14 @@ public class TestApiIT extends EmbeddedPostgresIT {
             regnskapId2 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_3_2016S);
 
             //Add partner
-            //Connection connection = connectionManager.getConnection();
-            //try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
-            //    stmt.executeUpdate();
-            //}
-            //connection.commit();
+            Connection connection = connectionManager.getConnection();
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                LOGGER.info("Partner test data already loaded");
+            }
+            ;
 
             hasImportedTestdata = true;
         }
