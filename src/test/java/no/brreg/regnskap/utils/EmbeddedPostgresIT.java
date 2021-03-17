@@ -4,6 +4,8 @@ import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 import no.brreg.regnskap.Application;
 import no.brreg.regnskap.TestData;
 import no.brreg.regnskap.repository.ConnectionManager;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
