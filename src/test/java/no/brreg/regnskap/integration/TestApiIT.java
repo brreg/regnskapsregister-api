@@ -96,6 +96,8 @@ public class TestApiIT extends EmbeddedPostgresSetup {
             }
             */
 
+            regnskapId1 = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2_2015S);
+
             //Add partner
             Connection connection = connectionManager.getConnection();
             try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
@@ -114,6 +116,6 @@ public class TestApiIT extends EmbeddedPostgresSetup {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         ResponseEntity<String> response = testApiImpl.getMostRecent(httpServletRequestMock);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(response.getBody(), TestData.TEST_ORGNR_1);
+        assertEquals(response.getBody(), TestData.TEST_ORGNR_2);
     }
 }
