@@ -75,12 +75,12 @@ public class TestApiIT extends EmbeddedPostgresIT {
         );
 
         if (!hasImportedTestdata) {
-            InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
-            try {
-                regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
-            } catch (SQLException e) {
-                LOGGER.info("Regnskap file test data already loaded");
-            }
+            //InputStream testdataIS = new ByteArrayInputStream(XmlTestData.xmlTestString.getBytes(StandardCharsets.UTF_8));
+            //try {
+            //    regnskapLogRepository.persistRegnskapFile(TESTDATA_FILENAME, testdataIS);
+            //} catch (SQLException e) {
+            //    LOGGER.info("Regnskap file test data already loaded");
+            //}
 
             //regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
             //regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
@@ -91,14 +91,13 @@ public class TestApiIT extends EmbeddedPostgresIT {
             //regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
 
             //Add partner
-            Connection connection = connectionManager.getConnection();
-            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
-                stmt.executeUpdate();
-                connection.commit();
-            } catch (SQLException e) {
-                LOGGER.info("Partner test data already loaded");
-            }
-            ;
+            //Connection connection = connectionManager.getConnection();
+            //try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
+            //    stmt.executeUpdate();
+            //    connection.commit();
+            //} catch (SQLException e) {
+            //    LOGGER.info("Partner test data already loaded");
+            //};
 
             hasImportedTestdata = true;
         }
