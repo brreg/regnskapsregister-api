@@ -85,13 +85,17 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
                 LOGGER.info("Regnskap file test data already loaded");
             }
 
-            regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
-            regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
-            regnskap2018_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_1S);
-            regnskap2018_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_2S);
-            regnskap2018_3Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_3K);
-            regnskap2019_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_1S);
-            regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
+            try {
+                regnskap2016Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2016S);
+                regnskap2017Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2017S);
+                regnskap2018_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_1S);
+                regnskap2018_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_2S);
+                regnskap2018_3Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2018_3K);
+                regnskap2019_1Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_1S);
+                regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
+            } catch (SQLException e) {
+                LOGGER.info("Regnskap test data already loaded");
+            }
 
             //Add partner
             Connection connection = connectionManager.getConnection();
