@@ -105,7 +105,6 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
             } catch (SQLException e) {
                 LOGGER.info("Partner test data already loaded");
             }
-            ;
 
             hasImportedTestdata = true;
         }
