@@ -33,9 +33,9 @@ import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.repository.RegnskapRepository;
 
-import no.brreg.regnskap.utils.EmbeddedPostgresIT;
+import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 
-public class TestApiIT extends EmbeddedPostgresIT {
+public class TestApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(TestApiIT.class);
 
     final static String TESTDATA_FILENAME = "xmlTestString";

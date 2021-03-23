@@ -11,7 +11,7 @@ import no.brreg.regnskap.generated.model.Regnskapstype;
 import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.repository.RegnskapRepository;
-import no.brreg.regnskap.utils.EmbeddedPostgresIT;
+import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class RegnskapApiIT extends EmbeddedPostgresIT {
+public class RegnskapApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiIT.class);
 
     final static String TESTDATA_FILENAME = "xmlTestString";

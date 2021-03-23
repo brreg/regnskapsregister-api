@@ -1,7 +1,7 @@
 package no.brreg.regnskap.integration;
 
 import no.brreg.regnskap.controller.HealthController;
-import no.brreg.regnskap.utils.EmbeddedPostgresIT;
+import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class HealthControllerIT extends EmbeddedPostgresIT {
+public class HealthControllerIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(HealthControllerIT.class);
 
     @Autowired

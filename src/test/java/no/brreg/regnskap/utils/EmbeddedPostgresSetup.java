@@ -25,9 +25,9 @@ import java.io.IOException;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class})
 @WebAppConfiguration
-@ContextConfiguration(initializers = {EmbeddedPostgresIT.Initializer.class})
-public abstract class EmbeddedPostgresIT {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmbeddedPostgresIT.class);
+@ContextConfiguration(initializers = {EmbeddedPostgresSetup.Initializer.class})
+public abstract class EmbeddedPostgresSetup {
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmbeddedPostgresSetup.class);
 
     @Autowired
     private ConnectionManager connectionManager;

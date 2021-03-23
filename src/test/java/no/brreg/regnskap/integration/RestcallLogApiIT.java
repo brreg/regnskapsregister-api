@@ -4,7 +4,7 @@ import no.brreg.regnskap.controller.StatistikkApiImpl;
 import no.brreg.regnskap.model.dbo.RestcallLog;
 import no.brreg.regnskap.repository.RestcallLogRepository;
 import no.brreg.regnskap.repository.ConnectionManager;
-import no.brreg.regnskap.utils.EmbeddedPostgresIT;
+import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -26,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class RestcallLogApiIT extends EmbeddedPostgresIT {
+class RestcallLogApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiIT.class);
 
     @Autowired
