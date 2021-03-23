@@ -104,7 +104,6 @@ public class TestApiIT extends EmbeddedPostgresIT {
         }
     }
 
-    @Disabled
     @Test
     public void orgnrOfLastAddedRegnskapIsReturned() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
