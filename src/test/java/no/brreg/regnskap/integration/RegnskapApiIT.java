@@ -49,7 +49,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
 
     @Autowired
     private RegnskapLogRepository regnskapLogRepository;
-    private static boolean hasImportedTestdata = false;
+    
     private static Integer regnskap2016Id;
     private static Integer regnskap2017Id;
     private static Integer regnskap2018_1Id;
