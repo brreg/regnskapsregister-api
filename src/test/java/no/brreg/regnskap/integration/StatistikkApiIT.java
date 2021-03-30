@@ -15,19 +15,15 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
-import java.util.Map;
 
 import no.brreg.regnskap.controller.RegnskapApiImpl;
 import no.brreg.regnskap.controller.StatistikkApiImpl;
