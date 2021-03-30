@@ -33,7 +33,6 @@ import no.brreg.regnskap.repository.RegnskapRepository;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 
 import no.brreg.regnskap.TestData;
-import no.brreg.regnskap.TestUtils;
 import no.brreg.regnskap.XmlTestData;
 
 import static org.junit.jupiter.api.Assertions.*;
