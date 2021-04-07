@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import no.brreg.regnskap.generated.model.Regnskapstype;
+import no.brreg.regnskap.model.RegnskapFields;
 
 public class RegnskapTest {
 
     @Test
     public void regnskapValuesStoredCorrectly() {
         Regnskap regnskap = new Regnskap();
+        RegnskapFields fields = new RegnskapFields();
+
         regnskap.setId(1001);
         regnskap.setOrgnr("123456789");
         regnskap.setRegnskapstype(Regnskapstype.SELSKAP);
@@ -37,6 +40,7 @@ public class RegnskapTest {
         regnskap.setForenkletIfrsSelskap(true);
         regnskap.setIfrsKonsern(false);
         regnskap.setForenkletIfrsKonsern(true);
+        regnskap.setFields(fields);
 
         assertEquals(1001, regnskap.getId());
         assertEquals("123456789", regnskap.getOrgnr());
@@ -65,6 +69,7 @@ public class RegnskapTest {
         assertEquals(true, regnskap.getForenkletIfrsSelskap());
         assertEquals(false, regnskap.getIfrsKonsern());
         assertEquals(true, regnskap.getForenkletIfrsKonsern());
+        assertEquals(fields, regnskap.getFields());
     }
 
 
