@@ -47,4 +47,12 @@ public class RegnskapUtilTest {
                                 .tilDato(null);
         assertEquals(true, RegnskapUtil.forYear(period, 2020));
     } 
+
+    @Test
+    public void tidsperiodeWithoutFradatoAndTildatoReturnsMatch() {
+        Tidsperiode period = new Tidsperiode()
+                                .fraDato(null)
+                                .tilDato(null);
+        assertEquals(true, RegnskapUtil.forYear(period, 2020));
+    } 
 }
