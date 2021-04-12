@@ -48,6 +48,11 @@ public class JenaUtils {
         return format;
     }
 
+    private static class MediaQuality {
+        public MimeType mediaType = null;
+        public double quality = 0.0;
+    }
+
     public static MimeType negotiateMimeType(final String acceptHeader) {
         if (acceptHeader==null || acceptHeader.isEmpty()) {
             return null;
@@ -58,52 +63,23 @@ public class JenaUtils {
 
         //Accept:-header is comma-separated mediaRange
         String[] mediaRanges = acceptHeader.split(",");
+        
         for (int mediaRangeIndex=0; mediaRangeIndex<mediaRanges.length; mediaRangeIndex++) {
-            MimeType mediaType = null;
-            double quality = 0.0;
-
             //mediaRange is either "type/subtype" or "type/subtype;parameter=token[;parameter=token]"
             String mediaRange = mediaRanges[mediaRangeIndex].trim();
             if (mediaRange==null || mediaRange.isEmpty()) {
                 //This should not happen, but better safe than sorry
                 continue;
             }
-
-            String[] parameters = mediaRange.split(";");
-            if (parameters==null || parameters.length<=1) {
-                mediaType = MimeType.valueOf(mediaRange);
-                quality = 1.0;
-            } else {
-                //There are parameters present!
-                mediaType = MimeType.valueOf(parameters[0]);
-                quality = 1.0; //Default to 1.0, but check if quality is one of the parameters
-
-                for (int acceptExtensionIndex=1; acceptExtensionIndex<parameters.length; acceptExtensionIndex++) {
-                    String acceptParams = parameters[acceptExtensionIndex].trim();
-                    if (acceptParams==null || acceptParams.isEmpty()) {
-                        //This should not happen, but better safe than sorry
-                        continue;
-                    }
-
-                    String[] acceptExtension = acceptParams.split("=");
-                    if (acceptExtension!=null && acceptExtension.length==PARAM_PAIR_LENGTH && "q".equals(acceptExtension[0].trim())) {
-                        try {
-                            quality = Double.valueOf(acceptExtension[1]);
-                        } catch (NumberFormatException e) {
-                            quality = 0.0;
-                        }
-                    }
-                }
-            }
-
-            if (mediaType==null) {
+            MediaQuality mediaQuality = extractMediaQuality(mediaRange);          
+            if (mediaQuality.mediaType==null) {
                 continue;
             }
 
             //Collect highest quality value
-            if (!acceptedMimeTypes.containsKey(mediaType) || acceptedMimeTypes.get(mediaType)<quality) {
-                acceptedMimeTypes.put(mediaType, quality);
-            }
+            if (!acceptedMimeTypes.containsKey(mediaQuality.mediaType) || acceptedMimeTypes.get(mediaQuality.mediaType)<mediaQuality.quality) {
+                acceptedMimeTypes.put(mediaQuality.mediaType, mediaQuality.quality);
+            }           
         }
 
         //Check if any compatible wildcard type/subtypes have higher quality
@@ -123,6 +99,42 @@ public class JenaUtils {
         //acceptedMimeTypes now contains all concrete and wildcard mimetypes, and their quality value
 
         //Find the highest quality mimetype matching our list of supported mimetypes.
+        return negotiateHighestQualityMimeType(acceptedMimeTypes);
+    }
+
+    public static MediaQuality extractMediaQuality(String mediaRange) {
+        MediaQuality mediaQuality = new MediaQuality();
+
+        String[] parameters = mediaRange.split(";");
+        if (parameters==null || parameters.length<=1) {
+            mediaQuality.mediaType = MimeType.valueOf(mediaRange);
+            mediaQuality.quality = 1.0;
+        } else {
+            //There are parameters present!
+            mediaQuality.mediaType = MimeType.valueOf(parameters[0]);
+            mediaQuality.quality = 1.0; //Default to 1.0, but check if quality is one of the parameters
+
+            for (int acceptExtensionIndex=1; acceptExtensionIndex<parameters.length; acceptExtensionIndex++) {
+                String acceptParams = parameters[acceptExtensionIndex].trim();
+                if (acceptParams==null || acceptParams.isEmpty()) {
+                    //This should not happen, but better safe than sorry
+                    continue;
+                }
+
+                String[] acceptExtension = acceptParams.split("=");
+                if (acceptExtension!=null && acceptExtension.length==PARAM_PAIR_LENGTH && "q".equals(acceptExtension[0].trim())) {
+                    try {
+                        mediaQuality.quality = Double.valueOf(acceptExtension[1]);
+                    } catch (NumberFormatException e) {
+                        mediaQuality.quality = 0.0;
+                    }
+                }
+            }
+        }
+        return mediaQuality;
+    }
+
+    public static MimeType negotiateHighestQualityMimeType(Map<MimeType,Double> acceptedMimeTypes) {
         double negotiatedQuality = 0.0;
         MimeType negotiatedMimeType = null;
         for (MimeType supportedMimeType : SUPPORTED_MIMETYPES) {
@@ -134,7 +146,6 @@ public class JenaUtils {
                 }
             }
         }
-
         return negotiatedMimeType;
     }
 
