@@ -58,12 +58,11 @@ public class JenaUtils {
             return null;
         }
 
-        //This will contain mime-types and matching quality. <URL: https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1 >
-        Map<MimeType,Double> acceptedMimeTypes = new HashMap<>();
-
         //Accept:-header is comma-separated mediaRange
         String[] mediaRanges = acceptHeader.split(",");
-        acceptedMimeTypes = extractAcceptedMimeTypes(mediaRanges);
+
+        //This will contain mime-types and matching quality. <URL: https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1 >
+        Map<MimeType,Double> acceptedMimeTypes = extractAcceptedMimeTypes(mediaRanges);
         
         //acceptedMimeTypes now contains all concrete and wildcard mimetypes, and their quality value
 
@@ -72,8 +71,27 @@ public class JenaUtils {
     }
 
     public static Map<MimeType,Double> extractAcceptedMimeTypes(String[] mediaRanges) {
-        Map<MimeType,Double> acceptedMimeTypes = new HashMap<>();
 
+        Map<MimeType,Double> acceptedMimeTypes = collectMimetypes(mediaRanges);
+
+        //Check if any compatible wildcard type/subtypes have higher quality
+        for (MimeType acceptedMimeType : acceptedMimeTypes.keySet()) {
+            if (!acceptedMimeType.isConcrete()) {
+                double acceptedQuality = acceptedMimeTypes.get(acceptedMimeType);
+                for (Map.Entry<MimeType, Double> entry : acceptedMimeTypes.entrySet()) {
+                    if (entry.getKey().isConcrete() &&
+                            entry.getKey().isCompatibleWith(acceptedMimeType) &&
+                            entry.getValue() < acceptedQuality) {
+                        entry.setValue(acceptedQuality);
+                    }
+                }
+            }
+        }
+        return acceptedMimeTypes;
+    }
+
+    public static Map<MimeType,Double> collectMimetypes(String[] mediaRanges) {
+        Map<MimeType,Double> acceptedMimeTypes = new HashMap<>();
         for (int mediaRangeIndex=0; mediaRangeIndex<mediaRanges.length; mediaRangeIndex++) {
             //mediaRange is either "type/subtype" or "type/subtype;parameter=token[;parameter=token]"
             String mediaRange = mediaRanges[mediaRangeIndex].trim();
@@ -91,23 +109,9 @@ public class JenaUtils {
                 acceptedMimeTypes.put(mediaQuality.mediaType, mediaQuality.quality);
             }           
         }
-
-        //Check if any compatible wildcard type/subtypes have higher quality
-        for (MimeType acceptedMimeType : acceptedMimeTypes.keySet()) {
-            if (!acceptedMimeType.isConcrete()) {
-                double acceptedQuality = acceptedMimeTypes.get(acceptedMimeType);
-                for (Map.Entry<MimeType, Double> entry : acceptedMimeTypes.entrySet()) {
-                    if (entry.getKey().isConcrete() &&
-                            entry.getKey().isCompatibleWith(acceptedMimeType) &&
-                            entry.getValue() < acceptedQuality) {
-                        entry.setValue(acceptedQuality);
-                    }
-                }
-            }
-        }
-
         return acceptedMimeTypes;
     }
+
 
     public static MediaQuality extractMediaQuality(String mediaRange) {
         MediaQuality mediaQuality = new MediaQuality();
