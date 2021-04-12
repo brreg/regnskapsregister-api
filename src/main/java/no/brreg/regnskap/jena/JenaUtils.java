@@ -63,7 +63,17 @@ public class JenaUtils {
 
         //Accept:-header is comma-separated mediaRange
         String[] mediaRanges = acceptHeader.split(",");
+        acceptedMimeTypes = extractAcceptedMimeTypes(mediaRanges);
         
+        //acceptedMimeTypes now contains all concrete and wildcard mimetypes, and their quality value
+
+        //Find the highest quality mimetype matching our list of supported mimetypes.
+        return negotiateHighestQualityMimeType(acceptedMimeTypes);
+    }
+
+    public static Map<MimeType,Double> extractAcceptedMimeTypes(String[] mediaRanges) {
+        Map<MimeType,Double> acceptedMimeTypes = new HashMap<>();
+
         for (int mediaRangeIndex=0; mediaRangeIndex<mediaRanges.length; mediaRangeIndex++) {
             //mediaRange is either "type/subtype" or "type/subtype;parameter=token[;parameter=token]"
             String mediaRange = mediaRanges[mediaRangeIndex].trim();
@@ -96,10 +106,7 @@ public class JenaUtils {
             }
         }
 
-        //acceptedMimeTypes now contains all concrete and wildcard mimetypes, and their quality value
-
-        //Find the highest quality mimetype matching our list of supported mimetypes.
-        return negotiateHighestQualityMimeType(acceptedMimeTypes);
+        return acceptedMimeTypes;
     }
 
     public static MediaQuality extractMediaQuality(String mediaRange) {
