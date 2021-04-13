@@ -121,26 +121,7 @@ public class RegnskapRepository {
                              "a.bistand_regnskapsforer, a.aarsregnskapstype, a.land_for_land, a.revisorberetning_ikke_levert, " +
                              "a.ifrs_selskap, a.forenklet_ifrs_selskap, a.ifrs_konsern, a.forenklet_ifrs_konsern, a.regnskap_dokumenttype " +
                             "FROM rregapi.regnskap a ";
-
-                    if (orgnr!=null && id!=null) {
-                        sql += "WHERE orgnr=? and _id=?";
-                    } else {
-                        sql += "INNER JOIN " +
-                                "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rregapi.regnskap " +
-                                "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
-                                "ON a._id=b._id " +
-                                "INNER JOIN " +
-                                "(SELECT MAX(regnaar) AS regnaar FROM rregapi.regnskap WHERE orgnr=?) c " +
-                                "ON a.regnaar > (c.regnaar-3) ";
-
-                        if (år != null) {
-                            sql += "WHERE a.regnaar=? ";
-                        }
-
-                        if (regnskapstype != null) {
-                            sql += (år == null ? "WHERE" : "AND") + " LOWER(a.regnskapstype)=? ";
-                        }
-                    }
+                    sql = addPartnerOrgnrWhereClause(sql, orgnr, id, år, regnskapstype);
 
                     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                         int i = 1;
@@ -196,6 +177,29 @@ public class RegnskapRepository {
             }
         }
         return regnskapList;
+    }
+
+    private String addPartnerOrgnrWhereClause(String sql, final String orgnr, final Integer id, final Integer år, final Regnskapstype regnskapstype) {
+        if (orgnr!=null && id!=null) {
+            sql += "WHERE orgnr=? and _id=?";
+        } else {
+            sql += "INNER JOIN " +
+                    "(SELECT MAX(_id) AS _id, regnaar, regnskapstype FROM rregapi.regnskap " +
+                    "WHERE orgnr=? GROUP BY regnskapstype, regnaar) b " +
+                    "ON a._id=b._id " +
+                    "INNER JOIN " +
+                    "(SELECT MAX(regnaar) AS regnaar FROM rregapi.regnskap WHERE orgnr=?) c " +
+                    "ON a.regnaar > (c.regnaar-3) ";
+
+            if (år != null) {
+                sql += "WHERE a.regnaar=? ";
+            }
+
+            if (regnskapstype != null) {
+                sql += (år == null ? "WHERE" : "AND") + " LOWER(a.regnskapstype)=? ";
+            }
+        }
+        return sql;
     }
 
     public List<String> getLog() throws SQLException {
@@ -376,24 +380,13 @@ public class RegnskapRepository {
           final Boolean forenklet_ifrs_selskap, final Boolean ifrs_konsern, final Boolean forenklet_ifrs_konsern,
           final String regnskap_dokumenttype) {
 
-        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
         Regnskapstype regnskapsType = no.brreg.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype);
-
-        if (regnskapsType == Regnskapstype.SELSKAP) {
-            if (ifrs_selskap!=null && ifrs_selskap) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
-            }
-            if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
-            }
-        } else if (regnskapsType == Regnskapstype.KONSERN) {
-            if (ifrs_konsern!=null && ifrs_konsern) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
-            }
-            if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
-            }
-        }
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = selectRegnskapsregler(
+            regnskapsType, 
+            ifrs_selskap, 
+            forenklet_ifrs_selskap, 
+            ifrs_konsern, 
+            forenklet_ifrs_konsern);
 
         Regnskap regnskap = new Regnskap().id(_id).journalnr(journalnr)
             .regnskapstype(regnskapsType)
@@ -423,6 +416,34 @@ public class RegnskapRepository {
         regnskap.virksomhet(virksomhet);
 
         return regnskap;
+    }
+
+    private static Regnskapsprinsipper.RegnskapsreglerEnum selectRegnskapsregler(
+        final Regnskapstype regnskapsType,
+        final Boolean ifrs_selskap,
+        final Boolean forenklet_ifrs_selskap,
+        final Boolean ifrs_konsern,
+        final Boolean forenklet_ifrs_konsern
+    ) {
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+
+        if (regnskapsType == Regnskapstype.SELSKAP) {
+            if (ifrs_selskap!=null && ifrs_selskap) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+            }
+            if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            }
+        } else if (regnskapsType == Regnskapstype.KONSERN) {
+            if (ifrs_konsern!=null && ifrs_konsern) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+            }
+            if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
+                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            }
+        }
+        return regnskapsregler;
     }
 
     private void populateRegnskapWithFields(final Connection connection, final Regnskap regnskap, final RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode) throws SQLException {
