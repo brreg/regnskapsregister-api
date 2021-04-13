@@ -429,19 +429,47 @@ public class RegnskapRepository {
             Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
 
         if (regnskapsType == Regnskapstype.SELSKAP) {
-            if (ifrs_selskap!=null && ifrs_selskap) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
-            }
-            if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
-            }
+            regnskapsregler = selectRegnskapsreglerSelskap(
+                regnskapsType, 
+                ifrs_selskap, 
+                forenklet_ifrs_selskap);
         } else if (regnskapsType == Regnskapstype.KONSERN) {
-            if (ifrs_konsern!=null && ifrs_konsern) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
-            }
-            if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
-                regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
-            }
+            regnskapsregler = selectRegnskapsreglerKonsern(
+                regnskapsType, 
+                ifrs_konsern, 
+                forenklet_ifrs_konsern);
+        }
+        return regnskapsregler;
+    }
+
+    private static Regnskapsprinsipper.RegnskapsreglerEnum selectRegnskapsreglerSelskap(
+        final Regnskapstype regnskapsType,
+        final Boolean ifrs_selskap,
+        final Boolean forenklet_ifrs_selskap
+    ) {
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+        if (ifrs_selskap!=null && ifrs_selskap) {
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+        }
+        if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+        }
+        return regnskapsregler;
+    }
+
+    private static Regnskapsprinsipper.RegnskapsreglerEnum selectRegnskapsreglerKonsern(
+        final Regnskapstype regnskapsType,
+        final Boolean ifrs_konsern,
+        final Boolean forenklet_ifrs_konsern
+    ) {
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+        if (ifrs_konsern!=null && ifrs_konsern) {
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
+        }
+        if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
         }
         return regnskapsregler;
     }
