@@ -70,10 +70,10 @@ public class ConnectionManager {
 			}
 		} catch (SQLException e) {
 			LOGGER.error("Getting connection for Liquibase update failed: "+e.getMessage(), e);
-			System.exit(-1);
+			throw new RuntimeException(e);
 		} catch (Exception e) {
 			LOGGER.error("Generic error when getting connection for Liquibase failed: "+e.getMessage(), e);
-			System.exit(-2);
+			throw new RuntimeException(e);
 		}
 	}
 
