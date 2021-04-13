@@ -193,15 +193,30 @@ public class JenaUtils {
             addLiteralIfNotNull(regnskapResource, BR.oppstillingsplan, regnskap.getOppstillingsplan().getValue());
         }
 
-        //Revisjon
+        regnskapResource = addRevisjon(model, regnskapResource, regnskap);
+        regnskapResource = addRegnskapsprinsipper(model, regnskapResource, regnskap);
+        if (regnskap.getRegnskapsperiode() != null) {
+            regnskapResource = addRegnskapsperiode(model, regnskapResource, regnskap.getRegnskapsperiode().getFraDato(), regnskap.getRegnskapsperiode().getTilDato());
+        }
+        regnskapResource = addVirksomhet(model, regnskapResource, regnskap, urls);
+        regnskapResource = addEiendeler(model, regnskapResource, regnskap);
+        regnskapResource = addEgenkapitalGjeld(model, regnskapResource, regnskap);
+        regnskapResource = addResultatregnskapResultat(model, regnskapResource, regnskap);
+         
+        return model;
+    }
+
+    private static Resource addRevisjon(final Model model, final Resource regnskapResource, final Regnskap regnskap) {
         if (regnskap.getRevisjon() != null) {
             Resource revisjonResource = model.createResource(BR.Revisjon);
             addLiteralIfNotNull(revisjonResource, BR.ikkeRevidertAarsregnskap, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
             addLiteralIfNotNull(revisjonResource, BR.fravalgRevisjon, regnskap.getRevisjon().getFravalgRevisjon());
             regnskapResource.addProperty(BR.revisjon, revisjonResource);
         }
+        return regnskapResource;
+    }
 
-        //Regnskapsprinsipper
+    private static Resource addRegnskapsprinsipper(final Model model, final Resource regnskapResource, final Regnskap regnskap) {
         if (regnskap.getRegnkapsprinsipper() != null) {
             Resource regnskapsprinsipper = model.createResource(BR.Regnskapsprinsipper);
             addLiteralIfNotNull(regnskapsprinsipper, BR.smaaForetak, regnskap.getRegnkapsprinsipper().getSmaaForetak());
@@ -210,13 +225,10 @@ public class JenaUtils {
             }
             regnskapResource.addProperty(BR.regnskapsprinsipper, regnskapsprinsipper);
         }
+        return regnskapResource;
+    }
 
-        if (regnskap.getRegnskapsperiode() != null) {
-            regnskapResource = addRegnskapsperiode(model, regnskapResource, regnskap.getRegnskapsperiode().getFraDato(), regnskap.getRegnskapsperiode().getTilDato());
-        }
-
-        regnskapResource = addVirksomhet(model, regnskapResource, regnskap, urls);
-
+    private static Resource addEiendeler(final Model model, final Resource regnskapResource, final Regnskap regnskap) {
         if (regnskap.getEiendeler() != null) {
             Resource eiendeler = model.createResource(BR.Eiendeler);
             addLiteralIfNotNull(eiendeler, BR.goodwill, regnskap.getEiendeler().getGoodwill());
@@ -239,7 +251,10 @@ public class JenaUtils {
             }
             regnskapResource.addProperty(BR.eiendeler, eiendeler);
         }
+        return regnskapResource;
+    }
 
+    private static Resource addEgenkapitalGjeld(final Model model, final Resource regnskapResource, final Regnskap regnskap) {
         if (regnskap.getEgenkapitalGjeld() != null) {
             Resource egenkapitalGjeld = model.createResource(BR.EgenkapitalGjeld);
             Resource sumEgenkapitalGjeld = addLiteralIfNotNull(egenkapitalGjeld, BR.sumEgenkapitalGjeld, regnskap.getEgenkapitalGjeld().getSumEgenkapitalGjeld());
@@ -281,7 +296,10 @@ public class JenaUtils {
             }
             regnskapResource.addProperty(BR.egenkapitalGjeld, egenkapitalGjeld);
         }
+        return regnskapResource;
+    }
 
+    private static Resource addResultatregnskapResultat(final Model model, final Resource regnskapResource, final Regnskap regnskap) {
         if (regnskap.getResultatregnskapResultat() != null) {
             Resource resultatregnskapResultat = model.createResource(BR.ResultatregnskapResultat);
             addLiteralIfNotNull(resultatregnskapResultat, BR.aarsresultat, regnskap.getResultatregnskapResultat().getAarsresultat());
@@ -330,7 +348,7 @@ public class JenaUtils {
             }
             regnskapResource.addProperty(BR.resultatregnskapResultat, resultatregnskapResultat);
         }
-        return model;
+        return regnskapResource;
     }
 
     private static Resource addLiteralIfNotNull(final Resource resource, final Property property, final Object value) {
