@@ -259,40 +259,8 @@ public class JenaUtils {
             Resource egenkapitalGjeld = model.createResource(BR.EgenkapitalGjeld);
             Resource sumEgenkapitalGjeld = addLiteralIfNotNull(egenkapitalGjeld, BR.sumEgenkapitalGjeld, regnskap.getEgenkapitalGjeld().getSumEgenkapitalGjeld());
             if (sumEgenkapitalGjeld != null) {
-                if (regnskap.getEgenkapitalGjeld().getEgenkapital() != null) {
-                    Resource egenkapital = model.createResource(BR.Egenkapital);
-                    Resource sumEgenkapital = addLiteralIfNotNull(egenkapital, BR.sumEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital());
-                    if (sumEgenkapital != null) {
-                        if (regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital() != null) {
-                            Resource innskuttEgenkapital = model.createResource(BR.InnskuttEgenkapital);
-                            addLiteralIfNotNull(innskuttEgenkapital, BR.sumInnskuttEgenkaptial, regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial());
-                            sumEgenkapital.addProperty(BR.innskuttEgenkapital, innskuttEgenkapital);
-                        }
-                        if (regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital() != null) {
-                            Resource opptjentEgenkapital = model.createResource(BR.OpptjentEgenkapital);
-                            addLiteralIfNotNull(opptjentEgenkapital, BR.sumOpptjentEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital());
-                            sumEgenkapital.addProperty(BR.opptjentEgenkapital, opptjentEgenkapital);
-                        }
-                    }
-                    sumEgenkapitalGjeld.addProperty(BR.egenkapital, egenkapital);
-                }
-                if (regnskap.getEgenkapitalGjeld().getGjeldOversikt() != null) {
-                    Resource gjeldOversikt = model.createResource(BR.GjeldOversikt);
-                    Resource sumGjeld = addLiteralIfNotNull(gjeldOversikt, BR.sumGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld());
-                    if (sumGjeld != null) {
-                        if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld() != null) {
-                            Resource langsiktigGjeld = model.createResource(BR.LangsiktigGjeld);
-                            addLiteralIfNotNull(langsiktigGjeld, BR.sumLangsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld());
-                            sumGjeld.addProperty(BR.langsiktigGjeld, langsiktigGjeld);
-                        }
-                        if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld() != null) {
-                            Resource kortsiktigGjeld = model.createResource(BR.KortsiktigGjeld);
-                            addLiteralIfNotNull(kortsiktigGjeld, BR.sumKortsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld());
-                            sumGjeld.addProperty(BR.opptjentEgenkapital, kortsiktigGjeld);
-                        }
-                    }
-                    sumEgenkapitalGjeld.addProperty(BR.gjeldOversikt, gjeldOversikt);
-                }
+                sumEgenkapitalGjeld = addSumEgenkapitalGjeldDetaljering(model, sumEgenkapitalGjeld, regnskap);
+                sumEgenkapitalGjeld = addGjeldOversikt(model, sumEgenkapitalGjeld, regnskap);              
             }
             regnskapResource.addProperty(BR.egenkapitalGjeld, egenkapitalGjeld);
         }
@@ -349,6 +317,48 @@ public class JenaUtils {
             regnskapResource.addProperty(BR.resultatregnskapResultat, resultatregnskapResultat);
         }
         return regnskapResource;
+    }
+
+    private static Resource addSumEgenkapitalGjeldDetaljering(final Model model, final Resource sumEgenkapitalGjeld, final Regnskap regnskap) {
+        if (regnskap.getEgenkapitalGjeld().getEgenkapital() != null) {
+            Resource egenkapital = model.createResource(BR.Egenkapital);
+            Resource sumEgenkapital = addLiteralIfNotNull(egenkapital, BR.sumEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getSumEgenkapital());
+            if (sumEgenkapital != null) {
+                if (regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital() != null) {
+                    Resource innskuttEgenkapital = model.createResource(BR.InnskuttEgenkapital);
+                    addLiteralIfNotNull(innskuttEgenkapital, BR.sumInnskuttEgenkaptial, regnskap.getEgenkapitalGjeld().getEgenkapital().getInnskuttEgenkapital().getSumInnskuttEgenkaptial());
+                    sumEgenkapital.addProperty(BR.innskuttEgenkapital, innskuttEgenkapital);
+                }
+                if (regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital() != null) {
+                    Resource opptjentEgenkapital = model.createResource(BR.OpptjentEgenkapital);
+                    addLiteralIfNotNull(opptjentEgenkapital, BR.sumOpptjentEgenkapital, regnskap.getEgenkapitalGjeld().getEgenkapital().getOpptjentEgenkapital().getSumOpptjentEgenkapital());
+                    sumEgenkapital.addProperty(BR.opptjentEgenkapital, opptjentEgenkapital);
+                }
+            }
+            sumEgenkapitalGjeld.addProperty(BR.egenkapital, egenkapital);
+        }
+        return sumEgenkapitalGjeld;
+    }
+
+    private static Resource addGjeldOversikt(final Model model, final Resource sumEgenkapitalGjeld, final Regnskap regnskap) {
+        if (regnskap.getEgenkapitalGjeld().getGjeldOversikt() != null) {
+            Resource gjeldOversikt = model.createResource(BR.GjeldOversikt);
+            Resource sumGjeld = addLiteralIfNotNull(gjeldOversikt, BR.sumGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getSumGjeld());
+            if (sumGjeld != null) {
+                if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld() != null) {
+                    Resource langsiktigGjeld = model.createResource(BR.LangsiktigGjeld);
+                    addLiteralIfNotNull(langsiktigGjeld, BR.sumLangsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getLangsiktigGjeld().getSumLangsiktigGjeld());
+                    sumGjeld.addProperty(BR.langsiktigGjeld, langsiktigGjeld);
+                }
+                if (regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld() != null) {
+                    Resource kortsiktigGjeld = model.createResource(BR.KortsiktigGjeld);
+                    addLiteralIfNotNull(kortsiktigGjeld, BR.sumKortsiktigGjeld, regnskap.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().getSumKortsiktigGjeld());
+                    sumGjeld.addProperty(BR.opptjentEgenkapital, kortsiktigGjeld);
+                }
+            }
+            sumEgenkapitalGjeld.addProperty(BR.gjeldOversikt, gjeldOversikt);
+        }
+        return sumEgenkapitalGjeld;
     }
 
     private static Resource addLiteralIfNotNull(final Resource resource, final Property property, final Object value) {
