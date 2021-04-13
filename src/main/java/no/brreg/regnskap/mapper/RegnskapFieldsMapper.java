@@ -59,6 +59,11 @@ public class RegnskapFieldsMapper {
     }
 
     private static void mapFieldsFromXmlDataDefault(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+        mapEgenkapitalGjeldFieldsFromXmlDataDefault(xmlData, fields);
+        mapResultatregnskapFieldsFromXmlDataDefault(xmlData, fields);
+    }
+
+    private static void mapEgenkapitalGjeldFieldsFromXmlDataDefault(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
         for (RegnskapXmlInfo xmlInfo : xmlData) {
             switch(xmlInfo.getFeltkode()) {
                 case FELTKODE_ANLEGGSMIDLER:              fields.getEiendeler().getAnleggsmidler().setSumAnleggsmidler(xmlInfo.getSum()); break;
@@ -71,7 +76,13 @@ public class RegnskapFieldsMapper {
                 case FELTKODE_KORTSIKTIG_GJELD:           fields.getEgenkapitalGjeld().getGjeldOversikt().getKortsiktigGjeld().setSumKortsiktigGjeld(xmlInfo.getSum()); break;
                 case FELTKODE_GJELD:                      fields.getEgenkapitalGjeld().getGjeldOversikt().setSumGjeld(xmlInfo.getSum()); break;
                 case FELTKODE_EGENKAPITAL_GJELD:          fields.getEgenkapitalGjeld().setSumEgenkapitalGjeld(xmlInfo.getSum()); break;
+            }
+        }
+    }
 
+    private static void mapResultatregnskapFieldsFromXmlDataDefault(final List<RegnskapXmlInfo> xmlData, RegnskapFields fields) {
+        for (RegnskapXmlInfo xmlInfo : xmlData) {
+            switch(xmlInfo.getFeltkode()) {
                 case FELTKODE_DRIFTSINNTEKTER:            fields.getResultatregnskapResultat().getDriftsresultat().getDriftsinntekter().setSumDriftsinntekter(xmlInfo.getSum()); break;
                 case FELTKODE_DRIFTSKOSTNAD:              fields.getResultatregnskapResultat().getDriftsresultat().getDriftskostnad().setSumDriftskostnad(xmlInfo.getSum()); break;
                 case FELTKODE_DRIFTSRESULTAT:             fields.getResultatregnskapResultat().getDriftsresultat().setDriftsresultat(xmlInfo.getSum()); break;
