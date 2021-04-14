@@ -510,7 +510,7 @@ public class RegnskapRepository {
     private String readString(final ResultSet rs, final String column) throws SQLException {
         String result = rs.getString(column);
         if (rs.wasNull()) {
-            return null;
+            return "";
         }
         return result;
     }
@@ -542,7 +542,7 @@ public class RegnskapRepository {
     private Boolean readBoolean(final ResultSet rs, final String column) throws SQLException {
         Boolean result = rs.getBoolean(column);
         if (rs.wasNull()) {
-            return null;
+            return false;
         }
         return result;
     }
