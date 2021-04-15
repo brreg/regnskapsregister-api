@@ -49,8 +49,25 @@ public class JenaUtils {
     }
 
     private static class MediaQuality {
-        public MimeType mediaType = null;
-        public double quality = 0.0;
+        private MimeType mediaType = null;
+        private double quality = 0.0;
+
+        public MimeType getMediaType() {
+            return mediaType;
+        }
+
+        public void setMediaType(MimeType mediaType) {
+            this.mediaType = mediaType;
+        }
+
+        public double getQuality() {
+            return quality;
+        }
+
+        public void setQuality(double quality) {
+            this.quality = quality;
+        }
+
     }
 
     public static MimeType negotiateMimeType(final String acceptHeader) {
@@ -100,13 +117,13 @@ public class JenaUtils {
                 continue;
             }
             MediaQuality mediaQuality = extractMediaQuality(mediaRange);          
-            if (mediaQuality.mediaType==null) {
+            if (mediaQuality.getMediaType()==null) {
                 continue;
             }
 
             //Collect highest quality value
-            if (!acceptedMimeTypes.containsKey(mediaQuality.mediaType) || acceptedMimeTypes.get(mediaQuality.mediaType)<mediaQuality.quality) {
-                acceptedMimeTypes.put(mediaQuality.mediaType, mediaQuality.quality);
+            if (!acceptedMimeTypes.containsKey(mediaQuality.getMediaType()) || acceptedMimeTypes.get(mediaQuality.getMediaType())<mediaQuality.getQuality()) {
+                acceptedMimeTypes.put(mediaQuality.getMediaType(), mediaQuality.getQuality());
             }           
         }
         return acceptedMimeTypes;
@@ -118,12 +135,12 @@ public class JenaUtils {
 
         String[] parameters = mediaRange.split(";");
         if (parameters==null || parameters.length<=1) {
-            mediaQuality.mediaType = MimeType.valueOf(mediaRange);
-            mediaQuality.quality = 1.0;
+            mediaQuality.setMediaType(MimeType.valueOf(mediaRange));
+            mediaQuality.setQuality(1.0);
         } else {
             //There are parameters present!
-            mediaQuality.mediaType = MimeType.valueOf(parameters[0]);
-            mediaQuality.quality = 1.0; //Default to 1.0, but check if quality is one of the parameters
+            mediaQuality.setMediaType(MimeType.valueOf(parameters[0]));
+            mediaQuality.setQuality(1.0); //Default to 1.0, but check if quality is one of the parameters
 
             for (int acceptExtensionIndex=1; acceptExtensionIndex<parameters.length; acceptExtensionIndex++) {
                 String acceptParams = parameters[acceptExtensionIndex].trim();
@@ -135,9 +152,9 @@ public class JenaUtils {
                 String[] acceptExtension = acceptParams.split("=");
                 if (acceptExtension!=null && acceptExtension.length==PARAM_PAIR_LENGTH && "q".equals(acceptExtension[0].trim())) {
                     try {
-                        mediaQuality.quality = Double.valueOf(acceptExtension[1]);
+                        mediaQuality.setQuality(Double.valueOf(acceptExtension[1]));
                     } catch (NumberFormatException e) {
-                        mediaQuality.quality = 0.0;
+                        mediaQuality.setQuality(0.0);
                     }
                 }
             }
