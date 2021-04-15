@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegnskapXmlInfo {
@@ -39,11 +39,11 @@ public class RegnskapXmlInfo {
     }
 
     public List<RegnskapXmlPost> getPost() {
-        return post;
+        return new ArrayList<RegnskapXmlPost>(post);
     }
 
     public void setPost(final List<RegnskapXmlPost> post) {
-        this.post = post;
+        this.post = new ArrayList<RegnskapXmlPost>(post);
     }
 
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.List;
+import java.util.ArrayList;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,11 +28,11 @@ public class RegnskapXml {
     }
 
     public List<RegnskapXmlInfo> getPosts() {
-        return posts;
+        return new ArrayList<RegnskapXmlInfo>(posts);
     }
 
     public void setPosts(final List<RegnskapXmlInfo> posts) {
-        this.posts = posts;
+        this.posts = new ArrayList<RegnskapXmlInfo>(posts);
     }
 
     public boolean essentialFieldsIncluded() {
