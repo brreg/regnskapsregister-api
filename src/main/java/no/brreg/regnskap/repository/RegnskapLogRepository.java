@@ -123,11 +123,15 @@ public class RegnskapLogRepository {
             }
         } finally {
             if (tmpFile != null) {
-                tmpFile.delete();
+                if(!tmpFile.delete()) {
+                    LOGGER.error("Temporary file could not be deleted: ", tmpFile.getName());
+                }
             }
 
             if (tmpZipFile != null) {
-                tmpZipFile.delete();
+                if(!tmpZipFile.delete()) {
+                    LOGGER.error("Temporary file could not be deleted: ", tmpZipFile.getName());
+                }
             }
         }
     }
