@@ -17,6 +17,9 @@ def deployOrder = [
 ]
 
 def roleyOptions = [
+        "appname"    : "regnskap-api",
+        "filename"   : "apps/regnskap-api",
+        "domain"     : "regnskap",
         "deployments": deployOrder
 ]
 
