@@ -25,6 +25,7 @@ def overrides = [
         "buildLoglevel": "DEBUG",
         "cleanJVMOpts": true,
         "deployFromBranch": "main",
-        "mavenProfile" : "all-tests"
+        "mavenProfile" : "all-tests",
+        roleyOptions: roleyOptions,
 ]
 jenkinsfile.run(version, overrides)
