@@ -5,13 +5,13 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.7-0">
-        <addColumn tableName="regnskap" schemaName="rreg">
+        <addColumn tableName="regnskap" schemaName="rregapi">
             <column name="_id_regnskaplog" type="INT"/>
         </addColumn>
 
-        <addForeignKeyConstraint baseColumnNames="_id_regnskaplog" baseTableName="regnskap" baseTableSchemaName="rreg"
+        <addForeignKeyConstraint baseColumnNames="_id_regnskaplog" baseTableName="regnskap" baseTableSchemaName="rregapi"
                                  constraintName="rreg_r_rl_fk" onDelete="CASCADE" onUpdate="CASCADE"
-                                 referencedColumnNames="_id" referencedTableName="regnskaplog" referencedTableSchemaName="rreg"/>
+                                 referencedColumnNames="_id" referencedTableName="regnskaplog" referencedTableSchemaName="rregapi"/>
     </changeSet>
 
 </databaseChangeLog>

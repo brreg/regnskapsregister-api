@@ -5,7 +5,7 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet author="extfrg" id="1.6-0">
-        <createIndex tableName="felt" schemaName="rreg" indexName="felt_idregnskap_idx" unique="false">
+        <createIndex tableName="felt" schemaName="rregapi" indexName="felt_idregnskap_idx" unique="false">
             <column name="_id_regnskap"/>
         </createIndex>
     </changeSet>

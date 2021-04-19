@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>no.regnskap</groupId>
+    <groupId>no.brreg.regnskap</groupId>
     <artifactId>regnskapsregister-api</artifactId>
     <name>Regnskapsregister</name>
-    <version>1.0.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -35,7 +35,15 @@
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
 
-        <start-class>no.regnskap.Application</start-class>
+        <start-class>no.brreg.regnskap.Application</start-class>
+
+        <sonar.host.url>http://sonar1.brreg.no:9000</sonar.host.url>
+        <sonar.maven.version>6.2</sonar.maven.version>
+        <build.profile.id>dev</build.profile.id>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.jacoco.itReportPath>${project.build.directory}/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.jacoco.reportPath>${project.build.directory}/jacoco-ut.exec</sonar.jacoco.reportPath>
+        <integration.test.pattern>**/*IntegrationTest.java, **/*IT.java, **/RunCucumberTests.java</integration.test.pattern>
     </properties>
 
 
@@ -80,22 +88,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- TEST JUnit5 -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
@@ -203,8 +195,34 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>all-tests</id>
+            <properties>
+                <build.profile.id>all-tests</build.profile.id>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration combine.self="override">
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                            <argLine>${surefireArgLine} -Dfile.encoding=${java.encoding}</argLine>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dev</id>
+        </profile>
+    </profiles>
+
+
     <build>
-        <finalName>app</finalName>
 
         <resources>
             <resource>
@@ -241,9 +259,9 @@
                             <generatorName>spring</generatorName>
                             <templateDirectory>${project.basedir}/src/main/resources/openAPI/openapi-generator-maven-plugin/templates/JavaSpring</templateDirectory>
                             <output>${project.build.directory}/generated-sources/openapi</output>
-                            <invokerPackage>no.regnskap.generated</invokerPackage>
-                            <apiPackage>no.regnskap.generated.api</apiPackage>
-                            <modelPackage>no.regnskap.generated.model</modelPackage>
+                            <invokerPackage>no.brreg.regnskap.generated</invokerPackage>
+                            <apiPackage>no.brreg.regnskap.generated.api</apiPackage>
+                            <modelPackage>no.brreg.regnskap.generated.model</modelPackage>
                             <configOptions>
                                 <allowUnicodeIdentifiers>true</allowUnicodeIdentifiers>
                                 <sourceFolder>src/main/java/gen</sourceFolder>
@@ -275,8 +293,8 @@
                 <configuration>
                     <ignoreErrors>false</ignoreErrors>
                     <ignoreMissingFile>false</ignoreMissingFile>
-                    <file>${project.basedir}/src/main/java/no/regnskap/spring/ApplicationInfo.template</file>
-                    <outputFile>${project.basedir}/src/main/java/no/regnskap/spring/ApplicationInfo.java</outputFile>
+                    <file>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.template</file>
+                    <outputFile>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.java</outputFile>
                     <token>%VERSION%</token>
                     <value>${project.version}</value>
                 </configuration>
@@ -293,30 +311,6 @@
                     <encoding>${java.encoding}</encoding>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>java-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>java-test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -325,23 +319,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <excludes>
+                        <exclude>${integration.test.pattern}</exclude>
+                    </excludes>
                     <groups>unit</groups>
-                </configuration>
-            </plugin>
-
-            <!-- Integration test runner -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
-                    <groups>service</groups>
-                    <excludedGroups>unit</excludedGroups>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
                 </configuration>
             </plugin>
 
@@ -356,17 +338,28 @@
                 <version>0.8.5</version>
                 <executions>
                     <execution>
+                        <id>pre-unit-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
-                        <id>jacoco-report</id>
-                        <phase>verify</phase>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <dataFile>${sonar.jacoco.reportPath}</dataFile>
+                            <!-- Sets the output directory for the code coverage report for unit tests. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                        </configuration>
                     </execution>
+                    
                 </executions>
             </plugin>
 
@@ -376,6 +369,44 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>distro-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/leveransepakke_descriptor.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
     </build>
+
+     <repositories>
+        <repository>
+            <id>maven-all</id>
+            <name>Maven all</name>
+            <url>https://nexus-repo1.brreg.no/repository/maven-all/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>https://nexus-repo1.brreg.no/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>maven-releases</id>
+            <url>https://nexus-repo1.brreg.no/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
