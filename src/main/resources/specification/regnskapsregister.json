@@ -22,12 +22,12 @@
   ],
   "servers": [
     {
-      "url": "http://34.98.91.231",
+      "url": "https://data.ppe.brreg.no",
       "description": "Server i produksjonsmiljø"
     }
   ],
   "paths": {
-    "/regnskap": {
+    "/regnskapsregisteret/regnskap": {
       "get": {
         "tags": [
           "regnskap"
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/regnskap/{id}": {
+    "/regnskapsregisteret/regnskap/{id}": {
       "get": {
         "tags": [
           "regnskap"
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/regnskap/log": {
+    "/regnskapsregisteret/regnskap/log": {
       "get": {
         "tags": [
           "regnskap"
