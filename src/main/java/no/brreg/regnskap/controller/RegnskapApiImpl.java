@@ -29,7 +29,7 @@ import java.util.List;
 
 @Controller
 @RestControllerAdvice
-public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.RegnskapApi {
+public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.RegnskapsregisteretApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegnskapApiImpl.class);
 
     @Autowired
