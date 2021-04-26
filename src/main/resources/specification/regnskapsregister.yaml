@@ -18,9 +18,9 @@ tags:
   - name: regnskapsregisteret
     description: Regnskapsregister API
 servers:
-  - url: 'http://data.ppe.brreg.no/swagger-ui/'
+  - url: 'http://data.ppe.brreg.no/regnskapsregisteret/regnskap/swagger-ui/'
     description: Server i prodmiljø
-  - url: 'http://rreg.ut1.rreg-dev.brreg.no/swagger-ui/'
+  - url: 'http://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap/swagger-ui/'
     description: Server i utviklingsmiljø
 paths:
   /regnskapsregisteret/regnskap/{orgNummer}:
