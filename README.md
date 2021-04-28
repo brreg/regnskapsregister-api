@@ -98,6 +98,47 @@ In a shell, execute "base64 --decode <exported_file> > file.zip"
 
 Unzip this file to get the original masse.xml-file
 
+## Moving data from one database instance to another
+Overview of the process:
+* Extract encoded import files from regnskaplog table in old database
+* Recreate import xml files from the extracted data
+* Upload the import files to the sftp server where regnskap-api usually gets its data
+* Let the ordinary import do its thing. The data will be imported in the same way as the ordinary database import process.
+
+### Extract encoded import files from old database
+Log on to database with psql client. If you are extracting from an google cloud database, you must first install the cloud sql proxy. Follow Googles's instructions here: https://cloud.google.com/sql/docs/postgres/quickstart-proxy-test
+
+You then need to download a key for the database's service account. 
+Go to Google Cloud Platform|SQL, select the SQL instance and in Overview, take a note of which Service Account is used.
+Go to Google Cloud Platform|IAM & Admin|Service Accounts, find the service account, and create a key using the corresponding three dot Action.
+
+Then run the proxy:
+```
+./cloud_sql_proxy -instances=<gcp-database-instance-id>:5432 -credential_file=service-account-key-file.json
+```
+
+Log on to psql, change to correct database and run extraction query:
+```
+psql --host=<hostname> -U <databaseuser>
+\connect rrapi
+\copy (select filename, ENCODE(zipfile, 'base64') from rreg.regnskaplog) to 'export.csv' csv
+```
+
+### Extact xml import files from exported csv file
+This is done by running a python script: migration/split.py
+Edit the file to ensure filenames and directories are correct
+```
+python split.py
+```
+### Upload import files to sftp server
+Upload the xml files produced in the previous step into the sftp server used by the new regnskap-api instance to fetch new data.
+Use your preferred sftp client, and use the same credentials used by the application to access the sftp server.
+
+### Import file processing
+The application will normally start processing the files each morning, and it will import all files not already imported (it will check its log).
+If you want the import to start immediately, restart the pod on Openshift.
+
+
 # Useful links
 [RREG-API GitHub repository](https://github.com/brreg/regnskapsregister-api/)
 
