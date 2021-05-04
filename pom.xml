@@ -5,7 +5,7 @@
     <groupId>no.brreg.regnskap</groupId>
     <artifactId>regnskapsregister-api</artifactId>
     <name>Regnskapsregister</name>
-    <version>1.1.9</version>
+    <version>1.1.10</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.2.32</version>
+            <version>1.5.8</version>
         </dependency>
 
         <dependency>
