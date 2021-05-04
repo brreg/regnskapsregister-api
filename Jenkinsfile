@@ -9,10 +9,6 @@ def deployOrder = [
         "1": [
                 "name"   : "-",
                 "cluster": "regsys-st"
-        ],
-        "2": [
-                "name"   : "-",
-                "cluster": "regsys-ppe"
         ]
 ]
 
@@ -27,7 +23,7 @@ def overrides = [
         "noCucumber": true,
         "buildLoglevel": "DEBUG",
         "cleanJVMOpts": true,
-        "deployFromBranch": "main",
+        "deployFromBranch": "fix-swagger-ui",
         "mavenProfile" : "all-tests",
         roleyOptions: roleyOptions,
 ]
