@@ -154,7 +154,7 @@ The application is not deployed to a production environment, as it is currently 
 
 [RREG-API Endpoint](https://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap)
 
-[RREG-API Swagger UI](http://rreg.ut1.rreg-dev.brreg.no/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config)
+[RREG-API Swagger UI](https://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap/swagger-ui/index.html)
 
 ## PPE Pre-prod environment
 
