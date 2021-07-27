@@ -161,3 +161,9 @@ The application is not deployed to a production environment, as it is currently 
 [RREG-API PPE OPenshift deployment details](https://console-openshift-console.apps.ocp-ppe.regsys.brreg.no/k8s/cluster/projects/regnskap) (available only on Brønnøysundregistrene's internal network)
 
 [RREG-API Endpoint](https://data.ppe.brreg.no/regnskapsregisteret/regnskap)
+
+## PRD Production environment
+
+[RREG-API PPE OPenshift deployment details](https://console-openshift-console.apps.ocp-prd.regsys.brreg.no/k8s/cluster/projects/regnskap) (available only on Brønnøysundregistrene's internal network)
+
+[RREG-API Endpoint](https://data.brreg.no/regnskapsregisteret/regnskap)
