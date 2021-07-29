@@ -120,9 +120,8 @@ Then run the proxy:
 
 Log on to psql, change to correct database and run extraction query:
 ```
-psql --host=<hostname> -U <databaseuser>
-\connect rrapi
-\copy (select filename, ENCODE(zipfile, 'base64') from rreg.regnskaplog) to 'export.csv' csv
+psql --host=<hostname> -U <databaseuser> -d <databasename>
+\copy (select filename, ENCODE(zipfile, 'base64') from rregapi.regnskaplog) to 'export.csv' csv
 ```
 
 ### Extact xml import files from exported csv file
@@ -161,3 +160,9 @@ The application is not deployed to a production environment, as it is currently 
 [RREG-API PPE OPenshift deployment details](https://console-openshift-console.apps.ocp-ppe.regsys.brreg.no/k8s/cluster/projects/regnskap) (available only on Brønnøysundregistrene's internal network)
 
 [RREG-API Endpoint](https://data.ppe.brreg.no/regnskapsregisteret/regnskap)
+
+## PRD Production environment
+
+[RREG-API PPE OPenshift deployment details](https://console-openshift-console.apps.ocp-prd.regsys.brreg.no/k8s/cluster/projects/regnskap) (available only on Brønnøysundregistrene's internal network)
+
+[RREG-API Endpoint](https://data.brreg.no/regnskapsregisteret/regnskap)
