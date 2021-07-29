@@ -120,9 +120,8 @@ Then run the proxy:
 
 Log on to psql, change to correct database and run extraction query:
 ```
-psql --host=<hostname> -U <databaseuser>
-\connect rrapi
-\copy (select filename, ENCODE(zipfile, 'base64') from rreg.regnskaplog) to 'export.csv' csv
+psql --host=<hostname> -U <databaseuser> -d <databasename>
+\copy (select filename, ENCODE(zipfile, 'base64') from rregapi.regnskaplog) to 'export.csv' csv
 ```
 
 ### Extact xml import files from exported csv file
