@@ -18,8 +18,10 @@ tags:
   - name: regnskapsregisteret
     description: Regnskapsregister API
 servers:
-  - url: 'http://data.ppe.brreg.no/regnskapsregisteret/regnskap/'
+  - url: 'http://data.brreg.no/regnskapsregisteret/regnskap/'
     description: Server i prodmiljø
+  - url: 'http://data.ppe.brreg.no/regnskapsregisteret/regnskap/'
+    description: Server i preprod-miljø
   - url: 'http://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap/'
     description: Server i utviklingsmiljø
 paths:
