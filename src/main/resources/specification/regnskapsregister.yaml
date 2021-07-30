@@ -24,8 +24,10 @@ servers:
     description: Server i preprod-miljø
   - url: 'http://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap/'
     description: Server i utviklingsmiljø
+  - url: 'http://localhost:8080/regnskapsregisteret/'
+    description: "lokalt på utviklers pc"
 paths:
-  /regnskapsregisteret/regnskap/{orgNummer}:
+  /regnskap/{orgNummer}:
     get:
       tags:
         - regnskap
@@ -73,7 +75,7 @@ paths:
             text/turtle:
               schema:
                 type: object
-  /regnskapsregisteret/regnskap/{orgNummer}/{id}:
+  /regnskap/{orgNummer}/{id}:
     get:
       tags:
         - regnskap
@@ -116,7 +118,7 @@ paths:
               schema:
                 type: object
 
-  /regnskapsregisteret/regnskap/log:
+  /regnskap/log:
     get:
       tags:
         - regnskap
