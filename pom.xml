@@ -31,7 +31,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <jena.version>3.17.0</jena.version>
+        <jena.version>4.2.0</jena.version>
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
 
