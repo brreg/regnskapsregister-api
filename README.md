@@ -25,10 +25,10 @@ PostgreSQL - https://www.postgresql.org/download/windows/
 ## Environment variables
 These are needed for RREG-API integration:
 ```
-RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/postgres?currentSchema=rregapi&sslmode=prefer"
-RRAPI_POSTGRES_DBO_USER="postgres" (whatever you used in your locally installed Postgresql)
+RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer"
+RRAPI_POSTGRES_DBO_USER="regnskap" (whatever you used in your locally installed Postgresql)
 RRAPI_POSTGRES_DBO_PASSWORD="password" (whatever you used in your locally installed Postgresql)
-RRAPI_POSTGRES_USER="postgres" (whatever you used in your locally installed Postgresql)
+RRAPI_POSTGRES_USER="regnskap" (whatever you used in your locally installed Postgresql)
 RRAPI_POSTGRES_PASSWORD="password" (whatever you used in your locally installed Postgresql)
 RRAPI_SFTP_SERVER="filporten.brreg.no"
 RRAPI_SFTP_PORT="22"
@@ -47,7 +47,7 @@ regnskap.fileimport.directory=C:/src/regnskapsregister-api/ (or wherever you mig
 ##### Linux
 Open ~/.bashrc and add the lines
 ```
-export RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/postgres?currentSchema=rregapi&sslmode=prefer"
+export RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer"
 export RRAPI_POSTGRES_DBO_USER="postgres" (whatever you used in your locally installed Postgresql)
 ...
 ```
