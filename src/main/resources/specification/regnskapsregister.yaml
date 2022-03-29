@@ -26,7 +26,7 @@ paths:
   /regnskapsregisteret/regnskap/{orgNummer}:
     get:
       tags:
-        - regnskap
+        - regnskapsregisteret
       summary: Query for regnskap.
       description: Returnerer en samling årsregnskap
       operationId: getRegnskap
@@ -75,7 +75,7 @@ paths:
   /regnskapsregisteret/regnskap/{orgNummer}/{id}:
     get:
       tags:
-        - regnskap
+        - regnskapsregisteret
       description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
