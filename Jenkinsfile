@@ -8,10 +8,6 @@ stage('load pipeline') {
 def deployOrder = [
         "1": [
                 "name"   : "-",
-                "cluster": "regsys-st"
-        ],
-        "2": [
-                "name"   : "-",
                 "cluster": "regsys-ppe"
         ]
 ]
