@@ -6,7 +6,7 @@ import no.brreg.regnskap.generated.model.Regnskap;
 import no.brreg.regnskap.generated.model.Regnskapstype;
 import no.brreg.regnskap.jena.ExternalUrls;
 import no.brreg.regnskap.jena.JenaUtils;
-import no.brreg.regnskap.mapper.RegnskapFieldsMapper;
+import no.brreg.regnskap.mapper.RegnskapFieldsMapper.RegnskapFieldIncludeMode;
 import no.brreg.regnskap.model.Partner;
 import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.service.RegnskapService;
@@ -21,10 +21,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static no.brreg.regnskap.jena.JenaUtils.*;
 
 
 @Controller
@@ -69,11 +73,11 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskap", orgNummer);
 
-            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
+            RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldIncludeMode.DEFAULT;
             try {
                 Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
-                if (partner!=null && partner.isAuthorized()) {
-                    regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+                if (partner != null && partner.isAuthorized()) {
+                    regnskapFieldIncludeMode = RegnskapFieldIncludeMode.PARTNER;
                 }
             } catch (IllegalArgumentException e) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -83,17 +87,18 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
 
             if (regnskapList == null || regnskapList.size() == 0) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
-                if (JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
-                    ExternalUrls urls = new ExternalUrls(profileConditionalValues.regnskapsregisteretUrl(),
-                                                         profileConditionalValues.organizationCatalogueUrl());
-                    String body = JenaUtils.modelToString(JenaUtils.createJenaResponse(regnskapList, urls), JenaUtils.mimeTypeToJenaFormat(negotiatedMimeType));
-                    return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
-                } else {
-                    return new ResponseEntity<>(regnskapList, HttpStatus.OK);
-                }
             }
+
+            MimeType negotiatedMimeType = negotiateMimeType(httpServletRequest.getHeader("Accept"));
+            if (!JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
+                return new ResponseEntity<>(regnskapList, HttpStatus.OK);
+            }
+
+            String self = profileConditionalValues.regnskapsregisteretUrl();
+            String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
+            ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
+            String body = modelToString(createJenaResponse(regnskapList, urls), mimeTypeToJenaFormat(negotiatedMimeType));
+            return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
         } catch (Exception e) {
             LOGGER.error("getRegnskap failed: ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -106,32 +111,33 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");
 
-            RegnskapFieldsMapper.RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.DEFAULT;
+            RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldIncludeMode.DEFAULT;
             try {
                 Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
                 if (partner != null && partner.isAuthorized()) {
-                    regnskapFieldIncludeMode = RegnskapFieldsMapper.RegnskapFieldIncludeMode.PARTNER;
+                    regnskapFieldIncludeMode = RegnskapFieldIncludeMode.PARTNER;
                 }
             } catch (IllegalArgumentException e) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
             List<Regnskap> regnskaper = regnskapService.getByOrgnr(orgNummer, id, null, null, regnskapFieldIncludeMode);
-            Regnskap regnskap = (regnskaper==null || regnskaper.isEmpty()) ? null : regnskaper.get(0);
+            Regnskap regnskap = (regnskaper == null || regnskaper.isEmpty()) ? null : regnskaper.get(0);
 
             if (regnskap == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                MimeType negotiatedMimeType = JenaUtils.negotiateMimeType(httpServletRequest.getHeader("Accept"));
-                if (negotiatedMimeType == null) {
-                    return new ResponseEntity<>(regnskap, HttpStatus.OK);
-                } else {
-                    ExternalUrls urls = new ExternalUrls(profileConditionalValues.regnskapsregisteretUrl(),
-                                                         profileConditionalValues.organizationCatalogueUrl());
-                    String body = JenaUtils.modelToString(JenaUtils.createJenaResponse(regnskap, urls), JenaUtils.mimeTypeToJenaFormat(negotiatedMimeType));
-                    return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
-                }
             }
+
+            MimeType negotiatedMimeType = negotiateMimeType(httpServletRequest.getHeader("Accept"));
+            if (!JenaUtils.jenaCanSerialize(negotiatedMimeType)) {
+                return new ResponseEntity<>(regnskap, HttpStatus.OK);
+            }
+
+            String self = profileConditionalValues.regnskapsregisteretUrl();
+            String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
+            ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
+            String body = modelToString(createJenaResponse(regnskap, urls), mimeTypeToJenaFormat(negotiatedMimeType));
+            return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
         } catch (Exception e) {
             LOGGER.error("getRegnskapById failed: ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

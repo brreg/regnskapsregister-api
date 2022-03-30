@@ -14,7 +14,7 @@ public class JenaResponseReader {
         return new InputStreamReader(JenaResponseReader.class.getClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8);
     }
 
-    private static String resourceAsString(final String resourceName) throws IOException {
+    public static String resourceAsString(final String resourceName) throws IOException {
         StringBuilder sb = new StringBuilder();
         String line;
         try (BufferedReader bufferedReader = new BufferedReader(JenaResponseReader.resourceAsReader(resourceName))) {
