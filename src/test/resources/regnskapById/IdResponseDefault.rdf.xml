@@ -1,0 +1,153 @@
+<rdf:RDF
+        xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:schema="http://schema.org/"
+        xmlns:br="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#"
+        xmlns:org="http://www.w3.org/ns/org#"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <br:Regnskap rdf:about="http://invalid.org/regnskap/123456789/7">
+        <br:oppstillingsplan>store</br:oppstillingsplan>
+        <br:resultatregnskapResultat>
+            <br:ResultatregnskapResultat>
+                <br:finansresultat>
+                    <br:Finansresultat>
+                        <br:finanskostnad>
+                            <br:Finanskostnad>
+                                <br:sumFinanskostnad rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2048</br:sumFinanskostnad>
+                            </br:Finanskostnad>
+                        </br:finanskostnad>
+                        <br:finansinntekt>
+                            <br:Finansinntekt>
+                                <br:sumFinansinntekter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2045</br:sumFinansinntekter>
+                            </br:Finansinntekt>
+                        </br:finansinntekt>
+                        <br:nettoFinans rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2044</br:nettoFinans>
+                    </br:Finansresultat>
+                </br:finansresultat>
+                <br:driftsresultat>
+                    <br:Driftsresultat>
+                        <br:driftskostnad>
+                            <br:Driftskostnad>
+                                <br:sumDriftskostnad rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2043</br:sumDriftskostnad>
+                            </br:Driftskostnad>
+                        </br:driftskostnad>
+                        <br:driftsinntekter>
+                            <br:Driftsinntekter>
+                                <br:sumDriftsinntekter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2041</br:sumDriftsinntekter>
+                            </br:Driftsinntekter>
+                        </br:driftsinntekter>
+                        <br:sumDriftsresultat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2039</br:sumDriftsresultat>
+                    </br:Driftsresultat>
+                </br:driftsresultat>
+                <br:ordinaertResultatFoerSkattekostnad rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                >2033</br:ordinaertResultatFoerSkattekostnad>
+                <br:totalresultat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                >2038</br:totalresultat>
+                <br:aarsresultat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                >2037</br:aarsresultat>
+            </br:ResultatregnskapResultat>
+        </br:resultatregnskapResultat>
+        <br:egenkapitalGjeld>
+            <br:EgenkapitalGjeld>
+                <br:gjeldOversikt>
+                    <br:GjeldOversikt>
+                        <br:opptjentEgenkapital>
+                            <br:KortsiktigGjeld>
+                                <br:sumKortsiktigGjeld rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2031</br:sumKortsiktigGjeld>
+                            </br:KortsiktigGjeld>
+                        </br:opptjentEgenkapital>
+                        <br:langsiktigGjeld>
+                            <br:LangsiktigGjeld>
+                                <br:sumLangsiktigGjeld rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2032</br:sumLangsiktigGjeld>
+                            </br:LangsiktigGjeld>
+                        </br:langsiktigGjeld>
+                        <br:sumGjeld rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2030</br:sumGjeld>
+                    </br:GjeldOversikt>
+                </br:gjeldOversikt>
+                <br:egenkapital>
+                    <br:Egenkapital>
+                        <br:opptjentEgenkapital>
+                            <br:OpptjentEgenkapital>
+                                <br:sumOpptjentEgenkapital rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2029</br:sumOpptjentEgenkapital>
+                            </br:OpptjentEgenkapital>
+                        </br:opptjentEgenkapital>
+                        <br:innskuttEgenkapital>
+                            <br:InnskuttEgenkapital>
+                                <br:sumInnskuttEgenkaptial rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                                >2028</br:sumInnskuttEgenkaptial>
+                            </br:InnskuttEgenkapital>
+                        </br:innskuttEgenkapital>
+                        <br:sumEgenkapital rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2027</br:sumEgenkapital>
+                    </br:Egenkapital>
+                </br:egenkapital>
+                <br:sumEgenkapitalGjeld rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                >2026</br:sumEgenkapitalGjeld>
+            </br:EgenkapitalGjeld>
+        </br:egenkapitalGjeld>
+        <br:regnskapsprinsipper>
+            <br:Regnskapsprinsipper>
+                <br:regnskapsregler>regnskapslovenAlminneligRegler</br:regnskapsregler>
+                <br:smaaForetak rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+                >true</br:smaaForetak>
+            </br:Regnskapsprinsipper>
+        </br:regnskapsprinsipper>
+        <br:revisjon>
+            <br:Revisjon>
+                <br:fravalgRevisjon rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+                >true</br:fravalgRevisjon>
+                <br:ikkeRevidertAarsregnskap rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+                >true</br:ikkeRevidertAarsregnskap>
+            </br:Revisjon>
+        </br:revisjon>
+        <dct:identifier>7</dct:identifier>
+        <schema:currency>valutakode</schema:currency>
+        <br:regnskapsperiode>
+            <dct:PeriodOfTime>
+                <schema:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
+                >2018-12-31</schema:endDate>
+                <schema:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
+                >2018-01-01</schema:startDate>
+            </dct:PeriodOfTime>
+        </br:regnskapsperiode>
+        <br:eiendeler>
+            <br:Eiendeler>
+                <br:omloepsmidler>
+                    <br:Omloepsmidler>
+                        <br:sumOmloepsmidler rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2025</br:sumOmloepsmidler>
+                    </br:Omloepsmidler>
+                </br:omloepsmidler>
+                <br:anleggsmidler>
+                    <br:Anleggsmidler>
+                        <br:sumAnleggsmidler rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                        >2024</br:sumAnleggsmidler>
+                    </br:Anleggsmidler>
+                </br:anleggsmidler>
+                <br:sumEiendeler rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
+                >2023</br:sumEiendeler>
+            </br:Eiendeler>
+        </br:eiendeler>
+        <br:virksomhet>
+            <br:Virksomhet>
+                <br:morselskap rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+                >true</br:morselskap>
+                <br:organisasjonsform>AS</br:organisasjonsform>
+                <br:organisasjonsnummer>123456789</br:organisasjonsnummer>
+                <org:organization rdf:resource="https://invalid.org/organizations/123456789"/>
+            </br:Virksomhet>
+        </br:virksomhet>
+        <br:avviklingsregnskap rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >true</br:avviklingsregnskap>
+    </br:Regnskap>
+</rdf:RDF>

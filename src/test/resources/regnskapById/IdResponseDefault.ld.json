@@ -1,0 +1,336 @@
+{
+  "@graph" : [ {
+    "@id" : "_:b0",
+    "@type" : "dct:PeriodOfTime",
+    "endDate" : "2018-12-31",
+    "startDate" : "2018-01-01"
+  }, {
+    "@id" : "_:b1",
+    "@type" : "br:ResultatregnskapResultat",
+    "aarsresultat" : "2037",
+    "driftsresultat" : "_:b3",
+    "finansresultat" : "_:b2",
+    "ordinaertResultatFoerSkattekostnad" : "2033",
+    "totalresultat" : "2038"
+  }, {
+    "@id" : "_:b10",
+    "@type" : "br:Driftsinntekter",
+    "sumDriftsinntekter" : "2041"
+  }, {
+    "@id" : "_:b11",
+    "@type" : "br:InnskuttEgenkapital",
+    "sumInnskuttEgenkaptial" : "2028"
+  }, {
+    "@id" : "_:b12",
+    "@type" : "br:Finanskostnad",
+    "sumFinanskostnad" : "2048"
+  }, {
+    "@id" : "_:b13",
+    "@type" : "br:Virksomhet",
+    "organization" : "https://invalid.org/organizations/123456789",
+    "br:morselskap" : true,
+    "organisasjonsform" : "AS",
+    "organisasjonsnummer" : "123456789"
+  }, {
+    "@id" : "_:b14",
+    "@type" : "br:Regnskapsprinsipper",
+    "regnskapsregler" : "regnskapslovenAlminneligRegler",
+    "br:smaaForetak" : true
+  }, {
+    "@id" : "_:b15",
+    "@type" : "br:Eiendeler",
+    "anleggsmidler" : "_:b18",
+    "omloepsmidler" : "_:b17",
+    "sumEiendeler" : "2023"
+  }, {
+    "@id" : "_:b16",
+    "@type" : "br:Revisjon",
+    "br:fravalgRevisjon" : true,
+    "br:ikkeRevidertAarsregnskap" : true
+  }, {
+    "@id" : "_:b17",
+    "@type" : "br:Omloepsmidler",
+    "sumOmloepsmidler" : "2025"
+  }, {
+    "@id" : "_:b18",
+    "@type" : "br:Anleggsmidler",
+    "sumAnleggsmidler" : "2024"
+  }, {
+    "@id" : "_:b19",
+    "@type" : "br:Driftskostnad",
+    "sumDriftskostnad" : "2043"
+  }, {
+    "@id" : "_:b2",
+    "@type" : "br:Finansresultat",
+    "finansinntekt" : "_:b8",
+    "finanskostnad" : "_:b12",
+    "nettoFinans" : "2044"
+  }, {
+    "@id" : "_:b20",
+    "@type" : "br:LangsiktigGjeld",
+    "sumLangsiktigGjeld" : "2032"
+  }, {
+    "@id" : "_:b3",
+    "@type" : "br:Driftsresultat",
+    "driftsinntekter" : "_:b10",
+    "driftskostnad" : "_:b19",
+    "sumDriftsresultat" : "2039"
+  }, {
+    "@id" : "_:b4",
+    "@type" : "br:EgenkapitalGjeld",
+    "egenkapital" : "_:b6",
+    "gjeldOversikt" : "_:b5",
+    "sumEgenkapitalGjeld" : "2026"
+  }, {
+    "@id" : "_:b5",
+    "@type" : "br:GjeldOversikt",
+    "langsiktigGjeld" : "_:b20",
+    "opptjentEgenkapital" : "_:b7",
+    "sumGjeld" : "2030"
+  }, {
+    "@id" : "_:b6",
+    "@type" : "br:Egenkapital",
+    "innskuttEgenkapital" : "_:b11",
+    "opptjentEgenkapital" : "_:b9",
+    "sumEgenkapital" : "2027"
+  }, {
+    "@id" : "_:b7",
+    "@type" : "br:KortsiktigGjeld",
+    "sumKortsiktigGjeld" : "2031"
+  }, {
+    "@id" : "_:b8",
+    "@type" : "br:Finansinntekt",
+    "sumFinansinntekter" : "2045"
+  }, {
+    "@id" : "_:b9",
+    "@type" : "br:OpptjentEgenkapital",
+    "sumOpptjentEgenkapital" : "2029"
+  }, {
+    "@id" : "http://invalid.org/regnskap/123456789/7",
+    "@type" : "br:Regnskap",
+    "identifier" : "7",
+    "currency" : "valutakode",
+    "br:avviklingsregnskap" : true,
+    "egenkapitalGjeld" : "_:b4",
+    "eiendeler" : "_:b15",
+    "oppstillingsplan" : "store",
+    "regnskapsperiode" : "_:b0",
+    "regnskapsprinsipper" : "_:b14",
+    "resultatregnskapResultat" : "_:b1",
+    "revisjon" : "_:b16",
+    "virksomhet" : "_:b13"
+  } ],
+  "@context" : {
+    "startDate" : {
+      "@id" : "http://schema.org/startDate",
+      "@type" : "http://www.w3.org/2001/XMLSchema#date"
+    },
+    "endDate" : {
+      "@id" : "http://schema.org/endDate",
+      "@type" : "http://www.w3.org/2001/XMLSchema#date"
+    },
+    "totalresultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#totalresultat",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "ordinaertResultatFoerSkattekostnad" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ordinaertResultatFoerSkattekostnad",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "finansresultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#finansresultat",
+      "@type" : "@id"
+    },
+    "driftsresultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#driftsresultat",
+      "@type" : "@id"
+    },
+    "aarsresultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#aarsresultat",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumEgenkapitalGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEgenkapitalGjeld",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "gjeldOversikt" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#gjeldOversikt",
+      "@type" : "@id"
+    },
+    "egenkapital" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#egenkapital",
+      "@type" : "@id"
+    },
+    "sumKortsiktigGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumKortsiktigGjeld",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumFinansinntekter" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumFinansinntekter",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumOpptjentEgenkapital" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumOpptjentEgenkapital",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumDriftsinntekter" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumDriftsinntekter",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumEgenkapital" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEgenkapital",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "opptjentEgenkapital" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#opptjentEgenkapital",
+      "@type" : "@id"
+    },
+    "innskuttEgenkapital" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#innskuttEgenkapital",
+      "@type" : "@id"
+    },
+    "nettoFinans" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#nettoFinans",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "finanskostnad" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#finanskostnad",
+      "@type" : "@id"
+    },
+    "finansinntekt" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#finansinntekt",
+      "@type" : "@id"
+    },
+    "organisasjonsnummer" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#organisasjonsnummer"
+    },
+    "organisasjonsform" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#organisasjonsform"
+    },
+    "morselskap" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#morselskap",
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "organization" : {
+      "@id" : "http://www.w3.org/ns/org#organization",
+      "@type" : "@id"
+    },
+    "virksomhet" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#virksomhet",
+      "@type" : "@id"
+    },
+    "oppstillingsplan" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#oppstillingsplan"
+    },
+    "identifier" : {
+      "@id" : "http://purl.org/dc/terms/identifier"
+    },
+    "regnskapsperiode" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#regnskapsperiode",
+      "@type" : "@id"
+    },
+    "regnskapsprinsipper" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#regnskapsprinsipper",
+      "@type" : "@id"
+    },
+    "currency" : {
+      "@id" : "http://schema.org/currency"
+    },
+    "eiendeler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#eiendeler",
+      "@type" : "@id"
+    },
+    "resultatregnskapResultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#resultatregnskapResultat",
+      "@type" : "@id"
+    },
+    "egenkapitalGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#egenkapitalGjeld",
+      "@type" : "@id"
+    },
+    "avviklingsregnskap" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#avviklingsregnskap",
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "revisjon" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#revisjon",
+      "@type" : "@id"
+    },
+    "sumOmloepsmidler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumOmloepsmidler",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumFinanskostnad" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumFinanskostnad",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumAnleggsmidler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumAnleggsmidler",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumDriftskostnad" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumDriftskostnad",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumEiendeler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumEiendeler",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "omloepsmidler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#omloepsmidler",
+      "@type" : "@id"
+    },
+    "anleggsmidler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#anleggsmidler",
+      "@type" : "@id"
+    },
+    "sumInnskuttEgenkaptial" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumInnskuttEgenkaptial",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "sumGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumGjeld",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "langsiktigGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#langsiktigGjeld",
+      "@type" : "@id"
+    },
+    "smaaForetak" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#smaaForetak",
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "regnskapsregler" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#regnskapsregler"
+    },
+    "sumLangsiktigGjeld" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumLangsiktigGjeld",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "ikkeRevidertAarsregnskap" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#ikkeRevidertAarsregnskap",
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "fravalgRevisjon" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#fravalgRevisjon",
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "sumDriftsresultat" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#sumDriftsresultat",
+      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "driftskostnad" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#driftskostnad",
+      "@type" : "@id"
+    },
+    "driftsinntekter" : {
+      "@id" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#driftsinntekter",
+      "@type" : "@id"
+    },
+    "br" : "https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#",
+    "schema" : "http://schema.org/",
+    "dct" : "http://purl.org/dc/terms/",
+    "org" : "http://www.w3.org/ns/org#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#"
+  }
+}
