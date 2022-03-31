@@ -24,6 +24,7 @@ def roleyOptions = [
 ]
 
 def overrides = [
+        "buildType" : "java11",
         "noCucumber": true,
         "buildLoglevel": "DEBUG",
         "cleanJVMOpts": true,
