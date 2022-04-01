@@ -1,14 +1,22 @@
+{{! Copied from https://github.com/OpenAPITools/openapi-generator/blob/5.4.x/modules/openapi-generator/src/main/resources/JavaSpring/model.mustache }}
+{{! Comment changes you make to the default templates to make changes searchable, traceable and reapliable when upgrading. E.g: }}
+{{! Change: Some explaination }}
 package {{package}};
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties; {{! Change: Import, used in pojo.mustache }}
+import com.fasterxml.jackson.annotation.JsonInclude; {{! Change: Import, used in pojo.mustache }}
+
+import java.net.URI;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import no.brreg.Generated;
 {{#imports}}import {{import}};
 {{/imports}}
+{{#openApiNullable}}
+import org.openapitools.jackson.nullable.JsonNullable;
+{{/openApiNullable}}
 {{#serializableModel}}
 import java.io.Serializable;
 {{/serializableModel}}
+import java.time.OffsetDateTime;
 {{#useBeanValidation}}
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -22,6 +30,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 {{/withXml}}
 {{/jackson}}
+{{#swagger2AnnotationLibrary}}
+import io.swagger.v3.oas.annotations.media.Schema;
+{{/swagger2AnnotationLibrary}}
+
 {{#withXml}}
 import javax.xml.bind.annotation.*;
 {{/withXml}}
@@ -31,13 +43,16 @@ import org.springframework.hateoas.RepresentationModel;
 {{/hateoas}}
 {{/parent}}
 
+import java.util.*;
+import javax.annotation.Generated;
+
 {{#models}}
 {{#model}}
 {{#isEnum}}
 {{>enumOuterClass}}
 {{/isEnum}}
 {{^isEnum}}
-{{>pojo}}
+{{#vendorExtensions.x-is-one-of-interface}}{{>oneof_interface}}{{/vendorExtensions.x-is-one-of-interface}}{{^vendorExtensions.x-is-one-of-interface}}{{>pojo}}{{/vendorExtensions.x-is-one-of-interface}}
 {{/isEnum}}
 {{/model}}
 {{/models}}

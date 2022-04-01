@@ -22,13 +22,11 @@ servers:
     description: Server i prodmiljø
   - url: 'http://data.ppe.brreg.no/regnskapsregisteret/regnskap/'
     description: Server i preprod-miljø
-  - url: 'http://regnskapsregister-api.apps.ocp-st.regsys.brreg.no/regnskapsregisteret/regnskap/'
-    description: Server i utviklingsmiljø
 paths:
   /regnskapsregisteret/regnskap/{orgNummer}:
     get:
       tags:
-        - regnskap
+        - regnskapsregisteret
       summary: Query for regnskap.
       description: Returnerer en samling årsregnskap
       operationId: getRegnskap
@@ -73,10 +71,11 @@ paths:
             text/turtle:
               schema:
                 type: object
+
   /regnskapsregisteret/regnskap/{orgNummer}/{id}:
     get:
       tags:
-        - regnskap
+        - regnskapsregisteret
       description: Hent et spesifikt årsregnskap for en virksomhet
       operationId: getRegnskapById
       parameters:
@@ -119,7 +118,7 @@ paths:
   /regnskapsregisteret/regnskap/log:
     get:
       tags:
-        - regnskap
+        - regnskapsregisteret
       summary: Query for log.
       description: Returnerer en logg over filer som har blitt lastet inn i systemet
       operationId: getLog
@@ -137,6 +136,7 @@ paths:
                 type: array
                 items:
                   type: string
+
   /test/most-recent:
     get:
       tags:
