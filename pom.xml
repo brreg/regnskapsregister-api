@@ -46,7 +46,7 @@
         <jena.version>4.4.0</jena.version>
         <slack.version>1.12</slack.version>
         <swagger.version>2.9.2</swagger.version>
-        <postgresql.version>42.3.3</postgresql.version>
+        <postgresql.version>42.3.7</postgresql.version>
         <liquibase-core.version>4.9.0</liquibase-core.version>
         <springdoc-openapi-ui.version>1.6.6</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
