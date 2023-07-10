@@ -1,5 +1,6 @@
 package no.brreg.regnskap.repository;
 
+import no.brreg.regnskap.controller.exception.InternalServerError;
 import no.brreg.regnskap.generated.model.*;
 import no.brreg.regnskap.mapper.RegnskapFieldsMapper;
 import no.brreg.regnskap.model.RegnskapFields;
@@ -9,7 +10,9 @@ import no.brreg.regnskap.model.RegnskapXmlInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -382,16 +385,30 @@ public class RegnskapRepository {
 
         Regnskapstype regnskapsType = no.brreg.regnskap.model.dbo.Regnskap.regnskapstypeFromString(regnskapstype);
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = selectRegnskapsregler(
-            regnskapsType, 
-            ifrs_selskap, 
-            forenklet_ifrs_selskap, 
-            ifrs_konsern, 
-            forenklet_ifrs_konsern);
+            regnskapsType,
+            ifrs_selskap,
+            forenklet_ifrs_selskap,
+            ifrs_konsern,
+            forenklet_ifrs_konsern
+        );
 
-        Regnskap regnskap = new Regnskap().id(_id).journalnr(journalnr)
+        Regnskap.OppstillingsplanEnum oppstillingsplan;
+        try {
+            oppstillingsplan = Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase());
+        } catch (IllegalArgumentException ex) {
+            throw new InternalServerError(
+                    String.format("Regnskapet inneholder en oppstillingsplan som ikke er støttet (%s)", aarsregnskapstype),
+                    ex,
+                    false
+            );
+        }
+
+        Regnskap regnskap = new Regnskap()
+            .id(_id)
+            .journalnr(journalnr)
             .regnskapstype(regnskapsType)
             .valuta(valutakode)
-            .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase()))
+            .oppstillingsplan(oppstillingsplan)
             .regnskapsperiode(new Tidsperiode().fraDato(startdato)
                                                .tilDato(avslutningsdato))
             .regnskapDokumenttype(regnskap_dokumenttype);
@@ -425,18 +442,18 @@ public class RegnskapRepository {
         final Boolean ifrs_konsern,
         final Boolean forenklet_ifrs_konsern
     ) {
-        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
             Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
 
         if (regnskapsType == Regnskapstype.SELSKAP) {
             regnskapsregler = selectRegnskapsreglerSelskap(
-                regnskapsType, 
-                ifrs_selskap, 
+                regnskapsType,
+                ifrs_selskap,
                 forenklet_ifrs_selskap);
         } else if (regnskapsType == Regnskapstype.KONSERN) {
             regnskapsregler = selectRegnskapsreglerKonsern(
-                regnskapsType, 
-                ifrs_konsern, 
+                regnskapsType,
+                ifrs_konsern,
                 forenklet_ifrs_konsern);
         }
         return regnskapsregler;
@@ -447,7 +464,7 @@ public class RegnskapRepository {
         final Boolean ifrs_selskap,
         final Boolean forenklet_ifrs_selskap
     ) {
-        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
             Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
         if (ifrs_selskap!=null && ifrs_selskap) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
@@ -463,7 +480,7 @@ public class RegnskapRepository {
         final Boolean ifrs_konsern,
         final Boolean forenklet_ifrs_konsern
     ) {
-        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler = 
+        Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
             Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
         if (ifrs_konsern!=null && ifrs_konsern) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;

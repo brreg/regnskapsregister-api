@@ -71,6 +71,15 @@ paths:
             text/turtle:
               schema:
                 type: object
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
 
   /regnskapsregisteret/regnskap/{orgNummer}/{id}:
     get:
@@ -114,6 +123,15 @@ paths:
             text/turtle:
               schema:
                 type: object
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
 
   /regnskapsregisteret/regnskap/log:
     get:
@@ -136,6 +154,15 @@ paths:
                 type: array
                 items:
                   type: string
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
 
   /test/most-recent:
     get:
@@ -151,6 +178,15 @@ paths:
             text/plain:
               schema:
                 type: string
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
   /statistikk/by-ip:
     get:
       tags:
@@ -180,6 +216,15 @@ paths:
                 type: array
                 items:
                   type: string
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
   /statistikk/by-orgnr:
     get:
       tags:
@@ -209,6 +254,15 @@ paths:
                 type: array
                 items:
                   type: string
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
   /statistikk/by-method:
     get:
       tags:
@@ -238,46 +292,55 @@ paths:
                 type: array
                 items:
                   type: string
+        '500':
+          description: Feil oppstod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorRespons"
+              examples:
+                ServerErrorRespons:
+                  $ref: "#/components/examples/ServerErrorRespons"
 components:
   schemas:
     Regnskap:
-        type: object
-        description: Et regnskap for et gitt år
-        properties:
-          id:
-            type: integer
-            format: int32
-            description: system-generert id
-          journalnr:
-            type: string
-          regnskapstype:
-            $ref: "#/components/schemas/Regnskapstype"
-          regnskapDokumenttype:
-            type: String
-          virksomhet:
-            $ref: "#/components/schemas/Virksomhet"
-          regnskapsperiode:
-            $ref: "#/components/schemas/Tidsperiode"
-          valuta:
-            $ref: "#/components/schemas/Valutakode"
-          avviklingsregnskap:
-            type: boolean
-          oppstillingsplan:
-            type: string
-            enum:
+      type: object
+      description: Et regnskap for et gitt år
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: system-generert id
+        journalnr:
+          type: string
+        regnskapstype:
+          $ref: "#/components/schemas/Regnskapstype"
+        regnskapDokumenttype:
+          type: String
+        virksomhet:
+          $ref: "#/components/schemas/Virksomhet"
+        regnskapsperiode:
+          $ref: "#/components/schemas/Tidsperiode"
+        valuta:
+          $ref: "#/components/schemas/Valutakode"
+        avviklingsregnskap:
+          type: boolean
+        oppstillingsplan:
+          type: string
+          enum:
             - smaa
             - store
             - oevrige
-          revisjon:
-            $ref: "#/components/schemas/Revisjon"
-          regnkapsprinsipper:
-            $ref: "#/components/schemas/Regnskapsprinsipper"
-          egenkapitalGjeld:
-            $ref: "#/components/schemas/EgenkapitalGjeld"
-          eiendeler:
-            $ref: "#/components/schemas/Eiendeler"
-          resultatregnskapResultat:
-            $ref: "#/components/schemas/ResultatregnskapResultat"
+        revisjon:
+          $ref: "#/components/schemas/Revisjon"
+        regnkapsprinsipper:
+          $ref: "#/components/schemas/Regnskapsprinsipper"
+        egenkapitalGjeld:
+          $ref: "#/components/schemas/EgenkapitalGjeld"
+        eiendeler:
+          $ref: "#/components/schemas/Eiendeler"
+        resultatregnskapResultat:
+          $ref: "#/components/schemas/ResultatregnskapResultat"
     ResultatregnskapResultat:
       type: object
       externalDocs:
@@ -304,11 +367,11 @@ components:
       type: object
       properties:
         sumEgenkapitalGjeld:
-            type: number
+          type: number
         egenkapital:
-            $ref: "#/components/schemas/Egenkapital"
+          $ref: "#/components/schemas/Egenkapital"
         gjeldOversikt:
-            $ref: "#/components/schemas/Gjeld"
+          $ref: "#/components/schemas/Gjeld"
     Eiendeler:
       type: object
       properties:
@@ -323,11 +386,11 @@ components:
         sumBankinnskuddOgKontanter:
           type: number
         sumEiendeler:
-            type: number
+          type: number
         omloepsmidler:
-            $ref: "#/components/schemas/Omloepsmidler"
+          $ref: "#/components/schemas/Omloepsmidler"
         anleggsmidler:
-            $ref: "#/components/schemas/Anleggsmidler"
+          $ref: "#/components/schemas/Anleggsmidler"
     Anleggsmidler:
       type: object
       properties:
@@ -466,3 +529,35 @@ components:
       enum:
         - SELSKAP
         - KONSERN
+    ServerErrorRespons:
+      type: object
+      description: Respons for generisk feilmelding
+      properties:
+        timestamp:
+          type: string
+          description: Tidspunkt feilen oppstod. Format er ISO-8601
+        status:
+          type: string
+          description: HTTP statuskode for feilmeldingen
+        error:
+          type: string
+          description: HTTP beskrivelse for status
+        message:
+          type: string
+          description: En tekstlig beskrivelse av feilen
+        path:
+          type: string
+          description: Sti til dette endepunktet
+        trace:
+          type: string
+          description: En tilfeldig generert UUID.
+  examples:
+    ServerErrorRespons:
+      summary: Error Respons
+      value:
+        timestamp: 2021-05-28T11:34:33.435+0000
+        status: 500
+        error: Internal Server Error
+        message: Internal Server Error
+        path: /regnskapsregisteret/regnskap/999999999
+        trace: 5631709a-6e3e-4b72-94e7-fcbf6341272a

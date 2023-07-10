@@ -43,9 +43,10 @@ public class TestApiImpl implements no.brreg.regnskap.generated.api.TestApi {
                     throw e2;
                 }
             }
-        } catch (SQLException throwables) {
-            LOGGER.error("getConnection failed: " + throwables.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         if (orgnr == null || orgnr.isEmpty()) {
@@ -54,5 +55,4 @@ public class TestApiImpl implements no.brreg.regnskap.generated.api.TestApi {
             return new ResponseEntity<>(orgnr, HttpStatus.OK);
         }
     }
-
 }

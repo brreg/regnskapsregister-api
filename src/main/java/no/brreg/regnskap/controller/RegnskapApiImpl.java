@@ -61,9 +61,10 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getLog failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
@@ -99,9 +100,10 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskapList, urls), mimeTypeToJenaFormat(negotiatedMimeType));
             return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getRegnskap failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
@@ -138,9 +140,10 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskap, urls), mimeTypeToJenaFormat(negotiatedMimeType));
             return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getRegnskapById failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
