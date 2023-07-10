@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: regnskap-postgres
+  labels:
+    purpose: local-development
+spec:
+  restartPolicy: Never
+  containers:
+    - name: postgres
+      image: postgres:12.14
+      ports:
+        - containerPort: 5432
+          hostPort: 5432
+      env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: password

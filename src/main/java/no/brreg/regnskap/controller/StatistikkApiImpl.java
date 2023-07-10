@@ -34,9 +34,10 @@ public class StatistikkApiImpl implements no.brreg.regnskap.generated.api.Statis
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getStatisticsByIp failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
@@ -50,9 +51,10 @@ public class StatistikkApiImpl implements no.brreg.regnskap.generated.api.Statis
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getStatisticsByMethod failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
@@ -66,9 +68,10 @@ public class StatistikkApiImpl implements no.brreg.regnskap.generated.api.Statis
             } else {
                 return new ResponseEntity<>(logList, HttpStatus.OK);
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            LOGGER.error("getStatisticsByOrgnr failed: ", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 

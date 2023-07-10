@@ -1,10 +1,7 @@
 package no.brreg.regnskap.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.brreg.regnskap.JenaResponseReader;
-import no.brreg.regnskap.TestData;
-import no.brreg.regnskap.TestUtils;
-import no.brreg.regnskap.XmlTestData;
+import no.brreg.regnskap.*;
 import no.brreg.regnskap.controller.RegnskapApiImpl;
 import no.brreg.regnskap.generated.model.Regnskap;
 import no.brreg.regnskap.generated.model.Regnskapsprinsipper;
@@ -13,7 +10,6 @@ import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.repository.RegnskapRepository;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
-import org.apache.jena.atlas.lib.tuple.Tuple3;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
@@ -33,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,22 +40,17 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static no.brreg.regnskap.TestData.TEST_ORGNR_1;
 import static no.brreg.regnskap.generated.model.Regnskapstype.KONSERN;
 import static no.brreg.regnskap.generated.model.Regnskapstype.SELSKAP;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @AutoConfigureMockMvc
 public class RegnskapApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiIT.class);
@@ -278,6 +268,27 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
                 arguments("application/rdf+json", "regnskap/OrgnrResponseDefault.rdf.json"),
                 arguments("application/xml", "regnskap/OrgnrResponseDefault.xml")
         );
+    }
+
+    @Test
+    public void getRegnskapByOrgnummerWithInvalidOppstillingsplanTest() throws Exception {
+        try {
+            InputStream inputStream = new ByteArrayInputStream(XmlTestDataInvalidOppstillingsplan.xmlTestString.getBytes(StandardCharsets.UTF_8));
+            regnskapLogRepository.persistRegnskapFile("testFile2", inputStream);
+        } catch (SQLException e) {
+            LOGGER.info("Regnskap file test data already loaded");
+        }
+
+        mockMvc
+                .perform(get("/regnskapsregisteret/regnskap/999888777").header("accept", "application/json"))
+                .andExpect(status().is(500))
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
+                .andExpect(jsonPath("$.status", is("500")))
+                .andExpect(jsonPath("$.error", is("Internal Server Error")))
+                .andExpect(jsonPath("$.message", is("Regnskapet inneholder en oppstillingsplan som ikke er stottet (IKKESTOTTET)")))
+                .andExpect(jsonPath("$.path", is("/regnskapsregisteret/regnskap/999888777")))
+                .andExpect(jsonPath("$.timestamp").isString())
+                .andExpect(jsonPath("$.trace").isString());
     }
 
     @ParameterizedTest
