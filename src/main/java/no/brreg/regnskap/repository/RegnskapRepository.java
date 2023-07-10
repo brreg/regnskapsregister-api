@@ -397,7 +397,7 @@ public class RegnskapRepository {
             oppstillingsplan = Regnskap.OppstillingsplanEnum.fromValue(aarsregnskapstype.toLowerCase());
         } catch (IllegalArgumentException ex) {
             throw new InternalServerError(
-                    String.format("Regnskapet inneholder en oppstillingsplan som ikke er støttet (%s)", aarsregnskapstype),
+                    String.format("Regnskapet inneholder en oppstillingsplan som ikke er stottet (%s)", aarsregnskapstype),
                     ex,
                     false
             );
