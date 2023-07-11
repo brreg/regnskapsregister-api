@@ -55,22 +55,22 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: 'object'
             application/xml:
               schema:
-                type: object
+                type: 'object'
             application/ld+json:
               schema:
-                type: object
+                type: 'object'
             application/rdf+json:
               schema:
-                type: object
+                type: 'object'
             application/rdf+xml:
               schema:
-                type: object
+                type: 'object'
             text/turtle:
               schema:
-                type: object
+                type: 'object'
         '500':
           description: Feil oppstod
           content:
@@ -107,22 +107,22 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
             application/xml:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
             application/ld+json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
             application/rdf+json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
             application/rdf+xml:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
             text/turtle:
               schema:
-                type: object
+                $ref: '#/components/schemas/Regnskap'
         '500':
           description: Feil oppstod
           content:
@@ -316,7 +316,7 @@ components:
         regnskapstype:
           $ref: "#/components/schemas/Regnskapstype"
         regnskapDokumenttype:
-          type: String
+          type: string
         virksomhet:
           $ref: "#/components/schemas/Virksomhet"
         regnskapsperiode:

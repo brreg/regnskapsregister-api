@@ -10,11 +10,13 @@ package {{package}};
 
 import javax.servlet.http.HttpServletRequest; {{! Change: Add import, used in controller-method arguments. }}
 
-{{#imports}}import {{import}};{{/imports}}
+{{#imports}}import {{import}};
+{{/imports}}
 {{#swagger2AnnotationLibrary}}
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

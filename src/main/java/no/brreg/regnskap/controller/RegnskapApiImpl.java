@@ -99,7 +99,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskapList, urls), mimeTypeToJenaFormat(negotiatedMimeType));
-            return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+            return (ResponseEntity) ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
 
     @Override
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
-    public ResponseEntity<Object> getRegnskapById(HttpServletRequest httpServletRequest, String orgNummer, Integer id) {
+    public ResponseEntity<Regnskap> getRegnskapById(HttpServletRequest httpServletRequest, String orgNummer, Integer id) {
         try {
             restcallLogService.logCall(httpServletRequest, "getRegnskapById");
 
@@ -139,7 +139,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskap, urls), mimeTypeToJenaFormat(negotiatedMimeType));
-            return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+            return (ResponseEntity) ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {

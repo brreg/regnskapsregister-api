@@ -128,7 +128,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = TEST_ORGNR_1;
         //Get most recent SELSKAP regnskap for TestData.TEST_ORGNR_1
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         assertEquals(1, body.size());
@@ -143,7 +143,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
         final String orgNummer = TEST_ORGNR_1;
         //Get most recent regnskap of any type for three most recent years for TestData.TEST_ORGNR_1
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<Regnskap> actualRegnskap = (List<Regnskap>) response.getBody();
@@ -176,7 +176,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic d3Jvbmc6cGFzc3dvcmQ="); // "Basic wrong:password"
         final String orgNummer = TEST_ORGNR_1;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, null, null);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         assertNull(body);
@@ -189,7 +189,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         final String orgNummer = TEST_ORGNR_1;
         final int år = 2018;
         final Regnskapstype regnskapstype = SELSKAP;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         for (Regnskap regnskap : body) {
@@ -205,7 +205,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         final String orgNummer = TEST_ORGNR_1;
         final int år = Integer.parseInt(TEST_ORGNR_1);
         final Regnskapstype regnskapstype = SELSKAP;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, orgNummer, år, regnskapstype);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -223,7 +223,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
 
         for (String acceptHeader : acceptHeaders) {
             when(httpServletRequestMock.getHeader("Accept")).thenReturn(acceptHeader);
-            ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, TEST_ORGNR_1, 2018, SELSKAP);
+            ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, TEST_ORGNR_1, 2018, SELSKAP);
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertNotNull(response.getBody());
         }
@@ -234,9 +234,9 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = "980919676";
         final Integer id = 1;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
+        ResponseEntity<Regnskap> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Regnskap body = (Regnskap) response.getBody();
+        Regnskap body = response.getBody();
         assertEquals(id, body.getId());
     }
 
@@ -245,9 +245,9 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
         final String orgNummer = "980919676";
         final Integer id = 1;
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
+        ResponseEntity<Regnskap> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, orgNummer, id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Regnskap body = (Regnskap) response.getBody();
+        Regnskap body =response.getBody();
         assertEquals(id, body.getId());
     }
 
@@ -295,7 +295,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     @MethodSource("getRegnskapByOrgnummerDefaultRDFTest_arguments")
     public void getRegnskapByOrgnummerDefaultRDFTest(Lang lang, String expectedResponseFile) throws IOException {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn(lang.getHeaderString());
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2018, SELSKAP);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2018, SELSKAP);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         String body = response.getBody() instanceof String
@@ -350,7 +350,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     @MethodSource("getRegnskapByIdDefaultRDFTest_arguments")
     public void getRegnskapByIdDefaultRDFTest(Lang lang, String expectedResponseFile) throws IOException {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn(lang.getHeaderString());
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
+        ResponseEntity response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         String body = response.getBody() instanceof String
@@ -386,7 +386,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     public void getRegnskapByIdPartnerTurtleTest() throws IOException, SQLException {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("text/turtle");
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
+        ResponseEntity response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         Model modelFromResponse = JenaResponseReader.parseResponse((String) response.getBody(), "TURTLE");
@@ -409,8 +409,8 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     @Test
     void correctSumsInPersistenceFieldsDefault() {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
-        Regnskap regnskap = (Regnskap) response.getBody();
+        ResponseEntity<Regnskap> response = regnskapApiImpl.getRegnskapById(httpServletRequestMock, "123456789", regnskap2018_1Id);
+        Regnskap regnskap = response.getBody();
 
         long baseValue = 2018L;
         assertNull(regnskap.getEiendeler().getGoodwill());
@@ -450,7 +450,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     void correctSumsInPersistenceFieldsPartnerSelskap() {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2019, SELSKAP);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2019, SELSKAP);
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         assertEquals(1, body.size());
         Regnskap regnskap = body.get(0);
@@ -488,7 +488,7 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     void correctSumsInPersistenceFieldsPartnerKonsern() {
         when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         when(httpServletRequestMock.getHeader("Authorization")).thenReturn("Basic dGVzdDp0ZXN0"); // "Basic test:test"
-        ResponseEntity<Object> response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2019, KONSERN);
+        ResponseEntity response = regnskapApiImpl.getRegnskap(httpServletRequestMock, "123456789", 2019, KONSERN);
         List<Regnskap> body = (List<Regnskap>) response.getBody();
         assertEquals(1, body.size());
         Regnskap regnskap = body.get(0);
