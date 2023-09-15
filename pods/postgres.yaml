@@ -17,3 +17,5 @@ spec:
           value: postgres
         - name: POSTGRES_PASSWORD
           value: password
+        - name: POSTGRES_DB
+          value: regnskap
