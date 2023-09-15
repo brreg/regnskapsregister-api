@@ -25,19 +25,19 @@ PostgreSQL - https://www.postgresql.org/download/windows/
 ## Environment variables
 These are needed for RREG-API integration:
 ```
-RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer"
-RRAPI_POSTGRES_DBO_USER="regnskap" (whatever you used in your locally installed Postgresql)
-RRAPI_POSTGRES_DBO_PASSWORD="password" (whatever you used in your locally installed Postgresql)
-RRAPI_POSTGRES_USER="regnskap" (whatever you used in your locally installed Postgresql)
-RRAPI_POSTGRES_PASSWORD="password" (whatever you used in your locally installed Postgresql)
-RRAPI_SFTP_SERVER="filporten.brreg.no"
-RRAPI_SFTP_PORT="22"
-RRAPI_SFTP_USER="RRmasse"
-RRAPI_SFTP_PASSWORD="<password>"
-RRAPI_SFTP_DIRECTORY="/out"
-RRAPI_SLACK_CHANNEL="prod-error"
-RRAPI_SLACK_TOKEN="disabled"
-RRAPI_IP_SALT="salt"
+RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer";
+RRAPI_POSTGRES_DBO_USER="regnskap";
+RRAPI_POSTGRES_DBO_PASSWORD="password";
+RRAPI_POSTGRES_USER="regnskap";
+RRAPI_POSTGRES_PASSWORD="password";
+RRAPI_SFTP_SERVER="filporten.brreg.no";
+RRAPI_SFTP_PORT="22";
+RRAPI_SFTP_USER="RRmasse";
+RRAPI_SFTP_PASSWORD="<password>";
+RRAPI_SFTP_DIRECTORY="/out";
+RRAPI_SLACK_CHANNEL="prod-error";
+RRAPI_SLACK_TOKEN="disabled";
+RRAPI_IP_SALT="salt";
 ```
 
 In addition, you can add this to the application.properties file:
