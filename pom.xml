@@ -5,7 +5,7 @@
     <groupId>no.brreg.regnskap</groupId>
     <artifactId>regnskapsregister-api</artifactId>
     <name>Regnskapsregister</name>
-    <version>1.1.16</version>
+    <version>1.1.16</version><!-- ApplicationInfo.java holds the version number that comes out in swagger UI -->
     <packaging>jar</packaging>
 
     <parent>
@@ -52,7 +52,6 @@
         <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
         <jsch.version>0.1.55</jsch.version>
         <openapi-generator-maven-plugin.version>5.4.0</openapi-generator-maven-plugin.version>
-        <replacer.version>1.5.3</replacer.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
@@ -282,28 +281,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>${replacer.version}</version>
-                <executions>
-                    <execution>
-                        <id>replace-version-number</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <ignoreErrors>false</ignoreErrors>
-                    <ignoreMissingFile>false</ignoreMissingFile>
-                    <file>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.template</file>
-                    <outputFile>${project.basedir}/src/main/java/no/brreg/regnskap/spring/ApplicationInfo.java</outputFile>
-                    <token>%VERSION%</token>
-                    <value>${project.version}</value>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
