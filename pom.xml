@@ -264,7 +264,7 @@
                             <apiPackage>no.brreg.regnskap.generated.api</apiPackage>
                             <modelPackage>no.brreg.regnskap.generated.model</modelPackage>
                             <globalProperties>
-                                <debugModels>true</debugModels>
+<!--                                <debugModels>Uncomment to debug models</debugModels>-->
                             </globalProperties>
                             <configOptions>
                                 <allowUnicodeIdentifiers>true</allowUnicodeIdentifiers>
