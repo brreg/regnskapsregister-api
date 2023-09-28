@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import no.brreg.regnskap.repository.ConnectionManager;
+import no.brreg.regnskap.spring.ApplicationInfo;
 import no.brreg.regnskap.spring.CachableDispatcherServlet;
 import org.apache.jena.riot.RIOT;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @OpenAPIDefinition(
         info = @Info(
                 title = "RegnskapsRegister-API",
-                version = no.brreg.regnskap.generated.spring.ApplicationInfo.VERSION
+                version = ApplicationInfo.VERSION
         )
 )
 @SecurityScheme(

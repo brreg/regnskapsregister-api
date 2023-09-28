@@ -57,7 +57,7 @@ RUN mvn install -Dmaven.test.skip=true --batch-mode --no-transfer-progress
 
 # To use Openjdk 11 instead, comment out the line above,
 # and uncomment the following line:
- FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk11
+FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk11
 
 # Configuration for Elastic APM agent and ECS logging format
 # Correct logback.xml is added in parent image
