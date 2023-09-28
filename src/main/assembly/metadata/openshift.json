@@ -1,9 +1,0 @@
-{
-    "domain": "regnskap",
-    "docker": {
-      "maintainer": "Team Digital Brukerfront <bed@brreg.no>"
-    },
-    "java": {
-      "applicationArgs": "--logging.config=${LOGBACK_FILE}"
-    }
-}

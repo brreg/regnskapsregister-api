@@ -1,0 +1,5 @@
+# ignorer alle filer
+/**
+# utenom disse:
+!/pom.xml
+!/src
