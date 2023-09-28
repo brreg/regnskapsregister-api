@@ -1,5 +1,6 @@
 package no.brreg.regnskap.integration;
 
+import no.brreg.regnskap.generated.model.Regnskap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -103,13 +104,13 @@ public class StatistikkApiIT extends EmbeddedPostgresSetup {
     public void getStatisticsByOrgnrTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = TestData.TEST_ORGNR_1;
-        
+
         //Simulate traffic to API
         for(int i = 0; i < 10; i++) {
-            ResponseEntity<Object> dummy = regnskapApiImpl.getRegnskap(
+            ResponseEntity dummy = regnskapApiImpl.getRegnskap(
                 httpServletRequestMock, orgNummer, null, null);
         }
-        
+
         ResponseEntity<List<String>> response = statistikkApiImpl.getStatisticsByOrgnr(
             httpServletRequestMock, null, null);
         List<String> body = response.getBody();
@@ -123,13 +124,13 @@ public class StatistikkApiIT extends EmbeddedPostgresSetup {
     public void getStatisticsByMethodTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = TestData.TEST_ORGNR_1;
-        
+
         //Simulate traffic to API
         for(int i = 0; i < 10; i++) {
-            ResponseEntity<Object> dummy = regnskapApiImpl.getRegnskap(
+            ResponseEntity dummy = regnskapApiImpl.getRegnskap(
                 httpServletRequestMock, orgNummer, null, null);
         }
-        
+
         ResponseEntity<List<String>> response = statistikkApiImpl.getStatisticsByMethod(
             httpServletRequestMock, null, null);
         List<String> body = response.getBody();
@@ -143,13 +144,13 @@ public class StatistikkApiIT extends EmbeddedPostgresSetup {
     public void getStatisticsByIpTest() {
         Mockito.when(httpServletRequestMock.getHeader("Accept")).thenReturn("application/xml");
         final String orgNummer = TestData.TEST_ORGNR_1;
-        
+
         //Simulate traffic to API
         for(int i = 0; i < 10; i++) {
-            ResponseEntity<Object> dummy = regnskapApiImpl.getRegnskap(
+            ResponseEntity dummy = regnskapApiImpl.getRegnskap(
                 httpServletRequestMock, orgNummer, null, null);
         }
-        
+
         ResponseEntity<List<String>> response = statistikkApiImpl.getStatisticsByIp(
             httpServletRequestMock, null, null);
         List<String> body = response.getBody();
@@ -159,5 +160,5 @@ public class StatistikkApiIT extends EmbeddedPostgresSetup {
         //no ip is recorded when called internally, but count should be correct
         assertEquals("10;null", body.get(0));
     }
-    
+
 }
