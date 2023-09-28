@@ -1,8 +1,8 @@
 FROM maven:3.6.3-openjdk-14 AS build
 RUN mkdir /app
 WORKDIR /app
-COPY pom.xml ./
-COPY src ./src
+COPY ../pom.xml ./
+COPY ../src ./src
 RUN mvn --batch-mode --no-transfer-progress -DskipTests clean package
 
 FROM openjdk:11-jre-slim
