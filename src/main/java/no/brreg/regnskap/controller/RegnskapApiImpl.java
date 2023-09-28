@@ -11,7 +11,7 @@ import no.brreg.regnskap.model.Partner;
 import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.service.RegnskapService;
 import no.brreg.regnskap.service.RestcallLogService;
-import no.brreg.regnskap.spring.config.ProfileConditionalValues;
+import no.brreg.regnskap.spring.properties.JenaExternalUrlProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
     private static final Logger LOGGER = LoggerFactory.getLogger(RegnskapApiImpl.class);
 
     @Autowired
-    private ProfileConditionalValues profileConditionalValues;
+    private JenaExternalUrlProperties jenaExternalUrlProperties;
 
     @Autowired
     private RegnskapService regnskapService;
@@ -95,8 +95,8 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
                 return new ResponseEntity<>(regnskapList, HttpStatus.OK);
             }
 
-            String self = profileConditionalValues.regnskapsregisteretUrl();
-            String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
+            String self = jenaExternalUrlProperties.getRegnskapsregisteretUrl();
+            String organizationCatalogue = jenaExternalUrlProperties.getOrganizationCatalogueUrl();
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskapList, urls), mimeTypeToJenaFormat(negotiatedMimeType));
             return (ResponseEntity) ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
@@ -135,8 +135,8 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
                 return new ResponseEntity<>(regnskap, HttpStatus.OK);
             }
 
-            String self = profileConditionalValues.regnskapsregisteretUrl();
-            String organizationCatalogue = profileConditionalValues.organizationCatalogueUrl();
+            String self = jenaExternalUrlProperties.getRegnskapsregisteretUrl();
+            String organizationCatalogue = jenaExternalUrlProperties.getOrganizationCatalogueUrl();
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskap, urls), mimeTypeToJenaFormat(negotiatedMimeType));
             return (ResponseEntity) ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);

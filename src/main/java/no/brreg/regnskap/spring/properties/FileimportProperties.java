@@ -1,10 +1,7 @@
-package no.brreg.regnskap;
+package no.brreg.regnskap.spring.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 
-
-@PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "regnskap.fileimport")
 public class FileimportProperties {
     private String directory;

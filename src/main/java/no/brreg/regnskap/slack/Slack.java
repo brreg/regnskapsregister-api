@@ -27,7 +27,7 @@ public class Slack {
 
             return postResult.unwrapOrElseThrow();
         } catch(Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }

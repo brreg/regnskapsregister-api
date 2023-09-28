@@ -1,9 +1,7 @@
-package no.brreg.regnskap;
+package no.brreg.regnskap.spring.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 
-@PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "postgres.rreg")
 public class PostgresProperties {
     private String db_url;

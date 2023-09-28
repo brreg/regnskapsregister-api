@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.spring.ApplicationInfo;
 import no.brreg.regnskap.spring.CachableDispatcherServlet;
+import no.brreg.regnskap.spring.properties.*;
 import org.apache.jena.riot.RIOT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,14 @@ import org.springframework.web.servlet.DispatcherServlet;
         scheme = "basic"
 )
 @EnableScheduling
-@EnableConfigurationProperties({PostgresProperties.class, SftpProperties.class, FileimportProperties.class, SlackProperties.class, IpProperties.class})
+@EnableConfigurationProperties({
+        PostgresProperties.class,
+        SftpProperties.class,
+        FileimportProperties.class,
+        SlackProperties.class,
+        IpProperties.class,
+        JenaExternalUrlProperties.class
+})
 public class Application {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Application.class);
