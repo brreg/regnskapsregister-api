@@ -1,6 +1,7 @@
 package no.brreg.regnskap.model.dbo;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

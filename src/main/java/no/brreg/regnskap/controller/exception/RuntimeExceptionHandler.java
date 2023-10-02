@@ -1,5 +1,6 @@
 package no.brreg.regnskap.controller.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.generated.model.ServerErrorRespons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +10,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import static java.time.Instant.now;
 import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.ResponseEntity.status;
-import static java.time.Instant.now;
 
 @ControllerAdvice
 public class RuntimeExceptionHandler {
