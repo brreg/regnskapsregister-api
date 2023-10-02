@@ -7,6 +7,8 @@ postgres:
     password: ${RRAPI_POSTGRES_PASSWORD}
 
 regnskap:
+  update:
+    enabled: ${RRAPI_UPDATE_ENABLED:false}
   jena-external-url:
     regnskapsregisteretUrl: ${RRAPI_JENA_EXTERNAL_URL_REGNSKAPSREGISTERET_URL}
     organizationCatalogueUrl: ${RRAPI_JENA_EXTERNAL_URL_ORGANIZATION_CATALOGUE_URL}
