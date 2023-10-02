@@ -8,7 +8,7 @@
  */
 package {{package}};
 
-import javax.servlet.http.HttpServletRequest; {{! Change: Add import, used in controller-method arguments. }}
+import jakarta.servlet.http.HttpServletRequest; {{! Change: Add import, used in controller-method arguments. }}
 
 {{#imports}}import {{import}};
 {{/imports}}
@@ -56,8 +56,8 @@ import org.springframework.http.codec.multipart.Part;
 {{/reactive}}
 
 {{#useBeanValidation}}
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 {{/useBeanValidation}}
 import java.util.List;
 import java.util.Map;
@@ -72,7 +72,7 @@ import java.util.Optional;
 {{#async}}
 import java.util.concurrent.CompletableFuture;
 {{/async}}
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 {{>generatedAnnotation}}
 {{#useBeanValidation}}
