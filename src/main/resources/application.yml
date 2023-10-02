@@ -1,0 +1,31 @@
+postgres:
+  rreg:
+    db_url: ${RRAPI_POSTGRES_DB_URL}
+    dbo_user: ${RRAPI_POSTGRES_DBO_USER}
+    dbo_password: ${RRAPI_POSTGRES_DBO_PASSWORD}
+    user: ${RRAPI_POSTGRES_USER}
+    password: ${RRAPI_POSTGRES_PASSWORD}
+
+regnskap:
+  jena-external-url:
+    regnskapsregisteretUrl: ${RRAPI_JENA_EXTERNAL_URL_REGNSKAPSREGISTERET_URL}
+    organizationCatalogueUrl: ${RRAPI_JENA_EXTERNAL_URL_ORGANIZATION_CATALOGUE_URL}
+  sftp:
+    host: ${RRAPI_SFTP_SERVER}
+    port: ${RRAPI_SFTP_PORT}
+    user: ${RRAPI_SFTP_USER}1
+    password: ${RRAPI_SFTP_PASSWORD}
+    directory: ${RRAPI_SFTP_DIRECTORY}
+  slack:
+    channel: ${RRAPI_SLACK_CHANNEL}
+    token: ${RRAPI_SLACK_TOKEN}
+  ip:
+    salt: ${RRAPI_IP_SALT}
+
+springdoc:
+  api-docs:
+    path: /regnskapsregisteret/regnskap/v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /regnskapsregisteret/regnskap/swagger-ui/index.html
+    url: /regnskapsregisteret/regnskap/v3/api-docs

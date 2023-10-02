@@ -4,25 +4,24 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import no.brreg.regnskap.FileimportProperties;
-import no.brreg.regnskap.SftpProperties;
-import no.brreg.regnskap.SlackProperties;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.slack.Slack;
+import no.brreg.regnskap.spring.properties.FileimportProperties;
+import no.brreg.regnskap.spring.properties.SftpProperties;
+import no.brreg.regnskap.spring.properties.SlackProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
-import org.springframework.scheduling.annotation.Scheduled;
-
 import java.util.Properties;
 import java.util.Vector;
-import javax.annotation.PostConstruct;
 
 
 @Service
