@@ -6,7 +6,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import jakarta.annotation.PostConstruct;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
-import no.brreg.regnskap.slack.Slack;
+import no.brreg.regnskap.slack.SlackPoster;
 import no.brreg.regnskap.spring.properties.FileimportProperties;
 import no.brreg.regnskap.spring.properties.SftpProperties;
 import no.brreg.regnskap.spring.properties.SlackProperties;
@@ -107,9 +107,15 @@ public class UpdateService {
                             }
                         }
                     } catch (Exception e) {
-                        LOGGER.error("Failed fetching accounting files from {}@{}:{}", sftpProperties.getUser(), sftpProperties.getHost(), sftpProperties.getPort());
-                        LOGGER.error("Exception when downloading accounting files: " + e.getMessage(), e);
-                        Slack.postMessage(slackProperties.getToken(), slackProperties.getChannel(), "Exception when downloading accounting files: " + e.getMessage());
+                        LOGGER.error(
+                                "Failed fetching accounting files from {}@{}:{}",
+                                sftpProperties.getUser(),
+                                sftpProperties.getHost(),
+                                sftpProperties.getPort()
+                        );
+                        final var error = "Exception when downloading accounting files: " + e.getMessage();
+                        LOGGER.error(error, e);
+                        SlackPoster.postMessage(slackProperties.getToken(), slackProperties.getChannel(), error);
                     } finally {
                         if (channel != null) {
                             channel.disconnect();
