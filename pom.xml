@@ -313,8 +313,6 @@
                     <excludes>
                         <exclude>${integration.test.pattern}</exclude>
                     </excludes>
-                    <groups>unit</groups>
-                    <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
 
