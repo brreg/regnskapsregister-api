@@ -13,7 +13,7 @@ regnskap:
   sftp:
     host: ${RRAPI_SFTP_SERVER}
     port: ${RRAPI_SFTP_PORT}
-    user: ${RRAPI_SFTP_USER}1
+    user: ${RRAPI_SFTP_USER}
     password: ${RRAPI_SFTP_PASSWORD}
     directory: ${RRAPI_SFTP_DIRECTORY}
   slack:

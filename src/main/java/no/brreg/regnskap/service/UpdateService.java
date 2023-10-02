@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
@@ -106,7 +106,7 @@ public class UpdateService {
                         }
                     } catch (Exception e) {
                         LOGGER.error("Failed fetching accounting files from {}@{}:{}", sftpProperties.getUser(), sftpProperties.getHost(), sftpProperties.getPort());
-                        LOGGER.error("Exception when downloading accounting files: " + e.getMessage());
+                        LOGGER.error("Exception when downloading accounting files: " + e.getMessage(), e);
                         Slack.postMessage(slackProperties.getToken(), slackProperties.getChannel(), "Exception when downloading accounting files: " + e.getMessage());
                     } finally {
                         if (channel != null) {

@@ -11,10 +11,10 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import no.brreg.regnskap.spring.properties.PostgresProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.inject.Inject;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +35,7 @@ public class ConnectionManager {
 	private final Object databaseIsReadyLock = new Object();
 
 
-	@Inject
+	@Autowired
 	PostgresProperties postgresProperties;
 
 
