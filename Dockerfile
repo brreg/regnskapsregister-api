@@ -27,7 +27,7 @@
 #   --> Using cache ff21c22c44cccb63deeac799b0aa03fa8cb95f92554a56600bd09f2d9eecd8bc
 #
 # Default builder image is Java 17
-#FROM quay.apps.ocp-svc.base.brreg.no/base-selvbetjening/builder-java as builder
+FROM quay.apps.ocp-svc.base.brreg.no/base-selvbetjening/builder-java as builder
 
 # To use Java 8 instead, comment out the line above,
 # and uncomment the following line:
@@ -35,7 +35,7 @@
 
 # To use Java 11 instead, comment out the line above,
 # and uncomment the following line:
- FROM quay.apps.ocp-svc.base.brreg.no/base-selvbetjening/builder-java11 as builder
+#FROM quay.apps.ocp-svc.base.brreg.no/base-selvbetjening/builder-java11 as builder
 
 
 COPY pom.xml .
@@ -49,7 +49,7 @@ COPY . .
 RUN mvn install -Dmaven.test.skip=true --batch-mode --no-transfer-progress
 
 # image which production app should run in. Default is Openjdk 17
-#FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk17
+FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk17
 
 # To use Openjdk 8 instead, comment out the line above,
 # and uncomment the following line:
@@ -57,7 +57,7 @@ RUN mvn install -Dmaven.test.skip=true --batch-mode --no-transfer-progress
 
 # To use Openjdk 11 instead, comment out the line above,
 # and uncomment the following line:
-FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk11
+#FROM quay.apps.ocp-svc.base.brreg.no/base-container/openjdk11
 
 # Configuration for Elastic APM agent and ECS logging format
 # Correct logback.xml is added in parent image
