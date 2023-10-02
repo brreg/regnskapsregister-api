@@ -4,6 +4,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import jakarta.annotation.PostConstruct;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.slack.Slack;
 import no.brreg.regnskap.spring.properties.FileimportProperties;
@@ -12,11 +13,11 @@ import no.brreg.regnskap.spring.properties.SlackProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import java.util.Vector;
 
 @Service
 @EnableScheduling
+@ConditionalOnProperty(value = "regnskap.update.enabled", havingValue = "true")
 public class UpdateService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateService.class);
 

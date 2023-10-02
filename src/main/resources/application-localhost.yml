@@ -1,0 +1,33 @@
+postgres:
+  rreg:
+    db_url: jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer
+    dbo_user: postgres
+    dbo_password: password
+    user: postgres
+    password: password
+
+regnskap:
+  update:
+    enabled: ${RRAPI_UPDATE_ENABLED:true}
+  jena-external-url:
+    regnskapsregisteretUrl: http://data.ppe.brreg.no/regnskapsregisteret/regnskap/%s/%d
+    organizationCatalogueUrl: https://publishers-api.ut1.fellesdatakatalog.brreg.no/organizations/
+  sftp:
+    host: filporten.brreg.no
+    port: 22
+    user: ${RRAPI_SFTP_USER}
+    password: ${RRAPI_SFTP_PASSWORD}
+    directory: /out
+  slack:
+    channel: localhost
+    token: disabled
+  ip:
+    salt: salt
+
+springdoc:
+  api-docs:
+    path: /regnskapsregisteret/regnskap/v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /regnskapsregisteret/regnskap/swagger-ui/index.html
+    url: /regnskapsregisteret/regnskap/v3/api-docs

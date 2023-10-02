@@ -4,6 +4,8 @@ spring:
   flyway:
     enabled: false
 regnskap:
+  update:
+    enabled: true
   jena-external-url:
     regnskapsregisteretUrl: "http://invalid.org/regnskap/%s/%d"
     organizationCatalogueUrl: "https://invalid.org/organizations/"
