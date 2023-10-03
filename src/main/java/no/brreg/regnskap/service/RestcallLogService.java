@@ -1,5 +1,6 @@
 package no.brreg.regnskap.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.model.dbo.RestcallLog;
 import no.brreg.regnskap.repository.RestcallLogRepository;
 import no.brreg.regnskap.spring.properties.IpProperties;
@@ -8,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDate;

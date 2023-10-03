@@ -1,11 +1,10 @@
 package no.brreg.regnskap;
 
-import com.google.common.collect.ImmutableMap;
 import no.brreg.regnskap.generated.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Map;
 
 
 public class TestData {
@@ -18,17 +17,18 @@ public class TestData {
     public static final int SFTP_PORT = 22;
     private static final String SFTP_DIRECTORY = "sftpdir";
     public static final String SFTP_DIR = "/" + SFTP_DIRECTORY;
-    public static final Map<String, String> SFTP_ENV_VALUES =
-        ImmutableMap.of("SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY);
+    public static final Map<String, String> SFTP_ENV_VALUES = Map.of(
+            "SFTP_USERS", SFTP_USER + ":" + SFTP_PWD + ":::" + SFTP_DIRECTORY
+    );
 
     public static final String TEST_ORGNR_1 = "123456789";
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2016S = createRegnskap(TEST_ORGNR_1, 201601, 2016, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2017S = createRegnskap(TEST_ORGNR_1, 201701, 2017, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_1S = createRegnskap(TEST_ORGNR_1, 201801, 2018, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_2S = createRegnskap(TEST_ORGNR_1, 201802, 2018, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2018_3K = createRegnskap(TEST_ORGNR_1, 201803, 2018, Regnskapstype.KONSERN);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_1S = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.SELSKAP);
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2019_2K = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.KONSERN);
+    public static final Regnskap REGNSKAP_2016S = createRegnskap(TEST_ORGNR_1, 201601, 2016, Regnskapstype.SELSKAP);
+    public static final Regnskap REGNSKAP_2017S = createRegnskap(TEST_ORGNR_1, 201701, 2017, Regnskapstype.SELSKAP);
+    public static final Regnskap REGNSKAP_2018_1S = createRegnskap(TEST_ORGNR_1, 201801, 2018, Regnskapstype.SELSKAP);
+    public static final Regnskap REGNSKAP_2018_2S = createRegnskap(TEST_ORGNR_1, 201802, 2018, Regnskapstype.SELSKAP);
+    public static final Regnskap REGNSKAP_2018_3K = createRegnskap(TEST_ORGNR_1, 201803, 2018, Regnskapstype.KONSERN);
+    public static final Regnskap REGNSKAP_2019_1S = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.SELSKAP);
+    public static final Regnskap REGNSKAP_2019_2K = createRegnskap(TEST_ORGNR_1, 201901 /*Test: Use same for Selskap and Konsern*/, 2019, Regnskapstype.KONSERN);
 
     public static final int TEST_SELSKAP_VARER = 100;
     public static final int TEST_KONSERN_VARER = 101;
@@ -36,25 +36,24 @@ public class TestData {
     public static final int TEST_KONSERN_INVESTERINGER = 103;
 
     public static final String TEST_ORGNR_2 = "333444555";
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_2_2015S = createRegnskap(TEST_ORGNR_2, 201501, 2015, Regnskapstype.SELSKAP);
-    
+    public static final Regnskap REGNSKAP_2_2015S = createRegnskap(TEST_ORGNR_2, 201501, 2015, Regnskapstype.SELSKAP);
+
     public static final String TEST_ORGNR_3 = "444555666";
-    public static final no.brreg.regnskap.generated.model.Regnskap REGNSKAP_3_2015S = createRegnskap(TEST_ORGNR_3, 201501, 2015, Regnskapstype.SELSKAP);
-   
+    public static final Regnskap REGNSKAP_3_2015S = createRegnskap(TEST_ORGNR_3, 201501, 2015, Regnskapstype.SELSKAP);
 
 
-    private static no.brreg.regnskap.generated.model.Regnskap createRegnskap(String orgnr, final Integer id, final int year, final Regnskapstype regnskapsType) {
-        no.brreg.regnskap.generated.model.Regnskap regnskap = new no.brreg.regnskap.generated.model.Regnskap()
-            .id(id)
-            .journalnr(Integer.toString(id))
-            .avviklingsregnskap(true)
-            .valuta("valutakode")
-            .oppstillingsplan(no.brreg.regnskap.generated.model.Regnskap.OppstillingsplanEnum.fromValue("store"))
-            .regnskapstype(regnskapsType)
-            .revisjon(
-                new Revisjon()
-                    .ikkeRevidertAarsregnskap(true)
-                    .fravalgRevisjon(true))
+    private static Regnskap createRegnskap(String orgnr, final Integer id, final int year, final Regnskapstype regnskapsType) {
+        Regnskap regnskap = new Regnskap()
+                .id(id)
+                .journalnr(Integer.toString(id))
+                .avviklingsregnskap(true)
+                .valuta("valutakode")
+                .oppstillingsplan(Regnskap.OppstillingsplanEnum.fromValue("store"))
+                .regnskapstype(regnskapsType)
+                .revisjon(
+                        new Revisjon()
+                                .ikkeRevidertAarsregnskap(true)
+                                .fravalgRevisjon(true))
             .regnskapsperiode(
                 new Tidsperiode()
                     .fraDato(LocalDate.of(year, 1, 1))

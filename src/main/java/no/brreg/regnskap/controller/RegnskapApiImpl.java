@@ -2,6 +2,7 @@ package no.brreg.regnskap.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.generated.model.Regnskap;
 import no.brreg.regnskap.generated.model.Regnskapstype;
 import no.brreg.regnskap.jena.ExternalUrls;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static no.brreg.regnskap.jena.JenaUtils.*;
