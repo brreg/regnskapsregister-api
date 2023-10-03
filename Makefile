@@ -12,8 +12,12 @@ trigger-pipeline:
 	oc login -u "${USER}" --server "https://api.ocp01.ut.base.brreg.no:6443"
 	oc project regnskap-registerinfo
 	tkn pipeline start "regnskap-opendata-api" --showlog --param "revision=$(CURRENT_REVISION)" --use-param-defaults
+	@echo "${CURRENT_REVISION}" built successfully. Use this hash to deploy the new image from the appconfig.
+	@echo "Remember to update the hash for both deployments:"
+	@echo "- regnskap-opendata-api"
+	@echo "- regnskap-opendata-updater"
 endif
 ifneq ($(CURRENT_BRANCH),$(CHECK_BRANCH))
 trigger-pipeline:
-	echo "Need to be on main branch to trigger pipeline"
+	@echo "Need to be on main branch to trigger pipeline"
 endif
