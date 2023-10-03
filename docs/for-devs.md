@@ -4,62 +4,18 @@ Key values from annual accounts for the last accounting year as open data.
 
 # Local development
 
-## Install java, git, maven and postgres
+1. Install java, git, maven and postgres (optional)
+   - You can also run postgres with Podman: `podman play kube pods/postgres.yaml`
+2. Set the application profile to `localhost`. 
+   - In IDEA: Application -> Edit Configurations -> Active profiles = `localhost`
+3. Set the missing environment variables:
+   - In IDEA: Application -> Edit Configurations -> Modify Options -> Environment variables -> add the following:
+       ```
+       RRAPI_SFTP_USER="<replace-me>";
+       RRAPI_SFTP_PASSWORD="<replace-me>";
+       ```
 
-##### Linux
-```
-sudo apt update
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install default-jdk git maven postgresql
-```
-
-##### Windows
-Git for Windows - https://gitforwindows.org/
-
-Apache Maven - https://maven.apache.org/download.cgi
-
-PostgreSQL - https://www.postgresql.org/download/windows/
-
-
-## Environment variables
-These are needed for RREG-API integration:
-```
-RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer";
-RRAPI_POSTGRES_DBO_USER="regnskap";
-RRAPI_POSTGRES_DBO_PASSWORD="password";
-RRAPI_POSTGRES_USER="regnskap";
-RRAPI_POSTGRES_PASSWORD="password";
-RRAPI_SFTP_SERVER="filporten.brreg.no";
-RRAPI_SFTP_PORT="22";
-RRAPI_SFTP_USER="RRmasse";
-RRAPI_SFTP_PASSWORD="<password>";
-RRAPI_SFTP_DIRECTORY="/out";
-RRAPI_SLACK_CHANNEL="prod-error";
-RRAPI_SLACK_TOKEN="disabled";
-RRAPI_IP_SALT="salt";
-```
-
-In addition, you can add this to the application.properties file:
-regnskap.fileimport.directory=C:/src/regnskapsregister-api/ (or wherever you might have RREG masse.xml-files)
-
-
-##### Linux
-Open ~/.bashrc and add the lines
-```
-export RRAPI_POSTGRES_DB_URL="jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer"
-export RRAPI_POSTGRES_DBO_USER="postgres" (whatever you used in your locally installed Postgresql)
-...
-```
-Update from ~/.bashrc with
-```
-source ~/.bashrc
-```
-
-Check that they have been added with "printenv"
-
-##### Windows
-“Advanced system settings” → “Environment Variables”
+    >    See the rest of the environment variables in application.yml
 
 
 ## Clone and run
@@ -75,13 +31,9 @@ Liquibase will create database schema "rregapi" and the database itself at start
 
 Import this collection in Postman to test the api locally.
 
-# Build and deploy on Openshift
-For deployment to Brønnøysundregistrene's Openshift environment, Jenkins with standard Brønnøysundregistrene pipeline is used.
-https://jenkins-data.apps.ocp-svc.base.brreg.no/job/regnskapsregister-api/ (available only on Brønnøysundregistrene's internal network)
-
-Builds on the main branch are deployed.
-Configuration of Openshift environments is found in the appconfig repository:
-https://bitbucket.brreg.no/projects/OPENSHIFT-APPCONFIG/repos/regnskap/browse (available only on Brønnøysundregistrene's internal network)
+# Build and deploy on Openshift (BR only)
+1. Trigger the pipeline `make trigger-pipeline`
+2. If the build succeeds, grab the git hash and paste it into both deployment files in the appconfig.
 
 # Exporting importfiles
 
@@ -148,9 +100,7 @@ The application is deployed to two environments on Brønnøysundregistrene's Ope
 * Production environment: PRD
 The application is deployed to a production environment, but it is currently made available as a "preview", with no guarantees of quality of service.
 
-| Environment   | API                                                        | Open Shift Console * |
-|---------------|------------------------------------------------------------|------------|
-| PPE           | https://data.ppe.brreg.no/regnskapsregisteret/regnskap     | https://console-openshift-console.apps.ocp-ppe.regsys.brreg.no/k8s/cluster/projects/regnskap        |
-| PRD           | https://data.brreg.no/regnskapsregisteret/regnskap         | https://console-openshift-console.apps.ocp-prd.regsys.brreg.no/k8s/cluster/projects/regnskap       |
-
-* The Open Shift Console is only available on Brønnøysundregistrene's internal network
+| Environment   | API                                                     |
+|---------------|---------------------------------------------------------|
+| PPE           | https://data.ppe.brreg.no/regnskapsregisteret/regnskap  |
+| PRD           | https://data.brreg.no/regnskapsregisteret/regnskap      |
