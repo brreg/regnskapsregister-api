@@ -90,9 +90,9 @@ public class UpdateService {
                             String filename = item.getFilename();
                             String extension = filename.substring(filename.lastIndexOf('.') + 1);
                             boolean isXmlFile = !item.getAttrs().isDir() && extension.equals("xml");
-                            boolean fileIsNew = !regnskapLogRepository.hasLogged(filename);
+                            boolean fileIsNewXml = isXmlFile && !regnskapLogRepository.hasLogged(filename);
 
-                            if (isXmlFile && fileIsNew) {
+                            if (fileIsNewXml) {
                                 String path = sftpProperties.getDirectory() + "/" + filename;
                                 try {
                                     stopWatch.start("Process " + filename);
