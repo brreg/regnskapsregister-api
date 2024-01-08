@@ -47,15 +47,14 @@
         <embedded-postgres-binaries-bom.version>15.3.0</embedded-postgres-binaries-bom.version>
         <sonar.maven.version>6.2</sonar.maven.version>
         <jena.version>4.9.0</jena.version>
-        <swagger.version>2.9.2</swagger.version>
         <postgresql.version>42.6.0</postgresql.version>
         <liquibase-core.version>4.23.2</liquibase-core.version>
-        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <logback-ecs-encoder.version>1.5.0</logback-ecs-encoder.version>
         <jsch.version>0.1.55</jsch.version>
         <openapi-generator-maven-plugin.version>7.0.1</openapi-generator-maven-plugin.version>
         <slack-api-client.version>1.32.2</slack-api-client.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
     </properties>
 
     <dependencies>
@@ -120,8 +119,8 @@
         <!-- Generated code dependencies -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc-openapi-ui.version}</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
         </dependency>
 
         <dependency>
