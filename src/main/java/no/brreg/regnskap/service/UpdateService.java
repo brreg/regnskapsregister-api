@@ -4,7 +4,6 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import jakarta.annotation.PostConstruct;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.slack.SlackPoster;
 import no.brreg.regnskap.spring.properties.FileimportProperties;
@@ -17,12 +16,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -44,90 +44,81 @@ public class UpdateService {
     private RegnskapLogRepository regnskapLogRepository;
 
     private static Object updateLock = new Object();
-    private static LocalDateTime previousUpdateTime;
 
-
-    @PostConstruct
-    @Scheduled(fixedDelay = 60000)
-    void intermittentScheduleTask() {
-        updateAccountingData();
-    }
-
-    @PostConstruct
-    @Scheduled(cron = "0 15 5 * * *") // Check server for new accounting files once a day at 05:15
-    void dailyScheduleTask() {
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
+    void hourlyScheduleTask() {
         updateAccountingData();
     }
 
     private void updateAccountingData() {
         synchronized (updateLock) {
-            if (previousUpdateTime!=null && previousUpdateTime.plusHours(24+1).isAfter(LocalDateTime.now())) {
-                return; //We have updated recently
-            }
+            new Thread(() -> {
+                StopWatch stopWatch = new StopWatch();
 
-            try {
-                new Thread(() -> {
-                    fileImport();
+                stopWatch.start("File Import");
+                fileImport();
+                stopWatch.stop();
 
-                    Session session = null;
-                    Channel channel = null;
+                Session session = null;
+                Channel channel = null;
 
-                    try {
-                        JSch jsch = new JSch();
-                        Properties config = new Properties();
+                String user = sftpProperties.getUser();
+                String host = sftpProperties.getHost();
+                String port = sftpProperties.getPort();
+                try {
+                    JSch jsch = new JSch();
+                    Properties config = new Properties();
 
-                        config.setProperty("StrictHostKeyChecking", "no");
+                    config.setProperty("StrictHostKeyChecking", "no");
 
-                        session = jsch.getSession(sftpProperties.getUser(),
-                                sftpProperties.getHost(), Integer.valueOf(sftpProperties.getPort()));
-                        session.setPassword(sftpProperties.getPassword());
-                        session.setConfig(config);
-                        session.connect(); // Create SFTP Session
+                    session = jsch.getSession(user, host, Integer.parseInt(port));
+                    session.setPassword(sftpProperties.getPassword());
+                    session.setConfig(config);
+                    session.connect();
 
-                        channel = session.openChannel("sftp");
-                        if (channel instanceof ChannelSftp) {
-                            ChannelSftp channelSftp = (ChannelSftp) channel;
+                    channel = session.openChannel("sftp");
+                    if (channel instanceof ChannelSftp) {
+                        ChannelSftp channelSftp = (ChannelSftp) channel;
 
-                            channelSftp.connect();
-                            channelSftp.cd(sftpProperties.getDirectory()); // Change Directory on SFTP Server
+                        channelSftp.connect();
+                        LOGGER.debug("Change directory to: {}", sftpProperties.getDirectory());
+                        channelSftp.cd(sftpProperties.getDirectory());
 
-                            Vector<ChannelSftp.LsEntry> fileList = channelSftp.ls(sftpProperties.getDirectory()); // List of content in source folder
+                        Vector<ChannelSftp.LsEntry> filesInDirectory = channelSftp.ls(sftpProperties.getDirectory());
 
-                            //Iterate through list of folder content
-                            for (ChannelSftp.LsEntry item : fileList) {
-                                String extension = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1);
-                                if (!item.getAttrs().isDir() && extension.equals("xml") && !regnskapLogRepository.hasLogged(item.getFilename())) { // Do not download if it's a directory, not xml or if the file already has been persisted
-                                    try {
-                                        regnskapLogRepository.persistRegnskapFile(item.getFilename(),
-                                                channelSftp.get(sftpProperties.getDirectory() + "/" + item.getFilename()));
-                                    } catch (Exception e) {
-                                        LOGGER.error("Exception when downloading accounting file {}: {}", sftpProperties.getDirectory() + "/" + item.getFilename(), e.getMessage());
-                                    }
+                        for (ChannelSftp.LsEntry item : filesInDirectory) {
+                            String filename = item.getFilename();
+                            String extension = filename.substring(filename.lastIndexOf('.') + 1);
+                            boolean isXmlFile = !item.getAttrs().isDir() && extension.equals("xml");
+                            boolean fileIsNew = !regnskapLogRepository.hasLogged(filename);
+
+                            if (isXmlFile && fileIsNew) {
+                                String path = sftpProperties.getDirectory() + "/" + filename;
+                                try {
+                                    stopWatch.start("Process " + filename);
+                                    regnskapLogRepository.persistRegnskapFile(filename, channelSftp.get(path));
+                                    stopWatch.stop();
+                                } catch (Exception e) {
+                                    LOGGER.error("Exception when downloading file {}: {}", path, e.getMessage());
                                 }
                             }
                         }
-                    } catch (Exception e) {
-                        LOGGER.error(
-                                "Failed fetching accounting files from {}@{}:{}",
-                                sftpProperties.getUser(),
-                                sftpProperties.getHost(),
-                                sftpProperties.getPort()
-                        );
-                        final var error = "Exception when downloading accounting files: " + e.getMessage();
-                        LOGGER.error(error, e);
-                        SlackPoster.postMessage(slackProperties.getToken(), slackProperties.getChannel(), error);
-                    } finally {
-                        if (channel != null) {
-                            channel.disconnect();
-                        }
-                        if (session != null) {
-                            session.disconnect();
-                        }
                     }
-                }).start();
-            } finally {
-                previousUpdateTime = LocalDateTime.now();
-            }
+                } catch (Exception e) {
+                    LOGGER.error("Failed fetching accounting files from {}@{}:{}", user, host, port);
+                    final var error = "Exception when downloading accounting files: " + e.getMessage();
+                    LOGGER.error(error, e);
+                    SlackPoster.postMessage(slackProperties.getToken(), slackProperties.getChannel(), error);
+                } finally {
+                    if (channel != null) {
+                        channel.disconnect();
+                    }
+                    if (session != null) {
+                        session.disconnect();
+                    }
+                    LOGGER.info(stopWatch.prettyPrint());
+                }
+            }).start();
         }
     }
 
