@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -46,15 +46,15 @@
         <embedded-postgres.version>2.0.4</embedded-postgres.version>
         <embedded-postgres-binaries-bom.version>15.3.0</embedded-postgres-binaries-bom.version>
         <sonar.maven.version>6.2</sonar.maven.version>
-        <jena.version>4.9.0</jena.version>
-        <postgresql.version>42.6.0</postgresql.version>
-        <liquibase-core.version>4.23.2</liquibase-core.version>
+        <jena.version>4.10.0</jena.version>
+        <postgresql.version>42.7.4</postgresql.version>
+        <liquibase-core.version>4.29.2</liquibase-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <logback-ecs-encoder.version>1.5.0</logback-ecs-encoder.version>
+        <logback-ecs-encoder.version>1.6.0</logback-ecs-encoder.version>
         <jsch.version>0.1.55</jsch.version>
-        <openapi-generator-maven-plugin.version>7.0.1</openapi-generator-maven-plugin.version>
-        <slack-api-client.version>1.32.2</slack-api-client.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
+        <openapi-generator-maven-plugin.version>7.8.0</openapi-generator-maven-plugin.version>
+        <slack-api-client.version>1.43.1</slack-api-client.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
     </properties>
 
     <dependencies>
