@@ -61,7 +61,7 @@ public class TestData {
             .regnkapsprinsipper(
                 new Regnskapsprinsipper()
                     .smaaForetak(true)
-                    .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER))
+                    .regnskapsregler(Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVEN_ALMINNELIG_REGLER))
             .virksomhet(
                 new Virksomhet()
                     .organisasjonsnummer(orgnr)

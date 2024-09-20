@@ -344,7 +344,7 @@ public class RegnskapRepository {
             stmt.setNull(21, Types.BOOLEAN);//stmt.setBoolean(21, kodeToBoolean(regnskapXmlHead.getLandForLand()));
             setBoolean(stmt, 22, regnskap.getRevisjon().getIkkeRevidertAarsregnskap());
             setBoolean(stmt, 23, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.IFRS);
-            setBoolean(stmt, 24, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
+            setBoolean(stmt, 24, regnskap.getRegnkapsprinsipper().getRegnskapsregler() == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLET_ANVENDELSE_IFRS);
             stmt.setNull(25, Types.BOOLEAN);//stmt.setBoolean(25, kodeToBoolean(regnskapXmlHead.getIfrsKonsern()));
             stmt.setNull(26, Types.BOOLEAN);//stmt.setBoolean(26, kodeToBoolean(regnskapXmlHead.getForenkletIfrsKonsern()));
             stmt.setString(27, regnskap.getRegnskapDokumenttype());
@@ -443,7 +443,7 @@ public class RegnskapRepository {
         final Boolean forenklet_ifrs_konsern
     ) {
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
-            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVEN_ALMINNELIG_REGLER;
 
         if (regnskapsType == Regnskapstype.SELSKAP) {
             regnskapsregler = selectRegnskapsreglerSelskap(
@@ -465,12 +465,12 @@ public class RegnskapRepository {
         final Boolean forenklet_ifrs_selskap
     ) {
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
-            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVEN_ALMINNELIG_REGLER;
         if (ifrs_selskap!=null && ifrs_selskap) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
         }
         if (forenklet_ifrs_selskap!=null && forenklet_ifrs_selskap) {
-            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLET_ANVENDELSE_IFRS;
         }
         return regnskapsregler;
     }
@@ -481,12 +481,12 @@ public class RegnskapRepository {
         final Boolean forenklet_ifrs_konsern
     ) {
         Regnskapsprinsipper.RegnskapsreglerEnum regnskapsregler =
-            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER;
+            Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVEN_ALMINNELIG_REGLER;
         if (ifrs_konsern!=null && ifrs_konsern) {
             regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.IFRS;
         }
         if (forenklet_ifrs_konsern!=null && forenklet_ifrs_konsern) {
-            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS;
+            regnskapsregler = Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLET_ANVENDELSE_IFRS;
         }
         return regnskapsregler;
     }
