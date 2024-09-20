@@ -118,8 +118,8 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     @Test
     public void regnskapsreglerEnumTest() {
         Regnskapsprinsipper.RegnskapsreglerEnum regler = TestData.REGNSKAP_2018_1S.getRegnkapsprinsipper().getRegnskapsregler();
-        assertTrue(regler == Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVENALMINNELIGREGLER);
-        assertFalse(regler == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLETANVENDELSEIFRS);
+        assertTrue(regler == Regnskapsprinsipper.RegnskapsreglerEnum.REGNSKAPSLOVEN_ALMINNELIG_REGLER);
+        assertFalse(regler == Regnskapsprinsipper.RegnskapsreglerEnum.FORENKLET_ANVENDELSE_IFRS);
         assertFalse(regler == Regnskapsprinsipper.RegnskapsreglerEnum.IFRS);
     }
 
