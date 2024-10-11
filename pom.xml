@@ -46,7 +46,7 @@
         <embedded-postgres.version>2.0.4</embedded-postgres.version>
         <embedded-postgres-binaries-bom.version>15.3.0</embedded-postgres-binaries-bom.version>
         <sonar.maven.version>6.2</sonar.maven.version>
-        <jena.version>4.10.0</jena.version>
+        <jena.version>5.1.0</jena.version>
         <postgresql.version>42.7.4</postgresql.version>
         <liquibase-core.version>4.29.2</liquibase-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
