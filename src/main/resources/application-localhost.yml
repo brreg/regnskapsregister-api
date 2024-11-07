@@ -23,6 +23,8 @@ regnskap:
     token: disabled
   ip:
     salt: salt
+  aarsregnskap-copy:
+    enabled: true
 
 springdoc:
   api-docs:

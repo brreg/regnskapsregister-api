@@ -23,6 +23,8 @@ regnskap:
     token: ${RRAPI_SLACK_TOKEN}
   ip:
     salt: ${RRAPI_IP_SALT}
+  aarsregnskap-copy:
+    enabled: ${RRAPI_AARSREGNSKAP_COPY_ENABLED:false}
 
 springdoc:
   api-docs:
