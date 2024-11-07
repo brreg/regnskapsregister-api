@@ -22,7 +22,6 @@ public class AarsregnskapController {
         this.aarsregnskapCopyService = aarsregnskapCopyService;
     }
 
-
     @GetMapping("/aarsregnskap/{orgnr}/aar")
     public ResponseEntity<List<String>> getAvailableAarsregnskap(@PathVariable String orgnr) {
         var yearList = this.aarsregnskapCopyService.getAvailableAarsregnskapYears(orgnr);

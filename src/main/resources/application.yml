@@ -1,6 +1,12 @@
 spring:
   liquibase:        # Disable Liquibase globally, to prevent liquibase instanciating for sybase.
     enabled: false  # Postgres not affected, as it is configured manually to use liquibase
+  cache:
+    type: jcache
+    jcache:
+      provider: com.hazelcast.cache.impl.HazelcastServerCachingProvider
+  main:
+    allow-bean-definition-overriding: true
 
 postgres:
   rreg:
@@ -35,6 +41,35 @@ regnskap:
       username: ${RRAPI_AARDB_USER}
       password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver
+  cache:
+    ttl-after-accessed-aar-requests: ${CACHE_TTL_AAR_REQUESTS_SECONDS}
+    ttl-after-created-aar-copy-filemeta: ${CACHE_TTL_AAR_COPY_FILEMETA_SECONDS}
+
+bucket4j:
+  enabled: true
+  cache-to-use: jcache
+  filters:
+    - cache-name: aarsregnskapCopyBucket
+      filter-order: 1000
+      url: /aarsregnskap.*
+      rate-limits:
+        - cache-key: "getRemoteAddr()"
+          bandwidths:
+            - id: short
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_SHORT_CAPACITY}
+              time: ${AARSREGNSKAP_RATE_LIMIT_SHORT_TIME_SECONDS}
+              unit: seconds
+              refill-speed: interval
+            - id: medium
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_CAPACITY}
+              time: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_TIME_SECONDS}
+              unit: seconds
+              refill-speed: interval
+            - id: long
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_LONG_CAPACITY}
+              time: ${AARSREGNSKAP_RATE_LIMIT_LONG_TIME_SECONDS}
+              unit: seconds
+              refill-speed: interval
 
 springdoc:
   api-docs:
