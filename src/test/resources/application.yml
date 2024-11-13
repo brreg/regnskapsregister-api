@@ -3,6 +3,9 @@ spring:
     active: test
   flyway:
     enabled: false
+  liquibase:        # Disable Liquibase globally, to prevent liquibase instanciating for sybase.
+    enabled: false  # Postgres not affected, as it is configured manually to use liquibase
+
 regnskap:
   update:
     enabled: true
@@ -11,3 +14,9 @@ regnskap:
     organizationCatalogueUrl: "https://invalid.org/organizations/"
   aarsregnskap-copy:
     enabled: true
+  aardb:
+    datasource:
+      jdbc-url: jdbc:h2:mem:aardb
+      username: sa
+      password: sa
+      driver-class-name: org.h2.Driver

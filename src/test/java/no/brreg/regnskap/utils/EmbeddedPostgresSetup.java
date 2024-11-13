@@ -4,6 +4,7 @@ import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 
 import no.brreg.regnskap.Application;
 import no.brreg.regnskap.TestData;
+import no.brreg.regnskap.configuration.TestConfig;
 import no.brreg.regnskap.repository.ConnectionManager;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +30,7 @@ import java.sql.SQLException;
 
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {Application.class})
+@SpringBootTest(classes = {TestConfig.class})
 @WebAppConfiguration
 @ContextConfiguration(initializers = {EmbeddedPostgresSetup.Initializer.class})
 public abstract class EmbeddedPostgresSetup {

@@ -12,7 +12,7 @@ import no.brreg.regnskap.model.Partner;
 import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.service.RegnskapService;
 import no.brreg.regnskap.service.RestcallLogService;
-import no.brreg.regnskap.spring.properties.JenaExternalUrlProperties;
+import no.brreg.regnskap.config.properties.JenaExternalUrlProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

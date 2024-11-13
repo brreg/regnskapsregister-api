@@ -1,4 +1,4 @@
-package no.brreg.regnskap.spring.properties;
+package no.brreg.regnskap.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

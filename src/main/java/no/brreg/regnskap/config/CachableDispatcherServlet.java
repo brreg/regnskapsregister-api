@@ -1,4 +1,4 @@
-package no.brreg.regnskap.spring;
+package no.brreg.regnskap.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +20,7 @@ public class CachableDispatcherServlet extends DispatcherServlet {
         } catch (Exception e) {
             LOGGER.error("Dispatch failed: ", e);
         }
-        
+
     }
 
 }
