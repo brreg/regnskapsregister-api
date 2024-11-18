@@ -25,7 +25,7 @@ public class AarsregnskapSybaseRepository implements AarsregnskapRepository {
 
     private List<AarsregnskapFileMeta> getAarsregnskapMeta(String orgnr) {
         try {
-            return jdbcTemplate.queryForList("exec aardb..finn_sti_image_for_alle_aar :orgnr", Map.of("orgnr", orgnr), AarsregnskapFileMeta.class);
+            return jdbcTemplate.query("exec aardb..finn_sti_image_for_alle_aar :orgnr", Map.of("orgnr", Integer.parseInt(orgnr)), new AarsregnskapFileMetaRowMapper());
         } catch (DataAccessException dae) {
             LOGGER.error("DataAccessException caught. {}. Throwing InternalServerError", dae.getMessage());
             throw new InternalServerError(dae);
