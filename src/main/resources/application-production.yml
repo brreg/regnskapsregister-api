@@ -2,4 +2,6 @@ spring:
   config:
     activate:
       on-profile: production
-    import: configtree:/secrets/secrets/
+    import:
+      - configtree:/secrets/secrets/
+      - configtree:/secrets/aardb-secrets/
