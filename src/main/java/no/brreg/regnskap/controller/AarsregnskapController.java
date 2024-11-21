@@ -32,7 +32,7 @@ public class AarsregnskapController {
                 .body(yearList);
     }
 
-    @GetMapping("/aarsregnskap/kopi/{orgnr}/{aar}")
+    @GetMapping("/aarsregnskap/{orgnr}/kopi/{aar}")
     public ResponseEntity<byte[]> getAarsregnskapCopy(@PathVariable("orgnr") String orgnr,
                                                       @PathVariable("aar") String aar) {
 

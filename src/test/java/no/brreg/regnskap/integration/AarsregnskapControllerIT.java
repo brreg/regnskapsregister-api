@@ -71,7 +71,7 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturnCorrectHeaders() throws Exception {
-        mockMvc.perform(get("/aarsregnskap/kopi/312800640/2022"))
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/pdf"))
                 .andExpect(header().string("Content-Disposition", "attachment; filename=aarsregnskap-2022_312800640.pdf"));
@@ -79,7 +79,7 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturn404IfNoFile() throws Exception {
-        mockMvc.perform(get("/aarsregnskap/kopi/312800640/2024"))
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2024"))
                 .andExpect(status().isNotFound());
     }
 
@@ -93,7 +93,7 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
         mockMvc.perform(get("/aarsregnskap/312800640/aar"))
                 .andExpect(status().isTooManyRequests());
 
-        mockMvc.perform(get("/aarsregnskap/kopi/312800640/2022"))
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
                 .andExpect(status().isTooManyRequests());
     }
 }
