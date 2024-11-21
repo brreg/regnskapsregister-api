@@ -34,7 +34,7 @@ regnskap:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseavgtest.brreg.no:5005/aardb}
       username: ${RRAPI_AARDB_USER}
-      password: ${RRAPI_AARDB_PASSWORD}
+      password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver
 
 springdoc:
