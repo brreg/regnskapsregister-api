@@ -3,7 +3,7 @@ package no.brreg.regnskap.service;
 import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.model.dbo.RestcallLog;
 import no.brreg.regnskap.repository.RestcallLogRepository;
-import no.brreg.regnskap.spring.properties.IpProperties;
+import no.brreg.regnskap.config.properties.IpProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -24,20 +24,8 @@
 #
 #   --> Using cache ff21c22c44cccb63deeac799b0aa03fa8cb95f92554a56600bd09f2d9eecd8bc
 #
-# Default builder image is Java 17
-FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-17 as builder
 
-# To use Java 8 instead, comment out the 'FROM' statement above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi8-openjdk-8 as builder
-
-# To use Java 11 instead, comment out the 'FROM' statement above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-11 as builder
-
-# To use Java 21 instead, comment out the 'FROM' statement above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-21 as builder
+FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-21 as builder
 
 COPY pom.xml .
 
@@ -49,20 +37,8 @@ COPY . .
 
 RUN mvn install -Dmaven.test.skip=true --batch-mode --no-transfer-progress
 
-# image which production app should run in. Default is Openjdk 17
-FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-17-runtime
 
-# To use Openjdk 8 instead, comment out the line above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi8-openjdk-8-runtime
-
-# To use Openjdk 11 instead, comment out the line above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-11-runtime
-
-# To use Openjdk 21 instead, comment out the line above,
-# and uncomment the following line:
-# FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-21-runtime
+FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-21-runtime
 
 # Overstyring av default expiry. If you want a different default that 2 years,
 # change the ARG below for how long a tag is kept on the master branch.
