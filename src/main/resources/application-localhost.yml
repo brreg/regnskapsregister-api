@@ -57,7 +57,7 @@ bucket4j:
               refill-speed: interval
             - id: medium
               capacity: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_CAPACITY:300}
-              time: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_TIME_SECONDS:10}
+              time: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_TIME_SECONDS:600}
               unit: seconds
               refill-speed: interval
             - id: long
