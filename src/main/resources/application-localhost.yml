@@ -36,6 +36,35 @@ regnskap:
       username: ${RRAPI_AARDB_USER}
       password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver
+  cache:
+    ttl-after-accessed-aar-requests: ${CACHE_TTL_AAR_REQUESTS_SECONDS:86400}
+    ttl-after-created-aar-copy-filemeta: ${CACHE_TTL_AAR_COPY_FILEMETA_SECONDS:120}
+
+bucket4j:
+  enabled: true
+  cache-to-use: jcache
+  filters:
+    - cache-name: aarsregnskapCopyBucket
+      filter-order: 1000
+      url: /aarsregnskap.*
+      rate-limits:
+        - cache-key: "getRemoteAddr()"
+          bandwidths:
+            - id: short
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_SHORT_CAPACITY:30}
+              time: ${AARSREGNSKAP_RATE_LIMIT_SHORT_TIME_SECONDS:30}
+              unit: seconds
+              refill-speed: interval
+            - id: medium
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_CAPACITY:300}
+              time: ${AARSREGNSKAP_RATE_LIMIT_MEDIUM_TIME_SECONDS:10}
+              unit: seconds
+              refill-speed: interval
+            - id: long
+              capacity: ${AARSREGNSKAP_RATE_LIMIT_LONG_CAPACITY:15000}
+              time: ${AARSREGNSKAP_RATE_LIMIT_LONG_TIME_SECONDS:43200} # 12hrs default
+              unit: seconds
+              refill-speed: interval
 
 springdoc:
   api-docs:

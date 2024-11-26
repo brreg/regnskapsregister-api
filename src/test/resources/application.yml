@@ -1,10 +1,16 @@
 spring:
   profiles:
     active: test
+  cache:
+    type: jcache
+    jcache:
+      provider: com.hazelcast.cache.impl.HazelcastServerCachingProvider
   flyway:
     enabled: false
   liquibase:        # Disable Liquibase globally, to prevent liquibase instanciating for sybase.
     enabled: false  # Postgres not affected, as it is configured manually to use liquibase
+  main:
+    allow-bean-definition-overriding: true
 
 regnskap:
   update:
@@ -20,3 +26,32 @@ regnskap:
       username: sa
       password: sa
       driver-class-name: org.h2.Driver
+  cache:
+    ttl-after-accessed-aar-requests: 300
+    ttl-after-created-aar-copy-filemeta: 10
+
+bucket4j:
+  enabled: true
+  cache-to-use: jcache
+  filters:
+    - cache-name: aarsregnskapCopyBucket
+      filter-order: 1000
+      url: /aarsregnskap.*
+      rate-limits:
+        - cache-key: "getRemoteAddr()"
+          bandwidths:
+            - id: short
+              capacity: 5
+              time: 5
+              unit: seconds
+              refill-speed: interval
+            - id: medium
+              capacity: 25
+              time: 50
+              unit: seconds
+              refill-speed: interval
+            - id: long
+              capacity: 100
+              time: 300
+              unit: seconds
+              refill-speed: interval

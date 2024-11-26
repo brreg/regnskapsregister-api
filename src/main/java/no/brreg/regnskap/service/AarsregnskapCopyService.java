@@ -1,12 +1,14 @@
 package no.brreg.regnskap.service;
 
 import no.brreg.regnskap.controller.exception.InternalServerError;
+import no.brreg.regnskap.model.AarsregnskapFileMeta;
 import no.brreg.regnskap.repository.AarsregnskapRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+
 import java.time.Clock;
 import java.time.Year;
 import java.util.List;
@@ -26,21 +28,24 @@ public class AarsregnskapCopyService {
         this.pdfConverterService = pdfConverterService;
         this.aarsregnskapRepository = aarsregnskapRepository;
         this.clock = clock;
-
     }
 
     public List<String> getAvailableAarsregnskapYears(String orgnr) {
-        var years = aarsregnskapRepository.getAvailableAarsregnskap(orgnr);
         Year tenYearsAgo = Year.now(clock).minusYears(10);
 
-        return years.stream()
+        return aarsregnskapRepository.getAarsregnskapMeta(orgnr).stream()
+                .map(AarsregnskapFileMeta::regnaar)
                 .filter(y -> !Year.parse(y).isBefore(tenYearsAgo))
                 .toList();
     }
 
     public Optional<byte[]> getAarsregnskapCopy(String orgnr, String year) {
-        var aarsregnskapPath = aarsregnskapRepository.getAarsregnskapPath(orgnr, year);
-        if (aarsregnskapPath.orElse("").isEmpty()) {
+        var aarsregnskapPath = aarsregnskapRepository.getAarsregnskapMeta(orgnr).stream()
+                .filter(meta -> meta.regnaar().equals(year))
+                .findFirst()
+                .map(AarsregnskapFileMeta::path);
+
+        if (aarsregnskapPath.isEmpty()) {
             return Optional.empty();
         }
 

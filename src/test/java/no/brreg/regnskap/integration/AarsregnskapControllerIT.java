@@ -1,12 +1,14 @@
 package no.brreg.regnskap.integration;
 
 
+import kotlin.ranges.IntRange;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +17,9 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
+import static java.util.Objects.requireNonNull;
+import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_COPY_FILEMETA;
+import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_REQUEST_BUCKET;
 import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
@@ -36,12 +41,18 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
     @MockBean
     private Clock clock;
 
+    @Autowired
+    CacheManager cacheManager;
+
 
     @BeforeEach
     void setUp() {
         Instant fixedInstant = Instant.parse("2024-01-01T00:00:00Z");
         when(clock.instant()).thenReturn(fixedInstant);
         when(clock.getZone()).thenReturn(ZoneId.of("UTC"));
+
+        requireNonNull(cacheManager.getCache(CACHE_AAR_COPY_FILEMETA)).clear();
+        requireNonNull(cacheManager.getCache(CACHE_AAR_REQUEST_BUCKET)).clear();
     }
 
     @Test
@@ -60,7 +71,7 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturnCorrectHeaders() throws Exception {
-        mockMvc.perform(get("/aarsregnskap/kopi/312800640/2022"))
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/pdf"))
                 .andExpect(header().string("Content-Disposition", "attachment; filename=aarsregnskap-2022_312800640.pdf"));
@@ -68,7 +79,21 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturn404IfNoFile() throws Exception {
-        mockMvc.perform(get("/aarsregnskap/kopi/312800640/2024"))
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2024"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void ratelimit_enforcedOnEndpoints() throws Exception {
+        for (var i : new IntRange(0, 4)) {
+            mockMvc.perform(get("/aarsregnskap/312800640/aar"))
+                    .andExpect(status().isOk());
+        }
+
+        mockMvc.perform(get("/aarsregnskap/312800640/aar"))
+                .andExpect(status().isTooManyRequests());
+
+        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
+                .andExpect(status().isTooManyRequests());
     }
 }

@@ -5,6 +5,7 @@ import no.brreg.regnskap.model.AarsregnskapFileMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,8 @@ public class AarsregnskapSybaseRepository implements AarsregnskapRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private List<AarsregnskapFileMeta> getAarsregnskapMeta(String orgnr) {
+    @Cacheable(value="aarsregnskapCopyFileMeta", key = "#orgnr")
+    public List<AarsregnskapFileMeta> getAarsregnskapMeta(String orgnr) {
         try {
             return jdbcTemplate.query("exec aardb..finn_sti_image_for_alle_aar :orgnr", Map.of("orgnr", Integer.parseInt(orgnr)), new AarsregnskapFileMetaRowMapper());
         } catch (DataAccessException dae) {
@@ -33,17 +35,5 @@ public class AarsregnskapSybaseRepository implements AarsregnskapRepository {
             LOGGER.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public List<String> getAvailableAarsregnskap(String orgnr) {
-        return this.getAarsregnskapMeta(orgnr).stream().map(AarsregnskapFileMeta::regnaar).toList();
-    }
-
-    @Override
-    public Optional<String> getAarsregnskapPath(String orgnr, String year) {
-        return this.getAarsregnskapMeta(orgnr).stream()
-                .filter(meta -> meta.regnaar().equals(year))
-                .findFirst().map(AarsregnskapFileMeta::path);
     }
 }

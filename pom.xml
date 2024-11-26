@@ -56,6 +56,8 @@
         <slack-api-client.version>1.43.1</slack-api-client.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
         <jconn4.version>ASE16.0_SP02_PL04_EBF_26120</jconn4.version>
+        <bucket4j-spring-boot-starter.version>0.12.8</bucket4j-spring-boot-starter.version>
+        <hazelcast.version>5.3.5</hazelcast.version>
     </properties>
 
     <dependencies>
@@ -66,6 +68,25 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
+            <artifactId>bucket4j-spring-boot-starter</artifactId>
+            <version>${bucket4j-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+            <version>${hazelcast.version}</version>
         </dependency>
 
         <!-- Logging -->
