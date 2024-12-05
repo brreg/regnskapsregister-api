@@ -9,6 +9,6 @@ import java.sql.SQLException;
 public class AarsregnskapFileMetaRowMapper implements RowMapper<AarsregnskapFileMeta> {
     @Override
     public AarsregnskapFileMeta mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new AarsregnskapFileMeta(rs.getString("regnaar"), rs.getString("path"));
+        return new AarsregnskapFileMeta(rs.getString("regnaar"), rs.getString("path").trim());
     }
 }
