@@ -45,7 +45,8 @@ import java.time.Clock;
         SlackProperties.class,
         IpProperties.class,
         JenaExternalUrlProperties.class,
-        CacheProperties.class
+        CacheProperties.class,
+        AarsregnskapCopyProperties.class
 })
 public class Application {
 

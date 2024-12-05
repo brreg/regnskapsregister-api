@@ -30,6 +30,7 @@ regnskap:
     salt: salt
   aarsregnskap-copy:
     enabled: true
+    filepathPrefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX:src/main/resources/aarsregnskap-mock-files}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseavgtest.brreg.no:5005/aardb}

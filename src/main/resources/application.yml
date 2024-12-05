@@ -35,6 +35,7 @@ regnskap:
     salt: ${RRAPI_IP_SALT}
   aarsregnskap-copy:
     enabled: ${RRAPI_AARSREGNSKAP_COPY_ENABLED:false}
+    filepathPrefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL}

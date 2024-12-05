@@ -1,14 +1,12 @@
 package no.brreg.regnskap.service;
 
-import no.brreg.regnskap.controller.exception.InternalServerError;
+import no.brreg.regnskap.config.properties.AarsregnskapCopyProperties;
 import no.brreg.regnskap.model.AarsregnskapFileMeta;
 import no.brreg.regnskap.repository.AarsregnskapRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Year;
 import java.util.List;
@@ -17,14 +15,13 @@ import java.util.Optional;
 @Service
 public class AarsregnskapCopyService {
 
+    private final AarsregnskapCopyProperties aarsregnskapCopyProperties;
     private final PdfConverterService pdfConverterService;
     private final AarsregnskapRepository aarsregnskapRepository;
     private final Clock clock;
 
-    @Value("classpath:aarsregnskap-mock-files/example-multipage.tiff")
-    private Resource mockFileResource;
-
-    public AarsregnskapCopyService(PdfConverterService pdfConverterService, AarsregnskapRepository aarsregnskapRepository, Clock clock) {
+    public AarsregnskapCopyService(AarsregnskapCopyProperties aarsregnskapCopyProperties, PdfConverterService pdfConverterService, AarsregnskapRepository aarsregnskapRepository, Clock clock) {
+        this.aarsregnskapCopyProperties = aarsregnskapCopyProperties;
         this.pdfConverterService = pdfConverterService;
         this.aarsregnskapRepository = aarsregnskapRepository;
         this.clock = clock;
@@ -40,22 +37,13 @@ public class AarsregnskapCopyService {
     }
 
     public Optional<byte[]> getAarsregnskapCopy(String orgnr, String year) {
-        var aarsregnskapPath = aarsregnskapRepository.getAarsregnskapMeta(orgnr).stream()
+        return aarsregnskapRepository.getAarsregnskapMeta(orgnr).stream()
                 .filter(meta -> meta.regnaar().equals(year))
                 .findFirst()
-                .map(AarsregnskapFileMeta::path);
+                .map(AarsregnskapFileMeta::path)
+                .map(FilenameUtils::separatorsToSystem)
+                .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path).toString())
+                .map(pdfConverterService::tiffToPdf);
 
-        if (aarsregnskapPath.isEmpty()) {
-            return Optional.empty();
-        }
-
-        String mockFilePath;
-        try {
-            mockFilePath = mockFileResource.getURI().getPath();
-        } catch (IOException e) {
-            throw new InternalServerError(e);
-        }
-
-        return Optional.of(pdfConverterService.tiffToPdf(mockFilePath));
     }
 }
