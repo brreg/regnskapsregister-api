@@ -4,6 +4,7 @@ import no.brreg.regnskap.config.properties.AarsregnskapCopyProperties;
 import no.brreg.regnskap.model.AarsregnskapFileMeta;
 import no.brreg.regnskap.repository.AarsregnskapRepository;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Paths;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")
 public class AarsregnskapCopyService {
 
     private final AarsregnskapCopyProperties aarsregnskapCopyProperties;
