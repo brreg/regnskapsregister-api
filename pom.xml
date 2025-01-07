@@ -170,6 +170,16 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>${jackson-databind-nullable.version}</version>
+            <exclusions>
+                <!--
+                Reason: https://app.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-7569538
+                Solution: Exclude old omitted dependency. We get a newer version from spring-boot
+                -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- SFTP -->
