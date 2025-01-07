@@ -1,6 +1,7 @@
 package no.brreg.regnskap.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
+@ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")
 public class JdbcConfig {
     public static final String AARDB_DATASOURCE = "aardbDatasource";
     public static final String AARDB_JDBC_TEMPLATE = "aardbJdbcTemplate";

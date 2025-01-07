@@ -5,6 +5,7 @@ import no.brreg.regnskap.model.AarsregnskapFileMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +16,7 @@ import java.util.*;
 import static no.brreg.regnskap.config.JdbcConfig.AARDB_JDBC_TEMPLATE;
 
 @Repository
+@ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")
 public class AarsregnskapSybaseRepository implements AarsregnskapRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(AarsregnskapSybaseRepository.class);
 
