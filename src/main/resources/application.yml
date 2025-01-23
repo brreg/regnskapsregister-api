@@ -58,7 +58,7 @@ bucket4j:
       filter-order: 1000
       url: /aarsregnskap.*
       rate-limits:
-        - cache-key: "getRemoteAddr()"
+        - cache-key: "getHeader('X-Forwarded-For') != null ? getHeader('X-Forwarded-For').split(',')[0].trim() : getRemoteAddr()"
           bandwidths:
             - id: short
               capacity: ${AARSREGNSKAP_RATE_LIMIT_SHORT_CAPACITY}
