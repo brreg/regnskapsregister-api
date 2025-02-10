@@ -83,6 +83,35 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
                 .andExpect(status().isNotFound());
     }
 
+
+    @Test
+    public void getAvailableBaerekraftrapport_shouldReturnExpectedResponse() throws Exception {
+        mockMvc.perform(get("/aarsregnskap/baerekraft/310293903/aar"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[\"2014\",\"2022\",\"2023\"]"));
+    }
+
+    @Test
+    public void getAvailableBaerekraftrapport_shouldReturnExpectedResponseIfNoFiles() throws Exception {
+        mockMvc.perform(get("/aarsregnskap/baerekraft/123456789/aar"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"));
+    }
+
+    @Test
+    public void getBaerekraftrapport_shouldReturnCorrectHeaders() throws Exception {
+        mockMvc.perform(get("/aarsregnskap/baerekraft/310293903/file/2022"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/zip"))
+                .andExpect(header().string("Content-Disposition", "attachment; filename=baerekraft-2022_310293903.zip"));
+    }
+
+    @Test
+    public void getBaerekraftrapport_shouldReturn404IfNoFile() throws Exception {
+        mockMvc.perform(get("/aarsregnskap/baerekraft/310293903/file/2024"))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     public void ratelimit_enforcedOnEndpoints() throws Exception {
         for (var i : new IntRange(0, 4)) {

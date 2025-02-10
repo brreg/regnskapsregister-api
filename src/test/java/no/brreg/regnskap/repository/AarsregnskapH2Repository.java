@@ -24,4 +24,9 @@ public class AarsregnskapH2Repository implements AarsregnskapRepository {
     public List<AarsregnskapFileMeta> getAarsregnskapMeta(String orgnr) {
         return jdbcTemplate.query("SELECT regnaar, filePath AS path FROM aarsregnskap WHERE orgnr = :orgnr", Map.of("orgnr", orgnr), new AarsregnskapFileMetaRowMapper());
     }
+
+    @Override
+    public List<AarsregnskapFileMeta> getBaerekraftMeta(String orgnr) {
+        return jdbcTemplate.query("SELECT regnaar, filePath AS path FROM baerekraft WHERE orgnr = :orgnr", Map.of("orgnr", orgnr), new AarsregnskapFileMetaRowMapper());
+    }
 }
