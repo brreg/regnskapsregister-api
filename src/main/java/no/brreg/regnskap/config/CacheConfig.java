@@ -15,9 +15,10 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    public static String
+    public static final String
             CACHE_AAR_REQUEST_BUCKET = "aarsregnskapCopyBucket",
-            CACHE_AAR_COPY_FILEMETA = "aarsregnskapCopyFileMeta";
+            CACHE_AAR_COPY_FILEMETA = "aarsregnskapCopyFileMeta",
+            CACHE_BAEREKRAFT_FILEMETA = "baerekraftFileMeta";
 
     private final CacheProperties cacheProperties;
 
@@ -30,7 +31,8 @@ public class CacheConfig {
         return new Config()
                 .setNetworkConfig(getNetworkConfig())
                 .addCacheConfig(createAarRequestBucketCacheConfig())
-                .addCacheConfig(createAarCopyFileMetaCacheConfig());
+                .addCacheConfig(createFileMetaCacheConfig(CACHE_AAR_COPY_FILEMETA))
+                .addCacheConfig(createFileMetaCacheConfig(CACHE_BAEREKRAFT_FILEMETA));
     }
 
     private NetworkConfig getNetworkConfig() {
@@ -48,8 +50,8 @@ public class CacheConfig {
                 .setExpiryPolicyFactoryConfig(createExpiryConfig(ExpiryPolicyType.ACCESSED, cacheProperties.ttlAfterAccessedAarRequests()));
     }
 
-    private CacheSimpleConfig createAarCopyFileMetaCacheConfig() {
-        return new CacheSimpleConfig(CACHE_AAR_COPY_FILEMETA)
+    private CacheSimpleConfig createFileMetaCacheConfig(String cacheKey) {
+        return new CacheSimpleConfig(cacheKey)
                 .setExpiryPolicyFactoryConfig(createExpiryConfig(ExpiryPolicyType.CREATED, cacheProperties.ttlAfterCreatedAarCopyFilemeta()));
     }
 
