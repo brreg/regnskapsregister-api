@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,15 +18,18 @@ import java.sql.SQLException;
 
 
 @Controller
-@RestControllerAdvice
-public class TestApiImpl implements no.brreg.regnskap.generated.api.TestApi {
+public class TestApiImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestApiImpl.class);
 
     @Autowired
     private ConnectionManager connectionManager;
 
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/test/most-recent",
+            produces = { "text/plain", "application/json" }
+    )
     public ResponseEntity<String> getMostRecent(HttpServletRequest httpServletRequest) {
         String orgnr = null;
         try (Connection connection = connectionManager.getConnection()) {

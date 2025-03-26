@@ -60,10 +60,10 @@ public class AarsregnskapCopyService {
     }
 
     private List<String> fileMetaToAvailableYears(List<AarsregnskapFileMeta> meta) {
-        Year tenYearsAgo = Year.now(clock).minusYears(10);
+        Year yearLimit = Year.now(clock).minusYears(this.aarsregnskapCopyProperties.yearsAvailable());
         return meta.stream()
                 .map(AarsregnskapFileMeta::regnaar)
-                .filter(y -> !Year.parse(y).isBefore(tenYearsAgo))
+                .filter(y -> !Year.parse(y).isBefore(yearLimit))
                 .toList();
     }
 }
