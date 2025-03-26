@@ -38,8 +38,10 @@ regnskap:
   ip:
     salt: ${RRAPI_IP_SALT}
   aarsregnskap-copy:
-    enabled: ${RRAPI_AARSREGNSKAP_COPY_ENABLED:false}
-    filepathPrefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX}
+    enabled: ${RRAPI_AARSREGNSKAP_COPY_ENABLED:true}
+    external-enabled: ${RRAPI_AARSREGNSKAP_COPY_EXTERNAL_ENABLED:false}
+    filepath-prefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX}
+    years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL}
@@ -56,7 +58,7 @@ bucket4j:
   filters:
     - cache-name: aarsregnskapCopyBucket
       filter-order: 1000
-      url: /aarsregnskap.*
+      url: (/aarsregnskap.*|/regnskapsregisteret/aarsregnskap.*)
       rate-limits:
         - cache-key: "getHeader('X-Forwarded-For') != null ? getHeader('X-Forwarded-For').split(',')[0].trim() : getRemoteAddr()"
           bandwidths:
