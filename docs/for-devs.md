@@ -31,6 +31,10 @@ Liquibase will create database schema "rregapi" and the database itself at start
 
 Import this collection in Postman to test the api locally.
 
+## Kopi av årsregnskap
+In order to be able to run the endpoints for kopi av årsregnskap locally, you will need to have [GraphicsMagick](http://www.graphicsmagick.org/) installed in order for the application to be able to convert TIFF to PDF.
+
+
 # Build and deploy on Openshift (BR only)
 1. Trigger the pipeline `make trigger-pipeline`
 2. If the build succeeds, grab the git hash and paste it into both deployment files in the appconfig.

@@ -7,3 +7,5 @@ src/main/java/no/regnskap/spring/ApplicationInfo.java
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.m2e.core.prefs
 .project
+
+pods/test.yaml
