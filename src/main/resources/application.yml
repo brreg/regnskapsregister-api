@@ -80,8 +80,10 @@ bucket4j:
 
 springdoc:
   api-docs:
-    path: /regnskapsregisteret/regnskap/v3/api-docs
+    groups:
+      enabled: true
     enabled: true
+    path: /regnskapsregisteret/regnskap/v3/api-docs
   swagger-ui:
     path: /regnskapsregisteret/regnskap/swagger-ui/index.html
-    url: /regnskapsregisteret/regnskap/v3/api-docs
+    urlsPrimaryName: regnskapsregisteret
