@@ -35,6 +35,11 @@ public class OpenAPIConfig {
         return GroupedOpenApi.builder()
                 .group("regnskapsregisteret")
                 .pathsToMatch(paths)
+                .addOpenApiCustomizer(customizer -> {
+                    customizer.info(customizer.getInfo().description("""
+                            API-et har en åpen og en lukket del. Den åpne delen inneholder nøkkeltall fra sist innsendte årsregnskap, mens den lukkede delen inneholder nesten samtlige tall fra de tre siste årsregnskapene, inkludert tall fra konsernregnskapet. Den åpne delen er tilgjengelig for alle, mens den lukkede delen er kun for offentlig myndighet.
+                            """));
+                })
                 .build();
     }
 
@@ -45,11 +50,13 @@ public class OpenAPIConfig {
                 .group("aarsregnskap")
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer((customizer) -> {
-                    customizer.info(customizer.getInfo().description("""
-                            API for årsregnskap fra regnskapsregisteret.\s
-                            \s
-                            Det er kun mulig å hente ut årsregnskap for de siste %s årene.\s
-                            \s""".formatted(aarsregnskapCopyProperties.yearsAvailable())));
+                    customizer.info(customizer.getInfo()
+                            .title("API for årsregnskap fra regnskapsregisteret")
+                            .description("""
+                                    Her kan du hente ut kopi av årsregnskap fra regnskapsregisteret.\s
+                                    \s
+                                    Det er kun mulig å hente ut årsregnskap for de siste %s årene.\s
+                                    \s""".formatted(aarsregnskapCopyProperties.yearsAvailable())));
                 })
                 .build();
     }
