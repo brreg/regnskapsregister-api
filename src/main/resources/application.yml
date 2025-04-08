@@ -42,6 +42,7 @@ regnskap:
     external-enabled: ${RRAPI_AARSREGNSKAP_COPY_EXTERNAL_ENABLED:false}
     filepath-prefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX}
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
+    use-graphics-magick: ${RRAPI_AARSREGNSKAP_COPY_USE_GRAPHICSMAGICK:false}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL}

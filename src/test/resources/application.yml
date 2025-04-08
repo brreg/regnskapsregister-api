@@ -23,6 +23,7 @@ regnskap:
     external-enabled: true
     filepath-prefix: src/main/resources/aarsregnskap-mock-files
     years-available: 15
+    use-graphics-magick: ${RRAPI_AARSREGNSKAP_COPY_USE_GRAPHICSMAGICK:false}
   aardb:
     datasource:
       jdbc-url: jdbc:h2:mem:aardb
