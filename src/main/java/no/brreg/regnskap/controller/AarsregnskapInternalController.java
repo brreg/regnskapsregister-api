@@ -1,12 +1,6 @@
 package no.brreg.regnskap.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.brreg.regnskap.controller.exception.InternalServerError;
-import no.brreg.regnskap.generated.model.ServerErrorRespons;
 import no.brreg.regnskap.service.AarsregnskapCopyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -38,17 +38,36 @@ COPY . .
 RUN mvn install -Dmaven.test.skip=true --batch-mode --no-transfer-progress
 
 
-FROM quay.base.brreg.no/brreg_base-container/ubi9-openjdk-21-runtime
+FROM registry.access.redhat.com/ubi9/openjdk-21-runtime
+
+ARG QUAY_EXPIRY="104w"
+LABEL quay.expires-after=$QUAY_EXPIRY
+
+ENV TZ=Europe/Oslo
+ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml -Dnetworkaddress.cache.ttl=30"
+ENV _JAVA_OPTIONS="-XX:MaxRAMPercentage=75 -XX:MinRAMPercentage=25"
+
+USER 0
+
+RUN microdnf -y update
+RUN microdnf install dnf -y
+RUN dnf install https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/libwmf-lite-0.2.12-9.el9.x86_64.rpm -y
+RUN dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
+RUN dnf install GraphicsMagick -y
+
+RUN rpm -e --nodeps $(rpm -qa '*rpm*' '*dnf*' '*libsolv*' '*hawkey*' 'yum*')
+
+USER default
+COPY src /deployments
 
 # Overstyring av default expiry. If you want a different default that 2 years,
 # change the ARG below for how long a tag is kept on the master branch.
 # If you want to change how long feature branch images are kept (default 14 days),
 # then that can be done by setting a variable in your pipeline/templates/pipeline.yaml task named: docker-image
-ARG QUAY_EXPIRY="104w"
-LABEL quay.expires-after=$QUAY_EXPIRY
 
 # Configuration for Elastic APM agent and ECS logging format
 # Correct logback.xml is added in parent image
+
 ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml"
 
 ## copy build results from builder. This is for Java 17 and Java 11
