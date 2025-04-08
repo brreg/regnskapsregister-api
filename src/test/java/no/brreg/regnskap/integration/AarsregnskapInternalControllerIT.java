@@ -3,8 +3,10 @@ package no.brreg.regnskap.integration;
 
 import kotlin.ranges.IntRange;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
+import no.brreg.regnskap.utils.stubs.ProcessStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +23,7 @@ import static java.util.Objects.requireNonNull;
 import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_COPY_FILEMETA;
 import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_REQUEST_BUCKET;
 import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +46,9 @@ public class AarsregnskapInternalControllerIT extends EmbeddedPostgresSetup {
 
     @Autowired
     CacheManager cacheManager;
+
+    @Mock
+    ProcessBuilder processBuilder;
 
 
     @BeforeEach
@@ -71,10 +77,15 @@ public class AarsregnskapInternalControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturnCorrectHeaders() throws Exception {
-        mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
-                .andExpect(status().isOk())
-                .andExpect(header().string("Content-Type", "application/pdf"))
-                .andExpect(header().string("Content-Disposition", "attachment; filename=aarsregnskap-2022_312800640.pdf"));
+        try (var mockProcessBuilder = mockConstruction(ProcessBuilder.class, (mock, context) -> {
+            when(mock.redirectErrorStream(true)).thenReturn(mock);
+            when(mock.start()).thenReturn(new ProcessStub(false));
+        })) {
+            mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
+                    .andExpect(status().isOk())
+                    .andExpect(header().string("Content-Type", "application/pdf"))
+                    .andExpect(header().string("Content-Disposition", "attachment; filename=aarsregnskap-2022_312800640.pdf"));
+        }
     }
 
     @Test
@@ -125,4 +136,5 @@ public class AarsregnskapInternalControllerIT extends EmbeddedPostgresSetup {
         mockMvc.perform(get("/aarsregnskap/312800640/kopi/2022"))
                 .andExpect(status().isTooManyRequests());
     }
+
 }
