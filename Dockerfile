@@ -44,7 +44,7 @@ ARG QUAY_EXPIRY="104w"
 LABEL quay.expires-after=$QUAY_EXPIRY
 
 ENV TZ=Europe/Oslo
-ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml -Dnetworkaddress.cache.ttl=30"
+#ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml -Dnetworkaddress.cache.ttl=30"
 ENV _JAVA_OPTIONS="-XX:MaxRAMPercentage=75 -XX:MinRAMPercentage=25"
 
 USER 0
@@ -68,7 +68,7 @@ COPY src /deployments
 # Configuration for Elastic APM agent and ECS logging format
 # Correct logback.xml is added in parent image
 
-ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml"
+#ENV JAVA_OPTS="-javaagent:/deployments/apm/elastic-apm-agent.jar -Dlogging.config=/deployments/logback.xml"
 
 ## copy build results from builder. This is for Java 17 and Java 11
 COPY --from=builder /home/default/target/*.jar /deployments
