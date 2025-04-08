@@ -21,7 +21,9 @@ public class PdfConverterService {
             String[] command = {
                     "gm",
                     "convert",
-                    "-limit", "memory", "1GB",
+                    "-limit", "memory", "32MB",
+                    "-limit", "map", "32MB",
+                    "-limit", "threads", "1",
                     tiffFile.getAbsolutePath(),
                     "pdf:-"
             };
