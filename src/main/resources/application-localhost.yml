@@ -33,7 +33,7 @@ regnskap:
     external-enabled: true
     filepath-prefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX:src/main/resources/aarsregnskap-mock-files}
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
-    use-graphics-magick: ${RRAPI_AARSREGNSKAP_COPY_USE_GRAPHICSMAGICK:false}
+    experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseavgtest.brreg.no:5005/aardb}
