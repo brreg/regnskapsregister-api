@@ -13,8 +13,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 @Service
 public class PdfConverterService {
@@ -22,15 +28,17 @@ public class PdfConverterService {
 
     private final AarsregnskapCopyProperties aarsregnskapCopyProperties;
 
-    public PdfConverterService(AarsregnskapCopyProperties aarsregnskapCopyProperties) {
+    private final ExecutorService executorService;
+
+    public PdfConverterService(AarsregnskapCopyProperties aarsregnskapCopyProperties, ExecutorService executorService) {
         this.aarsregnskapCopyProperties = aarsregnskapCopyProperties;
+        this.executorService = executorService;
     }
 
     public byte[] tiffToPdf(String filename) {
-        if (aarsregnskapCopyProperties.useGraphicsMagick()) {
-            return tiffToPdf_gm(filename);
+        if (aarsregnskapCopyProperties.experimentalConverter()) {
+            return tiffToPdf2(filename);
         }
-
 
         var tiffFile = new File(filename);
 
@@ -70,54 +78,104 @@ public class PdfConverterService {
         }
     }
 
-
-    public byte[] tiffToPdf_gm(String filename) {
+    public byte[] tiffToPdf2(String filename) {
         var tiffFile = new File(filename);
+        List<Future<BufferedImage>> imageFutures = new ArrayList<>();
+        try {
+            int numPages = getNumPages(tiffFile);
+            for (int i = 0; i < numPages; i++) {
+                int pageIndex = i;
+                imageFutures.add(executorService.submit(() -> {
+                    try (
+                            var fis = new FileInputStream(tiffFile);
+                            var imageInputStream = ImageIO.createImageInputStream(fis)
+                    ) {
+                        var readers = ImageIO.getImageReaders(imageInputStream);
+                        if (!readers.hasNext()) {
+                            throw new IOException("No reader found for TIFF-image.");
+                        }
+                        var reader = readers.next();
+                        reader.setInput(imageInputStream);
 
+                        var tiff = reader.read(pageIndex);
+                        return resizeAndConvertToPng(tiff, 0.5f);
+                    } catch (IOException e) {
+                        LOGGER.error("Error reading page " + pageIndex + ": " + e.getMessage());
+                        return null;
+                    }
+                }));
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        List<BufferedImage> images = new ArrayList<>();
+        for (Future<BufferedImage> future : imageFutures) {
+            try {
+                BufferedImage image = future.get();
+                if (image != null) {
+                    images.add(image);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Error converting image: " + e.getMessage());
+            }
+        }
+
+        return generatePdfFromImages(images);
+    }
+
+    private int getNumPages(File tiffFile) throws IOException {
         try (
-                var outputStream = new ByteArrayOutputStream();
-                var errorOutputStream = new ByteArrayOutputStream()
+                var fis = new FileInputStream(tiffFile);
+                var imageInputStream = ImageIO.createImageInputStream(fis)
         ) {
-
-            String[] command = {
-                    "gm",
-                    "convert",
-                    "-compress", "lzma",
-                    "-limit", "memory", "16MB",
-                    "-limit", "map", "16MB",
-                    tiffFile.getAbsolutePath(),
-                    "pdf:-"
-            };
-
-            var processBuilder = new ProcessBuilder(command);
-            processBuilder.redirectErrorStream(true);
-
-            var process = processBuilder.start();
-            try (var inputStream = process.getInputStream()) {
-                inputStream.transferTo(outputStream);
+            var readers = ImageIO.getImageReaders(imageInputStream);
+            if (!readers.hasNext()) {
+                throw new IOException("No reader found for TIFF-image.");
             }
-
-            try (var errorStream = process.getErrorStream()) {
-                errorStream.transferTo(errorOutputStream);
-            }
-
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                String errorMessage = errorOutputStream.toString();
-                throw new IOException("Failed to convert %s to PDF: %s".formatted(filename, errorMessage));
-            }
-
-            return outputStream.toByteArray();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new InternalServerError(e);
+            var reader = readers.next();
+            reader.setInput(imageInputStream);
+            return reader.getNumImages(true);
         }
     }
 
+    private BufferedImage resizeAndConvertToPng(BufferedImage image, float scale) {
+        int newWidth = (int) (image.getWidth() * scale);
+        int newHeight = (int) (image.getHeight() * scale);
+
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        var affineTransform = AffineTransform.getScaleInstance((double) newWidth / image.getWidth(), (double) newHeight / image.getHeight());
+        var bilinearScaleOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+
+        bilinearScaleOp.filter(image, resizedImage);
+
+        return resizedImage;
+    }
+
+    private byte[] generatePdfFromImages(List<BufferedImage> images) {
+        try (var os = new ByteArrayOutputStream(); var document = new PDDocument()) {
+            for (var image : images) {
+                var pageRect = new PDRectangle(image.getWidth(), image.getHeight());
+                var page = new PDPage(pageRect);
+                document.addPage(page);
+
+                var pdImage = PDImageXObject.createFromByteArray(document, imageToByteArray(image), "image");
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    contentStream.drawImage(pdImage, 0f, 0f);
+                }
+            }
+            document.save(os);
+            return os.toByteArray();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
     private byte[] imageToByteArray(BufferedImage image) throws IOException {
         try (var baos = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "TIFF", baos);
+            ImageIO.write(image, "PNG", baos);
             return baos.toByteArray();
         }
     }
