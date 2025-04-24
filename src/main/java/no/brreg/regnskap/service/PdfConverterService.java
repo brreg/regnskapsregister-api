@@ -146,10 +146,17 @@ public class PdfConverterService {
         int newHeight = (int) (image.getHeight() * scale);
 
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-        var affineTransform = AffineTransform.getScaleInstance((double) newWidth / image.getWidth(), (double) newHeight / image.getHeight());
-        var bilinearScaleOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 
-        bilinearScaleOp.filter(image, resizedImage);
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
+        g2d.drawImage(image, 0, 0, newWidth, newHeight, null);
+        g2d.dispose();
+
+//        var affineTransform = AffineTransform.getScaleInstance(scale, scale);
+//        var bilinearScaleOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+//
+//        bilinearScaleOp.filter(image, resizedImage);
 
         try (var baos = new ByteArrayOutputStream()) {
             ImageIO.write(resizedImage, "PNG", baos);
