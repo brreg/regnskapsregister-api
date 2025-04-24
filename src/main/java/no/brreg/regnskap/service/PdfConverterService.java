@@ -145,7 +145,7 @@ public class PdfConverterService {
         int newWidth = (int) (image.getWidth() * scale);
         int newHeight = (int) (image.getHeight() * scale);
 
-        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 
         var scaleTransform = AffineTransform.getScaleInstance((double) newWidth / image.getWidth(), (double) newHeight / image.getHeight());
         var bilinearScaleOp = new AffineTransformOp(scaleTransform, AffineTransformOp.TYPE_BILINEAR);
