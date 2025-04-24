@@ -10,6 +10,6 @@ import java.util.concurrent.Executors;
 public class ThreadPoolConfig {
     @Bean
     public ExecutorService tashExecutor() {
-        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2);
     }
 }
