@@ -99,7 +99,7 @@ public class PdfConverterService {
                         reader.setInput(imageInputStream);
 
                         var tiff = reader.read(pageIndex);
-                        return resizeAndConvertToPng(tiff, 0.5f);
+                        return resizeAndConvertToPng(tiff, 1f);
                     } catch (IOException e) {
                         LOGGER.error("Error reading page " + pageIndex + ": " + e.getMessage());
                         return null;
@@ -147,16 +147,9 @@ public class PdfConverterService {
 
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 
-        Graphics2D g2d = resizedImage.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
-        g2d.drawImage(image, 0, 0, newWidth, newHeight, null);
-        g2d.dispose();
-
-//        var affineTransform = AffineTransform.getScaleInstance(scale, scale);
-//        var bilinearScaleOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-//
-//        bilinearScaleOp.filter(image, resizedImage);
+        var scaleTransform = AffineTransform.getScaleInstance((double) newWidth / image.getWidth(), (double) newHeight / image.getHeight());
+        var bilinearScaleOp = new AffineTransformOp(scaleTransform, AffineTransformOp.TYPE_BILINEAR);
+        bilinearScaleOp.filter(image, resizedImage);
 
         try (var baos = new ByteArrayOutputStream()) {
             ImageIO.write(resizedImage, "PNG", baos);
