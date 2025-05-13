@@ -7,13 +7,13 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -42,14 +42,13 @@ public class PdfConverterService {
         }
 
         var tiffFile = new File(filename);
-
         try (
                 var os = new ByteArrayOutputStream();
                 var document = new PDDocument();
                 var fis = new FileInputStream(tiffFile);
                 var imageInputStream = ImageIO.createImageInputStream(fis)
         ) {
-            var readers = ImageIO.getImageReaders(imageInputStream);
+            var readers = ImageIO.getImageReadersByFormatName("tiff");
             if (!readers.hasNext()) {
                 throw new IOException("No reader found for TIFF-image.");
             }
@@ -65,10 +64,10 @@ public class PdfConverterService {
                 var page = new PDPage(pageRect);
                 document.addPage(page);
 
-                var pdImage = PDImageXObject.createFromByteArray(document, imageToByteArray(tiff), "image");
+                var pdImage = LosslessFactory.createFromImage(document, tiff);
 
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                    contentStream.drawImage(pdImage, 0f, 0f);
+                    contentStream.drawImage(pdImage, 0f, 0f, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
                 }
             }
             document.save(os);
@@ -171,7 +170,7 @@ public class PdfConverterService {
                 var page = new PDPage(pageRect);
                 document.addPage(page);
 
-                var pdImage = PDImageXObject.createFromByteArray(document, imageToByteArray(image), "image");
+                var pdImage = LosslessFactory.createFromImage(document, image);
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                     contentStream.drawImage(pdImage, 0f, 0f);
                 }
