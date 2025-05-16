@@ -45,7 +45,7 @@ public class OpenAPIConfig {
 
     @Bean
     public GroupedOpenApi aarsregnskapApi() {
-        String[] paths = {"/regnskapsregisteret/aarsregnskap/**"};
+        String[] paths = {"/regnskapsregisteret/regnskap/aarsregnskap/**"};
         return GroupedOpenApi.builder()
                 .group("aarsregnskap")
                 .pathsToMatch(paths)

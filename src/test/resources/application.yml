@@ -40,7 +40,7 @@ bucket4j:
   filters:
     - cache-name: aarsregnskapCopyBucket
       filter-order: 1000
-      url: (/aarsregnskap.*|/regnskapsregisteret/aarsregnskap.*)
+      url: (/aarsregnskap.*|/regnskapsregisteret/regnskap/aarsregnskap.*)
       rate-limits:
         - cache-key: "getRemoteAddr()"
           bandwidths:
