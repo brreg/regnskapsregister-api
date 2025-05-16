@@ -59,14 +59,14 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAvailableAarsregnskap_shouldReturnExpectedResponse() throws Exception {
-        mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/aar"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/aar"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[\"2014\",\"2022\",\"2023\"]"));
     }
 
     @Test
     public void getAvailableAarsregnskap_shouldReturnExpectedResponseIfNoFiles() throws Exception {
-        mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/123456789/aar"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/123456789/aar"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"));
     }
@@ -77,7 +77,7 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
             when(mock.redirectErrorStream(true)).thenReturn(mock);
             when(mock.start()).thenReturn(new ProcessStub(false));
         })) {
-            mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/2022"))
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/2022"))
                     .andExpect(status().isOk())
                     .andExpect(header().string("Content-Type", "application/pdf"))
                     .andExpect(header().string("Content-Disposition", "attachment; filename=aarsregnskap-2022_312800640.pdf"));
@@ -86,21 +86,21 @@ public class AarsregnskapControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getAarsregnskapCopy_shouldReturn404IfNoFile() throws Exception {
-        mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/2024"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/2024"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void ratelimit_enforcedOnEndpoints() throws Exception {
         for (var i : new IntRange(0, 4)) {
-            mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/aar"))
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/aar"))
                     .andExpect(status().isOk());
         }
 
-        mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/aar"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/aar"))
                 .andExpect(status().isTooManyRequests());
 
-        mockMvc.perform(get("/regnskapsregisteret/aarsregnskap/kopi/312800640/2022"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/kopi/312800640/2022"))
                 .andExpect(status().isTooManyRequests());
     }
 }

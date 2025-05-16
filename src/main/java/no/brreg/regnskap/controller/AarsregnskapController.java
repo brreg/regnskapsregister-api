@@ -54,7 +54,7 @@ public class AarsregnskapController {
             }
     )
 
-    @GetMapping(path = "/regnskapsregisteret/aarsregnskap/kopi/{orgnr}/aar", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/kopi/{orgnr}/aar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getAvailableAarsregnskap(@PathVariable String orgnr) {
         var yearList = this.aarsregnskapCopyService.getAvailableAarsregnskapYears(orgnr);
 
@@ -78,7 +78,7 @@ public class AarsregnskapController {
                     })
             }
     )
-    @GetMapping(path = "/regnskapsregisteret/aarsregnskap/kopi/{orgnr}/{aar}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/kopi/{orgnr}/{aar}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getAarsregnskapCopy(@PathVariable("orgnr") String orgnr,
                                                       @PathVariable("aar") String aar) {
 
