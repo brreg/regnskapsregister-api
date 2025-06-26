@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class OpenAPIConfig {
+    final String[] NOEKKELTALL_PATHS = {"/regnskapsregisteret/regnskap/**"};
+    final String[] AARSREGNSKAP_PATHS = {"/regnskapsregisteret/regnskap/aarsregnskap/**"};
 
     final AarsregnskapCopyProperties aarsregnskapCopyProperties;
 
@@ -31,10 +33,10 @@ public class OpenAPIConfig {
 
     @Bean
     public GroupedOpenApi noekkeltallApi() {
-        String[] paths = {"/regnskapsregisteret/regnskap/**"};
         return GroupedOpenApi.builder()
                 .group("regnskapsregisteret")
-                .pathsToMatch(paths)
+                .pathsToMatch(NOEKKELTALL_PATHS)
+                .pathsToExclude(AARSREGNSKAP_PATHS)
                 .addOpenApiCustomizer(customizer -> {
                     customizer.info(customizer.getInfo().description("""
                             API-et har en åpen og en lukket del. Den åpne delen inneholder nøkkeltall fra sist innsendte årsregnskap, mens den lukkede delen inneholder nesten samtlige tall fra de tre siste årsregnskapene, inkludert tall fra konsernregnskapet. Den åpne delen er tilgjengelig for alle, mens den lukkede delen er kun for offentlig myndighet.
@@ -45,10 +47,9 @@ public class OpenAPIConfig {
 
     @Bean
     public GroupedOpenApi aarsregnskapApi() {
-        String[] paths = {"/regnskapsregisteret/regnskap/aarsregnskap/**"};
         return GroupedOpenApi.builder()
                 .group("aarsregnskap")
-                .pathsToMatch(paths)
+                .pathsToMatch(AARSREGNSKAP_PATHS)
                 .addOpenApiCustomizer((customizer) -> {
                     customizer.info(customizer.getInfo()
                             .title("API for årsregnskap fra regnskapsregisteret")
