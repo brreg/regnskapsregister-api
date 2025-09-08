@@ -24,23 +24,23 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.util.List;
 
-@ConditionalOnProperty("regnskap.aarsregnskap-copy.external-enabled")
+@ConditionalOnProperty("regnskap.aarsregnskap-copy.mellombalanse-enabled")
 @Controller
 @RestControllerAdvice
-@Tag(name = "Kopi av årsregnskap")
-public class AarsregnskapController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AarsregnskapController.class);
+@Tag(name = "Mellombalanse")
+public class MellombalanseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MellombalanseController.class);
 
     private final AarsregnskapCopyService aarsregnskapCopyService;
 
 
-    public AarsregnskapController(AarsregnskapCopyService aarsregnskapCopyService) {
+    public MellombalanseController(AarsregnskapCopyService aarsregnskapCopyService) {
         this.aarsregnskapCopyService = aarsregnskapCopyService;
     }
 
     @Operation(
-            operationId = "getAvailableAarsregnskap",
-            summary = "Hent ut en liste over år hvor kopi av årsregnskap er tilgjengelig",
+            operationId = "getAvailableMellombalanse",
+            summary = "Hent ut en liste over år hvor mellombalanse er tilgjengelig",
             parameters = {
                     @Parameter(name = "orgnr", in = ParameterIn.PATH, description = "Virksomhetens organisasjonsnummer", schema = @Schema(implementation = String.class))
             },
@@ -53,9 +53,9 @@ public class AarsregnskapController {
                     })
             }
     )
-    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/kopi/{orgnr}/aar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getAvailableAarsregnskap(@PathVariable String orgnr) {
-        var yearList = this.aarsregnskapCopyService.getAvailableAarsregnskapYears(orgnr);
+    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/{orgnr}/aar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAvailableMellombalanse(@PathVariable String orgnr) {
+        var yearList = this.aarsregnskapCopyService.getAvailableMellombalanseYears(orgnr);
 
         return ResponseEntity
                 .status(200)
@@ -64,8 +64,8 @@ public class AarsregnskapController {
     }
 
     @Operation(
-            operationId = "getAarsregnskapCopy",
-            summary = "Hent ut kopi av årsregnskap som PDF",
+            operationId = "getMellombalanse",
+            summary = "Hent ut mellombalanse som PDF",
             parameters = {
                     @Parameter(name = "orgnr", in = ParameterIn.PATH, description = "Virksomhetens organisasjonsnummer", schema = @Schema(implementation = String.class)),
                     @Parameter(name = "aar", in = ParameterIn.PATH, description = "Regnskapsår", schema = @Schema(implementation = String.class))
@@ -77,23 +77,23 @@ public class AarsregnskapController {
                     })
             }
     )
-    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/kopi/{orgnr}/{aar}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<byte[]> getAarsregnskapCopy(@PathVariable("orgnr") String orgnr,
+    @GetMapping(path = "/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/{orgnr}/{aar}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> getMellombalanse(@PathVariable("orgnr") String orgnr,
                                                       @PathVariable("aar") String aar) {
 
-        var aarsregnskapPdf = this.aarsregnskapCopyService.getAarsregnskapCopy(orgnr, aar);
+        var mellombalansePdf = this.aarsregnskapCopyService.getMellombalanse(orgnr, aar);
 
-        if (aarsregnskapPdf.isEmpty()) {
+        if (mellombalansePdf.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set("Content-disposition", "attachment; filename=aarsregnskap-%s_%s.pdf".formatted(aar, orgnr));
+        headers.set("Content-disposition", "attachment; filename=mellombalanse-%s_%s.pdf".formatted(aar, orgnr));
 
         return ResponseEntity
                 .status(200)
                 .headers(headers)
-                .body(aarsregnskapPdf.get());
+                .body(mellombalansePdf.get());
     }
 }

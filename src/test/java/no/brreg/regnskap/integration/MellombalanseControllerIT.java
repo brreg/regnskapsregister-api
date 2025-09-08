@@ -1,0 +1,105 @@
+package no.brreg.regnskap.integration;
+
+
+import kotlin.ranges.IntRange;
+import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
+import no.brreg.regnskap.utils.stubs.ProcessStub;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+
+import static java.util.Objects.requireNonNull;
+import static no.brreg.regnskap.config.CacheConfig.*;
+import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
+@AutoConfigureMockMvc
+@Sql(
+        executionPhase = BEFORE_TEST_METHOD,
+        config = @SqlConfig(dataSource = AARDB_DATASOURCE),
+        scripts = {"/sql_scripts/aardb.sql"}
+)
+public class MellombalanseControllerIT extends EmbeddedPostgresSetup {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private Clock clock;
+
+    @Autowired
+    CacheManager cacheManager;
+
+
+    @BeforeEach
+    void setUp() {
+        Instant fixedInstant = Instant.parse("2029-01-01T00:00:00Z");
+        when(clock.instant()).thenReturn(fixedInstant);
+        when(clock.getZone()).thenReturn(ZoneId.of("UTC"));
+
+        requireNonNull(cacheManager.getCache(CACHE_MELLOMBALANSE_FILEMETA)).clear();
+        requireNonNull(cacheManager.getCache(CACHE_AAR_REQUEST_BUCKET)).clear();
+    }
+
+    @Test
+    public void getAvailableMellombalanse_shouldReturnExpectedResponse() throws Exception {
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/aar"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[\"2014\",\"2022\",\"2023\"]"));
+    }
+
+    @Test
+    public void getAvailableMellombalanse_shouldReturnExpectedResponseIfNoFiles() throws Exception {
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/123456789/aar"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"));
+    }
+
+    @Test
+    public void getMellombalanse_shouldReturnCorrectHeaders() throws Exception {
+        try (var mockProcessBuilder = mockConstruction(ProcessBuilder.class, (mock, context) -> {
+            when(mock.redirectErrorStream(true)).thenReturn(mock);
+            when(mock.start()).thenReturn(new ProcessStub(false));
+        })) {
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2022"))
+                    .andExpect(status().isOk())
+                    .andExpect(header().string("Content-Type", "application/pdf"))
+                    .andExpect(header().string("Content-Disposition", "attachment; filename=mellombalanse-2022_310293903.pdf"));
+        }
+    }
+
+    @Test
+    public void getMellombalanse_shouldReturn404IfNoFile() throws Exception {
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2024"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void ratelimit_enforcedOnEndpoints() throws Exception {
+        for (var i : new IntRange(0, 4)) {
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/aar"))
+                    .andExpect(status().isOk());
+        }
+
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/aar"))
+                .andExpect(status().isTooManyRequests());
+
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2022"))
+                .andExpect(status().isTooManyRequests());
+    }
+}

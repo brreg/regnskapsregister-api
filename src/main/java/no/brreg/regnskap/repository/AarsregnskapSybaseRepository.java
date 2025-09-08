@@ -13,8 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_COPY_FILEMETA;
-import static no.brreg.regnskap.config.CacheConfig.CACHE_BAEREKRAFT_FILEMETA;
+import static no.brreg.regnskap.config.CacheConfig.*;
 import static no.brreg.regnskap.config.JdbcConfig.AARDB_JDBC_TEMPLATE;
 
 @Repository
@@ -32,6 +31,19 @@ public class AarsregnskapSybaseRepository implements AarsregnskapRepository {
     public List<AarsregnskapFileMeta> getAarsregnskapMeta(String orgnr) {
         try {
             return jdbcTemplate.query("exec aardb..finn_sti_image_for_alle_aar :orgnr", Map.of("orgnr", Integer.parseInt(orgnr)), new AarsregnskapFileMetaRowMapper());
+        } catch (DataAccessException dae) {
+            LOGGER.error("DataAccessException caught. {}. Throwing InternalServerError", dae.getMessage());
+            throw new InternalServerError(dae);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Cacheable(value=CACHE_MELLOMBALANSE_FILEMETA, key="#orgnr")
+    public List<AarsregnskapFileMeta> getMellombalanseMeta(String orgnr) {
+        try {
+            return jdbcTemplate.query("exec aardb..finn_mbal_sti_image_for_alle_aar :orgnr", Map.of("orgnr", Integer.parseInt(orgnr)), new AarsregnskapFileMetaRowMapper());
         } catch (DataAccessException dae) {
             LOGGER.error("DataAccessException caught. {}. Throwing InternalServerError", dae.getMessage());
             throw new InternalServerError(dae);

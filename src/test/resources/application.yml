@@ -24,6 +24,7 @@ regnskap:
     filepath-prefix: src/main/resources/aarsregnskap-mock-files
     years-available: 15
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
+    mellombalanse-enabled: true
   aardb:
     datasource:
       jdbc-url: jdbc:h2:mem:aardb
