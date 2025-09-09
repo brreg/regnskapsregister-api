@@ -6,7 +6,9 @@ reset-sql-dev:
 	podman container rm --force postgres_regnskap
 
 trigger-pipeline:
-	oc login -u "${USER}" --server "https://api.ocp01.ut.base.brreg.no:6443"
+	@echo "Enter your Openshift username:"
+	@read -p "Username: " username; \
+	oc login -u $$username --server "https://api.ocp01.ut.base.brreg.no:6443"
 	oc project regnskap-registerinfo
 	tkn pipeline start "regnskap-opendata-api" --showlog --param "revision=$(CURRENT_REVISION)" --param "force_image_build=true" --use-param-defaults
 	@echo "${CURRENT_REVISION}" built successfully. Use this hash to deploy the new image from the appconfig.

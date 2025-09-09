@@ -79,7 +79,6 @@ public class AarsregnskapCopyService {
     private List<String> fileMetaToAvailableYears(List<AarsregnskapFileMeta> meta) {
         Year yearLimit = Year.now(clock).minusYears(this.aarsregnskapCopyProperties.yearsAvailable());
         return meta.stream()
-                .peek(m -> System.out.println(m.path()))
                 .map(AarsregnskapFileMeta::regnaar)
                 .filter(y -> !Year.parse(y).isBefore(yearLimit))
                 .toList();
