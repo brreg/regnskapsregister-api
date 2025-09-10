@@ -43,6 +43,7 @@ regnskap:
     filepath-prefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX}
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
+    mellombalanse-enabled: ${RRAPI_AARSREGNSKAP_COPY_MELLOMBALANSE_ENABLED:false}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL}

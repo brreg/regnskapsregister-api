@@ -7,7 +7,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Year;
@@ -35,14 +38,31 @@ public class AarsregnskapCopyService {
     }
 
     public Optional<byte[]> getAarsregnskapCopy(String orgnr, String year) {
-        return aarsregnskapRepository.getAarsregnskapMeta(orgnr).stream()
-                .filter(meta -> meta.regnaar().equals(year))
-                .findFirst()
-                .map(AarsregnskapFileMeta::path)
-                .map(FilenameUtils::separatorsToSystem)
+        return getFilepath(aarsregnskapRepository.getAarsregnskapMeta(orgnr), year)
                 .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path).toString())
                 .map(pdfConverterService::tiffToPdf);
+    }
 
+    public List<String> getAvailableMellombalanseYears(String orgnr) {
+        return fileMetaToAvailableYears(aarsregnskapRepository.getMellombalanseMeta(orgnr));
+    }
+
+    public Optional<byte[]> getMellombalanse(String orgnr, String year) {
+        return getFilepath(aarsregnskapRepository.getMellombalanseMeta(orgnr), year)
+                .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), "AAR/MBAL", path).toString())
+                .map(path -> path.replace(".tif", ".pdf"))
+                .map(path -> {
+                    try (
+                            var fis = new FileInputStream(path);
+                            var baos = new ByteArrayOutputStream();
+                        )
+                    {
+                        fis.transferTo(baos);
+                        return baos.toByteArray();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     public List<String> getAvailableBaerekraftYears(String orgnr) {
@@ -50,14 +70,11 @@ public class AarsregnskapCopyService {
     }
 
     public Optional<File> getBaerekraftrapport(String orgnr, String year) {
-        return aarsregnskapRepository.getBaerekraftMeta(orgnr).stream()
-                .filter(meta -> meta.regnaar().equals(year))
-                .findFirst()
-                .map(AarsregnskapFileMeta::path)
-                .map(FilenameUtils::separatorsToSystem)
+        return getFilepath(aarsregnskapRepository.getBaerekraftMeta(orgnr), year)
                 .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path).toString())
                 .map(File::new);
     }
+
 
     private List<String> fileMetaToAvailableYears(List<AarsregnskapFileMeta> meta) {
         Year yearLimit = Year.now(clock).minusYears(this.aarsregnskapCopyProperties.yearsAvailable());
@@ -65,5 +82,14 @@ public class AarsregnskapCopyService {
                 .map(AarsregnskapFileMeta::regnaar)
                 .filter(y -> !Year.parse(y).isBefore(yearLimit))
                 .toList();
+    }
+
+    private Optional<String> getFilepath(List<AarsregnskapFileMeta> metadata, String year) {
+        return metadata.stream()
+                .filter(meta -> meta.regnaar().equals(year))
+                .findFirst()
+                .map(AarsregnskapFileMeta::path)
+                .map(FilenameUtils::separatorsToSystem);
+
     }
 }

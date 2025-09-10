@@ -34,6 +34,7 @@ regnskap:
     filepath-prefix: ${RRAPI_AARSREGNSKAP_COPY_FILEPATH_PREFIX:src/main/resources/aarsregnskap-mock-files}
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
+    mellombalanse-enabled: true
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseavgtest.brreg.no:5005/aardb}
@@ -77,3 +78,4 @@ springdoc:
   swagger-ui:
     path: /regnskapsregisteret/regnskap/swagger-ui/index.html
     url: /regnskapsregisteret/regnskap/v3/api-docs
+    tagsSorter: alpha

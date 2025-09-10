@@ -18,7 +18,8 @@ public class CacheConfig {
     public static final String
             CACHE_AAR_REQUEST_BUCKET = "aarsregnskapCopyBucket",
             CACHE_AAR_COPY_FILEMETA = "aarsregnskapCopyFileMeta",
-            CACHE_BAEREKRAFT_FILEMETA = "baerekraftFileMeta";
+            CACHE_BAEREKRAFT_FILEMETA = "baerekraftFileMeta",
+            CACHE_MELLOMBALANSE_FILEMETA = "mellombalanseFileMeta";
 
     private final CacheProperties cacheProperties;
 
@@ -32,7 +33,8 @@ public class CacheConfig {
                 .setNetworkConfig(getNetworkConfig())
                 .addCacheConfig(createAarRequestBucketCacheConfig())
                 .addCacheConfig(createFileMetaCacheConfig(CACHE_AAR_COPY_FILEMETA))
-                .addCacheConfig(createFileMetaCacheConfig(CACHE_BAEREKRAFT_FILEMETA));
+                .addCacheConfig(createFileMetaCacheConfig(CACHE_BAEREKRAFT_FILEMETA))
+                .addCacheConfig(createFileMetaCacheConfig(CACHE_MELLOMBALANSE_FILEMETA));
     }
 
     private NetworkConfig getNetworkConfig() {
