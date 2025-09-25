@@ -35,9 +35,10 @@ regnskap:
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
     mellombalanse-enabled: true
+    sarepta-url: ${RRAPI_AARSREGNSKAP_SAREPTA_URL:https://sarepta-ppe.base.brreg.no/kunngjoring/regnskapsregisteret/}
   aardb:
     datasource:
-      jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseavgtest.brreg.no:5005/aardb}
+      jdbc-url: ${RRAPI_AARDB_URL:jdbc:sybase:Tds:aseppi.brreg.no:5008/aardb}
       username: ${RRAPI_AARDB_USER}
       password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver

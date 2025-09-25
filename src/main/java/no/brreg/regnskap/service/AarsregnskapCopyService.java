@@ -7,15 +7,16 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+
+import static com.slack.api.socket_mode.SocketModeClient.LOGGER;
+import static java.util.Optional.*;
 
 @Service
 @ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")
@@ -23,12 +24,14 @@ public class AarsregnskapCopyService {
 
     private final AarsregnskapCopyProperties aarsregnskapCopyProperties;
     private final PdfConverterService pdfConverterService;
+    private final SareptaService sareptaService;
     private final AarsregnskapRepository aarsregnskapRepository;
     private final Clock clock;
 
-    public AarsregnskapCopyService(AarsregnskapCopyProperties aarsregnskapCopyProperties, PdfConverterService pdfConverterService, AarsregnskapRepository aarsregnskapRepository, Clock clock) {
+    public AarsregnskapCopyService(AarsregnskapCopyProperties aarsregnskapCopyProperties, PdfConverterService pdfConverterService, SareptaService sareptaService, AarsregnskapRepository aarsregnskapRepository, Clock clock) {
         this.aarsregnskapCopyProperties = aarsregnskapCopyProperties;
         this.pdfConverterService = pdfConverterService;
+        this.sareptaService = sareptaService;
         this.aarsregnskapRepository = aarsregnskapRepository;
         this.clock = clock;
     }
@@ -39,8 +42,15 @@ public class AarsregnskapCopyService {
 
     public Optional<byte[]> getAarsregnskapCopy(String orgnr, String year) {
         return getFilepath(aarsregnskapRepository.getAarsregnskapMeta(orgnr), year)
-                .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path).toString())
-                .map(pdfConverterService::tiffToPdf);
+                .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path))
+                .map(path -> {
+                    try (var fis = Files.newInputStream(path)) {
+                        return pdfConverterService.tiffToPdf(fis);
+                    } catch (IOException e) {
+                        LOGGER.error(e.getMessage(), e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     public List<String> getAvailableMellombalanseYears(String orgnr) {
@@ -49,19 +59,15 @@ public class AarsregnskapCopyService {
 
     public Optional<byte[]> getMellombalanse(String orgnr, String year) {
         return getFilepath(aarsregnskapRepository.getMellombalanseMeta(orgnr), year)
-                .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), "AAR/MBAL", path).toString())
-                .map(path -> path.replace(".tif", ".pdf"))
-                .map(path -> {
-                    try (
-                            var fis = new FileInputStream(path);
-                            var baos = new ByteArrayOutputStream();
-                        )
-                    {
-                        fis.transferTo(baos);
-                        return baos.toByteArray();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                .flatMap(path -> {
+                    var getFromImagesys = Integer.parseInt(year) >= 2025;
+
+                    Optional<byte[]> fileFromImagesys = Optional.empty();
+                    if (getFromImagesys) {
+                        fileFromImagesys = tryGetMellombalanseFromImagesys(path);
                     }
+
+                    return fileFromImagesys.or(() -> sareptaService.getMellombalanse(path));
                 });
     }
 
@@ -73,6 +79,24 @@ public class AarsregnskapCopyService {
         return getFilepath(aarsregnskapRepository.getBaerekraftMeta(orgnr), year)
                 .map(path -> Paths.get(aarsregnskapCopyProperties.filepathPrefix(), path).toString())
                 .map(File::new);
+    }
+
+    private Optional<byte[]> tryGetMellombalanseFromImagesys(String path) {
+        var imagesysPath = Paths.get(aarsregnskapCopyProperties.filepathPrefix(), "AAR/MBAL", path).toString().replace(".tif", ".pdf");
+
+        if (!new File(imagesysPath).exists()) {
+            return Optional.empty();
+        }
+
+        try (
+                var fis = new FileInputStream(imagesysPath);
+                var baos = new ByteArrayOutputStream();
+        ) {
+            fis.transferTo(baos);
+            return of(baos.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
