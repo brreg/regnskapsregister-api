@@ -76,7 +76,7 @@ public class MellombalanseControllerIT extends EmbeddedPostgresSetup {
     public void getAvailableMellombalanse_shouldReturnExpectedResponse() throws Exception {
         mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/aar"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[\"2014\",\"2022\",\"2023\"]"));
+                .andExpect(content().string("[\"2014\",\"2022\",\"2023\",\"2024\",\"2025\"]"));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class MellombalanseControllerIT extends EmbeddedPostgresSetup {
 
     @Test
     public void getMellombalanse_shouldReturn404IfNoFile() throws Exception {
-        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2024"))
+        mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2021"))
                 .andExpect(status().isNotFound());
     }
 
