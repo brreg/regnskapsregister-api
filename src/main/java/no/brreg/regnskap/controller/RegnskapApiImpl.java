@@ -99,7 +99,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
             String organizationCatalogue = jenaExternalUrlProperties.getOrganizationCatalogueUrl();
             ExternalUrls urls = new ExternalUrls(self, organizationCatalogue);
             String body = modelToString(createJenaResponse(regnskapList, urls), mimeTypeToJenaFormat(negotiatedMimeType));
-            return (ResponseEntity) ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
+            return ResponseEntity.ok().contentType(MediaType.asMediaType(negotiatedMimeType)).body(body);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {

@@ -44,6 +44,7 @@ regnskap:
     years-available: ${RRAPI_AARSREGNSKAP_COPY_YEARS_AVAILABLE:15}
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
     mellombalanse-enabled: ${RRAPI_AARSREGNSKAP_COPY_MELLOMBALANSE_ENABLED:false}
+    sarepta-url: ${RRAPI_AARSREGNSKAP_SAREPTA_URL}
   aardb:
     datasource:
       jdbc-url: ${RRAPI_AARDB_URL}

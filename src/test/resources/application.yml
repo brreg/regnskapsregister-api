@@ -25,6 +25,7 @@ regnskap:
     years-available: 15
     experimental-converter: ${RRAPI_AARSREGNSKAP_COPY_EXPERIMENTAL_CONVERTER:false}
     mellombalanse-enabled: true
+    sarepta-url: "https://invalid.org/kunngjoring/regnskapsregisteret/"
   aardb:
     datasource:
       jdbc-url: jdbc:h2:mem:aardb

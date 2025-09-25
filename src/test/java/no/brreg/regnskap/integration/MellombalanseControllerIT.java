@@ -2,18 +2,29 @@ package no.brreg.regnskap.integration;
 
 
 import kotlin.ranges.IntRange;
+import no.brreg.regnskap.config.properties.AarsregnskapCopyProperties;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import no.brreg.regnskap.utils.stubs.ProcessStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -21,8 +32,7 @@ import java.time.ZoneId;
 import static java.util.Objects.requireNonNull;
 import static no.brreg.regnskap.config.CacheConfig.*;
 import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
-import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,8 +52,14 @@ public class MellombalanseControllerIT extends EmbeddedPostgresSetup {
     @MockBean
     private Clock clock;
 
+    @MockBean
+    RestTemplate restTemplate;
+
     @Autowired
     CacheManager cacheManager;
+
+    @Autowired
+    AarsregnskapCopyProperties  aarsregnskapCopyProperties;
 
 
     @BeforeEach
@@ -76,10 +92,35 @@ public class MellombalanseControllerIT extends EmbeddedPostgresSetup {
             when(mock.redirectErrorStream(true)).thenReturn(mock);
             when(mock.start()).thenReturn(new ProcessStub(false));
         })) {
-            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2022"))
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2025"))
                     .andExpect(status().isOk())
                     .andExpect(header().string("Content-Type", "application/pdf"))
-                    .andExpect(header().string("Content-Disposition", "attachment; filename=mellombalanse-2022_310293903.pdf"));
+                    .andExpect(header().string("Content-Disposition", "attachment; filename=mellombalanse-2025_310293903.pdf"));
+        }
+    }
+
+
+    @Test
+    public void getMellombalanse_shouldReturnCorrectHeaders_notInImageSys() throws Exception {
+        when(restTemplate.execute(anyString(), eq(HttpMethod.GET), isNull(), any(ResponseExtractor.class))).thenAnswer(inv -> {
+            ResponseExtractor<?> extractor = inv.getArgument(3);
+            var mockResponse = mock(ClientHttpResponse.class);
+
+            var mockFilePath = Paths.get(aarsregnskapCopyProperties.filepathPrefix(), "/AAR/MBAL/2025/00/00/26/2025000026.tif");
+            try (var fis = Files.newInputStream(mockFilePath)) {
+                when(mockResponse.getBody()).thenReturn(new ByteArrayInputStream(fis.readAllBytes()));
+            }
+            return extractor.extractData(mockResponse);
+        });
+
+        try (var mockProcessBuilder = mockConstruction(ProcessBuilder.class, (mock, context) -> {
+            when(mock.redirectErrorStream(true)).thenReturn(mock);
+            when(mock.start()).thenReturn(new ProcessStub(false));
+        })) {
+            mockMvc.perform(get("/regnskapsregisteret/regnskap/aarsregnskap/mellombalanse/310293903/2024"))
+                    .andExpect(status().isOk())
+                    .andExpect(header().string("Content-Type", "application/pdf"))
+                    .andExpect(header().string("Content-Disposition", "attachment; filename=mellombalanse-2024_310293903.pdf"));
         }
     }
 
