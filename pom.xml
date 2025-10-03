@@ -50,7 +50,6 @@
         <postgresql.version>42.7.7</postgresql.version>
         <liquibase-core.version>4.29.2</liquibase-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <logback-ecs-encoder.version>1.6.0</logback-ecs-encoder.version>
         <jsch.version>0.1.55</jsch.version>
         <openapi-generator-maven-plugin.version>7.8.0</openapi-generator-maven-plugin.version>
         <slack-api-client.version>1.43.1</slack-api-client.version>
@@ -61,6 +60,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>no.brreg.data.enhetsregisteret</groupId>
+            <artifactId>logback-ecs-encoder-enricher-autoconfigure</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -87,13 +92,6 @@
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-spring</artifactId>
             <version>${hazelcast.version}</version>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>co.elastic.logging</groupId>
-            <artifactId>logback-ecs-encoder</artifactId>
-            <version>${logback-ecs-encoder.version}</version>
         </dependency>
 
         <!-- Database -->
