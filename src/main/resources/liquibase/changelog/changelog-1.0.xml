@@ -6,7 +6,7 @@
 
     <changeSet author="extfrg" id="1.0-0">
         <sql endDelimiter=";">
-            CREATE SCHEMA IF NOT EXISTS rreg
+            CREATE SCHEMA IF NOT EXISTS rregapi
         </sql>
     </changeSet>
 

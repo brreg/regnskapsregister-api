@@ -1,10 +1,12 @@
 package no.brreg.regnskap.model.dbo;
 
-import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import no.brreg.regnskap.generated.model.Regnskapstype;
 import no.brreg.regnskap.model.RegnskapFields;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegnskapTest {
 
@@ -101,5 +103,5 @@ public class RegnskapTest {
 
         assertEquals(false, regnskap.essentialFieldsIncluded());
     }
-    
+
 }

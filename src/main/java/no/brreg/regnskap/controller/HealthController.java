@@ -1,19 +1,28 @@
 package no.brreg.regnskap.controller;
 
-import no.brreg.regnskap.repository.RestcallLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
+import static no.brreg.regnskap.config.SybaseJdbcConfig.AARDB_DATASOURCE;
+
 
 @Controller
 public class HealthController {
 
-    @Autowired
-    private RestcallLogRepository restcallLogRepository;
+    private final DataSource rregapidb;
+    private final DataSource aardb;
 
+    public HealthController(@Qualifier(RREGAPIDB_DATASOURCE) DataSource rregapidb, @Qualifier(AARDB_DATASOURCE) DataSource aardb) {
+        this.rregapidb = rregapidb;
+        this.aardb = aardb;
+    }
 
     @GetMapping(value="/ping", produces={"text/plain"})
     public ResponseEntity<String> getPing() {
@@ -22,11 +31,13 @@ public class HealthController {
 
     @GetMapping(value="/ready")
     public ResponseEntity<Void> getReady() {
-        if (restcallLogRepository.isDatabaseReady()) {
-            return ResponseEntity.ok().build();
-        } else {
+        try {
+            this.rregapidb.getConnection();
+            this.aardb.getConnection();
+        } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
         }
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -12,14 +12,6 @@ spring:
       - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
-postgres:
-  rreg:
-    db_url: ${RRAPI_POSTGRES_DB_URL}
-    dbo_user: ${RRAPI_POSTGRES_DBO_USER}
-    dbo_password: ${RRAPI_POSTGRES_DBO_PASSWORD}
-    user: ${RRAPI_POSTGRES_USER}
-    password: ${RRAPI_POSTGRES_PASSWORD}
-
 regnskap:
   update:
     enabled: ${RRAPI_UPDATE_ENABLED:false}
@@ -51,6 +43,11 @@ regnskap:
       username: ${RRAPI_AARDB_USER}
       password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver
+  rregapidb:
+    datasource:
+      jdbc-url: ${RRAPI_POSTGRES_DB_URL}
+      username: ${RRAPI_POSTGRES_USER}
+      password: ${RRAPI_POSTGRES_PASSWORD}
   cache:
     ttl-after-accessed-aar-requests: ${CACHE_TTL_AAR_REQUESTS_SECONDS}
     ttl-after-created-aar-copy-filemeta: ${CACHE_TTL_AAR_COPY_FILEMETA_SECONDS}

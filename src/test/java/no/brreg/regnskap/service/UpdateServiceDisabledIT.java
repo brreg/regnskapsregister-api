@@ -1,6 +1,6 @@
 package no.brreg.regnskap.service;
 
-import no.brreg.regnskap.Application;
+import no.brreg.regnskap.configuration.TestConfig;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
         properties = "regnskap.update.enabled=false",
-        classes = Application.class
+        classes = {TestConfig.class}
 )
 class UpdateServiceDisabledIT extends EmbeddedPostgresSetup {
 

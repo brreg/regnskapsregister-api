@@ -14,7 +14,7 @@ spring:
 
 regnskap:
   update:
-    enabled: true
+    enabled: false
   jena-external-url:
     regnskapsregisteretUrl: "http://invalid.org/regnskap/%s/%d"
     organizationCatalogueUrl: "https://invalid.org/organizations/"
@@ -32,6 +32,11 @@ regnskap:
       username: sa
       password: sa
       driver-class-name: org.h2.Driver
+  rregapidb:
+    datasource:
+      jdbc-url: postgres
+      username: postgres
+      password: postgres
   cache:
     ttl-after-accessed-aar-requests: 300
     ttl-after-created-aar-copy-filemeta: 10

@@ -2,15 +2,6 @@ spring:
   liquibase:        # Disable Liquibase globally, to prevent liquibase instanciating for sybase.
     enabled: false  # Postgres not affected, as it is configured manually to use liquibase
 
-
-postgres:
-  rreg:
-    db_url: jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer
-    dbo_user: postgres
-    dbo_password: password
-    user: postgres
-    password: password
-
 regnskap:
   update:
     enabled: ${RRAPI_UPDATE_ENABLED:true}
@@ -42,6 +33,12 @@ regnskap:
       username: ${RRAPI_AARDB_USER}
       password: ${RRAPI_AARDB_PASS}
       driver-class-name: com.sybase.jdbc4.jdbc.SybDriver
+  rregapidb:
+    datasource:
+      jdbc-url: jdbc:postgresql://localhost:5432/regnskap?currentSchema=rregapi&sslmode=prefer
+      username: postgres
+      password: password
+
   cache:
     ttl-after-accessed-aar-requests: ${CACHE_TTL_AAR_REQUESTS_SECONDS:86400}
     ttl-after-created-aar-copy-filemeta: ${CACHE_TTL_AAR_COPY_FILEMETA_SECONDS:120}

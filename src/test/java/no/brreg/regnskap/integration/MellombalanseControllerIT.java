@@ -7,7 +7,6 @@ import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import no.brreg.regnskap.utils.stubs.ProcessStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,8 +20,6 @@ import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -30,8 +27,9 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import static java.util.Objects.requireNonNull;
-import static no.brreg.regnskap.config.CacheConfig.*;
-import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
+import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_REQUEST_BUCKET;
+import static no.brreg.regnskap.config.CacheConfig.CACHE_MELLOMBALANSE_FILEMETA;
+import static no.brreg.regnskap.config.SybaseJdbcConfig.AARDB_DATASOURCE;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

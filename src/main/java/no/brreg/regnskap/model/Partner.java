@@ -1,10 +1,10 @@
 package no.brreg.regnskap.model;
 
 import jakarta.servlet.http.HttpServletRequest;
-import no.brreg.regnskap.repository.ConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ public class Partner {
     private Partner() {
     }
 
-    public static Partner fromRequest(final ConnectionManager connectionManager, final HttpServletRequest httpServletRequest) {
+    public static Partner fromRequest(final DataSource dataSource, final HttpServletRequest httpServletRequest) {
         Partner partner = null;
 
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
@@ -34,7 +34,7 @@ public class Partner {
                 partner.name = nameKey.substring(0, separatorPos);
                 String key = nameKey.substring(separatorPos+1);
                 try {
-                    partner.authorize(connectionManager, key);
+                    partner.authorize(dataSource, key);
                 } catch (SQLException e) {
                     LOGGER.error("Authorize failed: " + e.getMessage());
                 }
@@ -46,24 +46,14 @@ public class Partner {
         return partner;
     }
 
-    private void authorize(final ConnectionManager connectionManager, final String key) throws SQLException {
-        try (Connection connection = connectionManager.getConnection()) {
-            try {
-                final String sql = "SELECT COUNT(name) FROM rregapi.partners WHERE name=? AND key=?";
-                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                    stmt.setString(1, this.name);
-                    stmt.setString(2, key);
-                    ResultSet rs = stmt.executeQuery();
-                    this.isAuthorized = rs.next() && rs.getInt(1)>0;
-                }
-                connection.commit();
-            } catch (Exception e) {
-                try {
-                    connection.rollback();
-                    throw e;
-                } catch (SQLException e2) {
-                    throw e2;
-                }
+    private void authorize(final DataSource dataSource, final String key) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            final String sql = "SELECT COUNT(name) FROM rregapi.partners WHERE name=? AND key=?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, this.name);
+                stmt.setString(2, key);
+                ResultSet rs = stmt.executeQuery();
+                this.isAuthorized = rs.next() && rs.getInt(1)>0;
             }
         }
     }

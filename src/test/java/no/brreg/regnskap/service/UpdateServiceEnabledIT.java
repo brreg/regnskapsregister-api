@@ -1,5 +1,6 @@
 package no.brreg.regnskap.service;
 
+import no.brreg.regnskap.configuration.TestConfig;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
-        properties = "regnskap.update.enabled=true"
+        properties = "regnskap.update.enabled=true",
+        classes = {TestConfig.class}
 )
 class UpdateServiceEnabledIT extends EmbeddedPostgresSetup {
 

@@ -1,20 +1,22 @@
 package no.brreg.regnskap.integration;
 
+import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.controller.StatistikkApiImpl;
 import no.brreg.regnskap.model.dbo.RestcallLog;
 import no.brreg.regnskap.repository.RestcallLogRepository;
-import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -30,7 +33,8 @@ class RestcallLogApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestcallLogApiIT.class);
 
     @Autowired
-    ConnectionManager connectionManager;
+    @Qualifier(RREGAPIDB_DATASOURCE)
+    private DataSource dataSource;
 
     @Autowired
     private StatistikkApiImpl statistikkApi;
@@ -53,11 +57,10 @@ class RestcallLogApiIT extends EmbeddedPostgresSetup {
                 httpServletRequestMock
         );
 
-        Connection connection = connectionManager.getConnection();
+        Connection connection = dataSource.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement("TRUNCATE rregapi.restcallog")) {
             stmt.executeUpdate();
         }
-        connection.commit();
 
         for (RestcallLog restcallLog : testData) {
             restcallLogRepository.persistRestcall(restcallLog);
