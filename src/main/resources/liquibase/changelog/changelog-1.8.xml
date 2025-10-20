@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="mib" id="1.8-0">
+        <comment>Ensure sequence max value is large enough</comment>
+        <sql>
+            ALTER SEQUENCE rregapi.restcallog__id_seq AS BIGINT MAXVALUE 9223372036854775807;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
