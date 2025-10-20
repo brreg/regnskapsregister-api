@@ -7,7 +7,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.slack.api.socket_mode.SocketModeClient.LOGGER;
-import static java.util.Optional.*;
+import static java.util.Optional.of;
 
 @Service
 @ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")

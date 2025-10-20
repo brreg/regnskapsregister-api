@@ -1,12 +1,12 @@
 package no.brreg.regnskap.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import no.brreg.regnskap.*;
 import no.brreg.regnskap.controller.RegnskapApiImpl;
 import no.brreg.regnskap.generated.model.Regnskap;
 import no.brreg.regnskap.generated.model.Regnskapsprinsipper;
 import no.brreg.regnskap.generated.model.Regnskapstype;
-import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.repository.RegnskapLogRepository;
 import no.brreg.regnskap.repository.RegnskapRepository;
 import no.brreg.regnskap.utils.EmbeddedPostgresSetup;
@@ -23,12 +23,13 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static no.brreg.regnskap.TestData.TEST_ORGNR_1;
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 import static no.brreg.regnskap.generated.model.Regnskapstype.KONSERN;
 import static no.brreg.regnskap.generated.model.Regnskapstype.SELSKAP;
 import static org.hamcrest.core.Is.is;
@@ -51,6 +53,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @AutoConfigureMockMvc
 public class RegnskapApiIT extends EmbeddedPostgresSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(RegnskapApiIT.class);
@@ -78,7 +81,8 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
     private RegnskapRepository regnskapRepository;
 
     @Autowired
-    private ConnectionManager connectionManager;
+    @Qualifier(RREGAPIDB_DATASOURCE)
+    private DataSource dataSource;
 
     @Mock
     HttpServletRequest httpServletRequestMock;
@@ -106,10 +110,9 @@ public class RegnskapApiIT extends EmbeddedPostgresSetup {
         regnskap2019_2Id = regnskapRepository.persistRegnskap(TestData.REGNSKAP_2019_2K);
 
         //Add partner
-        Connection connection = connectionManager.getConnection();
+        Connection connection = dataSource.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO rregapi.partners (name,key) VALUES ('test','test')")) {
             stmt.executeUpdate();
-            connection.commit();
         } catch (SQLException e) {
             LOGGER.info("Partner test data already loaded");
         }

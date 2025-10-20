@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ConditionalOnProperty("regnskap.aarsregnskap-copy.enabled")
-public class JdbcConfig {
+public class SybaseJdbcConfig {
     public static final String AARDB_DATASOURCE = "aardbDatasource";
     public static final String AARDB_JDBC_TEMPLATE = "aardbJdbcTemplate";
 

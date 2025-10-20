@@ -1,23 +1,27 @@
 package no.brreg.regnskap.repository;
 
 import no.brreg.regnskap.model.dbo.RestcallLog;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.security.NoSuchAlgorithmException;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
+
 
 @Component
 public class RestcallLogRepository {
 
-    @Autowired
-    private ConnectionManager connectionManager;
+    private final DataSource dataSource;
 
+    public RestcallLogRepository(@Qualifier(RREGAPIDB_DATASOURCE) DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public List<String> getStatisticsByIp(LocalDate fraDato, LocalDate tilDato, final int maxRows) throws SQLException {
         return getStatisticsByColumn("calleriphash", fraDato, tilDato, maxRows);
@@ -32,8 +36,8 @@ public class RestcallLogRepository {
     }
 
     public List<String> getStatisticsByColumn(final String column, LocalDate fraDato, LocalDate tilDato, final int maxRows) throws SQLException {
-        List<String> returnList = new ArrayList();
-        try (Connection connection = connectionManager.getConnection()) {
+        List<String> returnList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
             final String where = (fraDato != null || tilDato != null) ? "WHERE " : "";
             final String fraFilter = (fraDato != null) ? "requestedtime>=? " : "";
             final String and = (fraDato != null && tilDato != null) ? "AND " : "";
@@ -59,57 +63,33 @@ public class RestcallLogRepository {
                     final String element = rs.getInt("c") + ";" + rs.getString(column);
                     returnList.add(element);
                 }
-                connection.commit();
-            } catch (SQLException e) {
-                try {
-                    connection.rollback();
-                    throw e;
-                } catch (SQLException e2) {
-                    throw e2;
-                }
             }
         }
         return returnList;
     }
 
-    public void persistRestcall(final RestcallLog restcallLog) throws SQLException, NoSuchAlgorithmException {
-        try (Connection connection = connectionManager.getConnection()) {
-            try {
-                final String sql = "INSERT INTO rregapi.restcallog (calleriphash,requestedorgnr,requestedmethod,requestedtime) " +
-                                   "VALUES (?,?,?,?)";
-                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                    stmt.setString(1, restcallLog.getCallerIp());
+    public void persistRestcall(final RestcallLog restcallLog) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            final String sql = "INSERT INTO rregapi.restcallog (calleriphash,requestedorgnr,requestedmethod,requestedtime) " +
+                               "VALUES (?,?,?,?)";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, restcallLog.getCallerIp());
 
-                    if (restcallLog.getRequestedOrgnr()==null) {
-                        stmt.setNull(2, Types.VARCHAR);
-                    } else {
-                        stmt.setString(2, restcallLog.getRequestedOrgnr());
-                    }
-
-                    if (restcallLog.getRequestedMethod()==null) {
-                        stmt.setNull(3, Types.VARCHAR);
-                    } else {
-                        stmt.setString(3, restcallLog.getRequestedMethod());
-                    }
-
-                    stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-                    stmt.executeUpdate();
+                if (restcallLog.getRequestedOrgnr()==null) {
+                    stmt.setNull(2, Types.VARCHAR);
+                } else {
+                    stmt.setString(2, restcallLog.getRequestedOrgnr());
                 }
 
-                connection.commit();
-            } catch (Exception e) {
-                try {
-                    connection.rollback();
-                    throw e;
-                } catch (SQLException e2) {
-                    throw e2;
+                if (restcallLog.getRequestedMethod()==null) {
+                    stmt.setNull(3, Types.VARCHAR);
+                } else {
+                    stmt.setString(3, restcallLog.getRequestedMethod());
                 }
+
+                stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                stmt.executeUpdate();
             }
         }
     }
-
-    public boolean isDatabaseReady() {
-        return connectionManager.getDatabaseIsReady();
-    }
-
 }

@@ -21,7 +21,7 @@ import java.time.ZoneId;
 import static java.util.Objects.requireNonNull;
 import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_COPY_FILEMETA;
 import static no.brreg.regnskap.config.CacheConfig.CACHE_AAR_REQUEST_BUCKET;
-import static no.brreg.regnskap.config.JdbcConfig.AARDB_DATASOURCE;
+import static no.brreg.regnskap.config.SybaseJdbcConfig.AARDB_DATASOURCE;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;

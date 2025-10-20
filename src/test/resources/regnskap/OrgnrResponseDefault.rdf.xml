@@ -4,7 +4,7 @@
         xmlns:schema="http://schema.org/"
         xmlns:br="https://github.com/Informasjonsforvaltning/regnskapsregister-api/blob/develop/src/main/resources/ontology/regnskapsregister.owl#"
         xmlns:org="http://www.w3.org/ns/org#"
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+>
     <br:Regnskap rdf:about="http://invalid.org/regnskap/123456789/10">
         <dct:identifier>10</dct:identifier>
         <br:oppstillingsplan>store</br:oppstillingsplan>

@@ -5,46 +5,43 @@ import no.brreg.regnskap.model.RegnskapXml;
 import no.brreg.regnskap.model.RegnskapXmlWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 
-@Component
+
+@Repository
+@Transactional
 public class RegnskapLogRepository {
     private static Logger LOGGER = LoggerFactory.getLogger(RegnskapLogRepository.class);
 
-    @Autowired
-    private ConnectionManager connectionManager;
+    private final DataSource dataSource;
+    private final RegnskapRepository regnskapRepository;
 
-    @Autowired
-    private RegnskapRepository regnskapRepository;
+    public RegnskapLogRepository(@Qualifier(RREGAPIDB_DATASOURCE) DataSource dataSource, RegnskapRepository regnskapRepository) {
+        this.dataSource = dataSource;
+        this.regnskapRepository = regnskapRepository;
+    }
 
 
     public boolean hasLogged(final String filename) throws SQLException {
         boolean hasLogged = false;
-        try (Connection connection = connectionManager.getConnection()) {
-            try {
-                final String sql = "SELECT COUNT(filename) FROM rregapi.regnskaplog WHERE filename=?";
-                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                    stmt.setString(1, filename);
-                    ResultSet rs = stmt.executeQuery();
-                    hasLogged = rs.next() && rs.getInt(1)>0;
-                    LOGGER.info("Has " + (hasLogged?"":"NOT ") + "logged " + filename);
-                }
-                connection.commit();
-            } catch (Exception e) {
-                try {
-                    connection.rollback();
-                    throw e;
-                } catch (SQLException e2) {
-                    throw e2;
-                }
+        try (Connection connection = dataSource.getConnection()) {
+            final String sql = "SELECT COUNT(filename) FROM rregapi.regnskaplog WHERE filename=?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, filename);
+                ResultSet rs = stmt.executeQuery();
+                hasLogged = rs.next() && rs.getInt(1)>0;
+                LOGGER.info("Has " + (hasLogged?"":"NOT ") + "logged " + filename);
             }
         }
 
@@ -54,7 +51,7 @@ public class RegnskapLogRepository {
     public void persistRegnskapFile(final String filename, final InputStream regnskapStream) throws IOException, SQLException {
         File tmpFile = null;
         File tmpZipFile = null;
-        try (Connection connection = connectionManager.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             { //Just a scope for buffer[] ...
                 byte[] buffer = new byte[100 * 1024]; //100KB chunks
                 int bytesRead;
@@ -112,14 +109,6 @@ public class RegnskapLogRepository {
                 }
 
                 LOGGER.info("Persisted " + persisCount + " regnskap from " + filename);
-                connection.commit();
-            } catch (Exception e) {
-                try {
-                    connection.rollback();
-                    throw e;
-                } catch (SQLException e2) {
-                    throw e2;
-                }
             }
         } finally {
             if (tmpFile != null) {

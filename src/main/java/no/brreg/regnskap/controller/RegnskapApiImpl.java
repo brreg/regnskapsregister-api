@@ -3,19 +3,18 @@ package no.brreg.regnskap.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import no.brreg.regnskap.config.properties.JenaExternalUrlProperties;
 import no.brreg.regnskap.generated.model.Regnskap;
 import no.brreg.regnskap.generated.model.Regnskapstype;
 import no.brreg.regnskap.jena.ExternalUrls;
 import no.brreg.regnskap.jena.JenaUtils;
 import no.brreg.regnskap.mapper.RegnskapFieldsMapper.RegnskapFieldIncludeMode;
 import no.brreg.regnskap.model.Partner;
-import no.brreg.regnskap.repository.ConnectionManager;
 import no.brreg.regnskap.service.RegnskapService;
 import no.brreg.regnskap.service.RestcallLogService;
-import no.brreg.regnskap.config.properties.JenaExternalUrlProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.sql.DataSource;
 import java.util.List;
 
+import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 import static no.brreg.regnskap.jena.JenaUtils.*;
 
 
@@ -36,17 +37,17 @@ import static no.brreg.regnskap.jena.JenaUtils.*;
 public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.RegnskapsregisteretApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegnskapApiImpl.class);
 
-    @Autowired
-    private JenaExternalUrlProperties jenaExternalUrlProperties;
+    private final JenaExternalUrlProperties jenaExternalUrlProperties;
+    private final RegnskapService regnskapService;
+    private final RestcallLogService restcallLogService;
+    private final DataSource dataSource;
 
-    @Autowired
-    private RegnskapService regnskapService;
-
-    @Autowired
-    private RestcallLogService restcallLogService;
-
-    @Autowired
-    private ConnectionManager connectionManager;
+    public RegnskapApiImpl(JenaExternalUrlProperties jenaExternalUrlProperties, RegnskapService regnskapService, RestcallLogService restcallLogService, @Qualifier(RREGAPIDB_DATASOURCE) DataSource dataSource) {
+        this.jenaExternalUrlProperties = jenaExternalUrlProperties;
+        this.regnskapService = regnskapService;
+        this.restcallLogService = restcallLogService;
+        this.dataSource = dataSource;
+    }
 
 
     @Override
@@ -76,7 +77,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
 
             RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldIncludeMode.DEFAULT;
             try {
-                Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
+                Partner partner = Partner.fromRequest(dataSource, httpServletRequest);
                 if (partner != null && partner.isAuthorized()) {
                     regnskapFieldIncludeMode = RegnskapFieldIncludeMode.PARTNER;
                 }
@@ -115,7 +116,7 @@ public class RegnskapApiImpl implements no.brreg.regnskap.generated.api.Regnskap
 
             RegnskapFieldIncludeMode regnskapFieldIncludeMode = RegnskapFieldIncludeMode.DEFAULT;
             try {
-                Partner partner = Partner.fromRequest(connectionManager, httpServletRequest);
+                Partner partner = Partner.fromRequest(dataSource, httpServletRequest);
                 if (partner != null && partner.isAuthorized()) {
                     regnskapFieldIncludeMode = RegnskapFieldIncludeMode.PARTNER;
                 }
