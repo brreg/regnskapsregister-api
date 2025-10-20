@@ -13,3 +13,4 @@ See [Open API specification](https://data.brreg.no/regnskapsregisteret/regnskap/
 
 Please see [docs for developers](docs/for-devs.md)
 
+ 
