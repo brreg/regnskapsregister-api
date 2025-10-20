@@ -2,6 +2,7 @@ package no.brreg.regnskap.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 
 @Configuration
+@ConditionalOnProperty("regnskap.update.enabled")
 public class LiquibaseConfig {
 
     public final DataSource rregapidb;
