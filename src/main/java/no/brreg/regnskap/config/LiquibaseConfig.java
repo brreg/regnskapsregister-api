@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+import java.sql.SQLException;
+
 import static no.brreg.regnskap.config.PostgresJdbcConfig.RREGAPIDB_DATASOURCE;
 
 @Configuration
@@ -19,7 +21,11 @@ public class LiquibaseConfig {
     }
 
     @Bean
-    public SpringLiquibase liquibase() {
+    public SpringLiquibase liquibase() throws SQLException {
+        try (var conn = rregapidb.getConnection()) {
+            conn.prepareStatement("CREATE SCHEMA IF NOT EXISTS rregapi").execute();
+        }
+
         var liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:liquibase/changelog/changelog-master.xml");
         liquibase.setDataSource(rregapidb);
