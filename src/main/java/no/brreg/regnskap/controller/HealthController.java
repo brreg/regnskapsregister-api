@@ -37,7 +37,7 @@ public class HealthController {
 
             var aardb = this.aardbProvider.getIfAvailable();
             if (aardb != null) {
-                aardb.getConnection().isValid(5);
+                aardb.getConnection();
             }
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
