@@ -32,7 +32,6 @@ import java.time.Clock;
         type = SecuritySchemeType.HTTP,
         scheme = "basic"
 )
-@EnableTransactionManagement
 @EnableScheduling
 @EnableConfigurationProperties({
         SftpProperties.class,

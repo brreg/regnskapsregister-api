@@ -37,6 +37,10 @@ public class HealthController {
 
             var aardb = this.aardbProvider.getIfAvailable();
             if (aardb != null) {
+                try (var conn = aardb.getConnection();
+                     var rs = conn.prepareStatement("SELECT 1").executeQuery()) {
+                    if (!rs.next()) throw new SQLException("No result from test query");
+                }
                 aardb.getConnection();
             }
         } catch (SQLException e) {
