@@ -1,7 +1,10 @@
 spring:
   liquibase:        # Disable Liquibase globally, to prevent liquibase instanciating for sybase.
     enabled: false  # Postgres not affected, as it is configured manually to use liquibase
-
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
 regnskap:
   update:
     enabled: ${RRAPI_UPDATE_ENABLED:true}

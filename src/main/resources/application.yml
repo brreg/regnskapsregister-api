@@ -11,7 +11,10 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
 regnskap:
   update:
     enabled: ${RRAPI_UPDATE_ENABLED:false}
